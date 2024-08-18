@@ -11,7 +11,7 @@ include "login/ceksession.php";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Arsip Surat Kota Samarinda </title>
+    <title>Arsip Surat Desa Candirejo Borobudur</title>
 
      <!-- Bootstrap -->
     <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -88,7 +88,7 @@ include "login/ceksession.php";
                           <img class="img-responsive avatar-view" src="images/<?php echo $data['gambar'];?>" alt="Avatar" title="Change the avatar">
                         </div>
                       </div>
-                      <h3 align="center"><?php echo $data['nama_admin'];?></h3>
+                      <h3 align ="center"><?php echo $data['nama_admin'];?></h3>
 
                        <a href="editprofile.php"><button type="button" class="btn btn-success"><i class="fa fa-edit m-right-xs"></i> Edit Profil</button></a>
                       <br />
@@ -132,7 +132,7 @@ include "login/ceksession.php";
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Apriansyah Wibowo. All Rights Reserved. <a href="https://colorlib.com">Colorlib</a>
           </div>
           <div class="clearfix"></div>
         </footer>

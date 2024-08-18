@@ -4,10 +4,10 @@ $username = "root";
 $password = "";
 $database = "db_surat";
 
-$db = mysqli_connect($server, $username, $password, $database);
+// Koneksi ke database
+$db = mysqli_connect('localhost', 'username', 'password', 'database');
 
-// cek koneksi
+// Cek koneksi
 if (!$db) {
-    die('Koneksi Database Gagal : ' . mysqli_connect_error());
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
-?>

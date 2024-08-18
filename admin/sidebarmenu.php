@@ -15,7 +15,7 @@ $data = mysqli_fetch_array($query);
     <!-- menu profile quick info -->
     <div class="profile clearfix">
       <div class="profile_pic">
-        <img src="images/<?php echo htmlspecialchars($data['gambar']); ?>" height="55" width="55" alt="" class="img-circle profile_img">
+        <img src="images/<?php echo htmlspecialchars($data['gambar']); ?>" height="70" width="85" alt="" class="img-circle profile_img">
       </div>
       <div class="profile_info">
         <span>Selamat Datang,</span>
@@ -31,7 +31,7 @@ $data = mysqli_fetch_array($query);
         <h3>Kategori</h3>
         <ul class="nav side-menu">
           <!-- Item untuk Buat Surat -->
-          <li><a href="buatsurat.php"><i class="fa fa-plus-square"></i> Buat Surat </a></li>
+          <li><a href="inputbuatsurat.php"><i class="fa fa-plus-square"></i> Buat Surat </a></li>
           <!-- Kategori Surat -->
           <li><a><i class="fa fa-file-text"></i> Kategori Surat <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
@@ -40,9 +40,11 @@ $data = mysqli_fetch_array($query);
             </ul>
           </li>
           <!-- Bagian -->
-          <li><a><i class="fa fa-users"></i> Bagian <span class="fa fa-chevron-down"></span></a>
+          <li><a><i class="fa fa-users"></i> Kategori Data <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="databagian.php"><i class="fa fa-inbox"></i> Data Bagian</a></li>
+              <li><a href="datamitra.php"><i class="fa fa-inbox"></i> Data Mitra</a></li>
+              <li><a href="datapengunjung.php"><i class="fa fa-inbox"></i> Data Pengunjung</a></li>
+              <li><a href="datapenjualanusaha.php"><i class="fa fa-inbox"></i> Data Penjualan Usaha</a></li>
             </ul>
           </li>
         </ul>

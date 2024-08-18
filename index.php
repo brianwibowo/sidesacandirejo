@@ -51,7 +51,6 @@ include "koneksi/ceksession.php";
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                     <li><a href="admin/login"><i class="fa fa-sign-out pull-right"></i> Admin</a></li> 
-                    <li><a href="bagian/login"><i class="fa fa-sign-out pull-right"></i> Bagian</a></li>
                   </ul>
                 </li>
               </ul>
@@ -118,7 +117,7 @@ include "koneksi/ceksession.php";
         <div class="row">
           <div class="col-md-12 text-center">
             <h2 class="service-title pad-bt15">Pengembang</h2>
-            <p class="sub-title pad-bt15">"Urip iku Urup"</p>
+            <p class="sub-title pad-bt15">"SIDESA CANDIREJO BOROBUDUR"</p>
             <hr class="bottom-line">
           </div>
           <div class="col-md-3"></div>
