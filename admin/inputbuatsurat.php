@@ -6,12 +6,11 @@ include "login/ceksession.php";
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	  
-    <title>Arsip Surat Desa Candirejo Borobudur/title>
+    <title>Arsip Surat Desa Candirejo Borobudur</title>
 
     <!-- Bootstrap -->
     <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,8 +32,6 @@ include "login/ceksession.php";
     <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <!-- starrr -->
     <link href="../assets/vendors/starrr/dist/starrr.css" rel="stylesheet">
-    <!-- bootstrap-daterangepicker -->
-    <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <link rel="shortcut icon" href="../img/icon.ico">
 
     <!-- Custom Theme Style -->
@@ -59,99 +56,113 @@ include "login/ceksession.php";
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Admin</h3>
-              </div>
-            </div>
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Admin ><small>Tambah Bagian</small></h2>
+                    <h2>Buat Surat</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <br />
-                    <form action="proses/proses_inputbagian.php"  name="formbagian" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <form action="proses/proses_buatsurat.php" name="formbuatsurat" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nama Bagian <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nomor_surat">Nomor Surat <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" id="nama_bagian" name="nama_bagian" required="required"  placeholder="Masukkan Nama Bagian" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="nomor_surat" name="nomor_surat" required="required" maxlength="50" placeholder="Masukkan Nomor Surat" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Username Admin Bagian <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kop_surat">Kop Surat <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" id="username_admin_bagian" name="username_admin_bagian" required="required" maxlength="50" placeholder="Masukkan Username Admin Bagian" class="form-control col-md-7 col-xs-12">
+                          <input type="file" id="kop_surat" name="kop_surat" required="required" accept="application/pdf" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Password Bagian <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="lampiran">Lampiran
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="password" id="password_bagian" name="password_bagian" required="required" maxlength="50" placeholder="Masukkan Password Bagian" class="form-control col-md-7 col-xs-12">
+                          <textarea id="lampiran" name="lampiran" class="form-control" rows="3" placeholder='Masukkan Lampiran (Opsional)'></textarea>
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nama Lengkap <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="perihal">Perihal <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" id="nama_lengkap" name="nama_lengkap" required="required" maxlength="70" placeholder="Masukkan Nama Lengkap" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="perihal" name="perihal" required="required" maxlength="200" placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Lahir <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal">Tanggal <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                        <fieldset>
-                          <div class="control-group">
-                            <div class="controls">
-                                <input type="text" class="form-control has-feedback-left" id="single_cal3" name="tanggal_lahir_bagian" placeholder="" aria-describedby="inputSuccess2Status3" required="required">
-                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                <span id="inputSuccess2Status3" class="sr-only">(success)</span>
-                            </div>
+                          <div class='input-group date' id='myDatepicker4'>
+                            <input type='text' id="tanggal" name="tanggal" required="required" class="form-control" readonly="readonly" />
+                            <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
                           </div>
-                        </fieldset>
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Alamat <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kepada">Kepada <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder='Masukkan Alamat'></textarea>
+                          <input type="text" id="kepada" name="kepada" required="required" maxlength="100" placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">No HP <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pembuka">Pembuka <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" onkeyup="validAngka(this)" id="no_hp_bagian" name="no_hp_bagian" required="required" maxlength="12" placeholder="Masukkan Nomor HP" class="form-control col-md-7 col-xs-12">
+                          <textarea id="pembuka" name="pembuka" required="required" class="form-control" rows="3" placeholder='Masukkan Pembuka Surat'></textarea>
                         </div>
                       </div>
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="isi">Isi <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                         <input name="gambar" accept="image/png,image/jpeg,image/jpg" type="file" id="gambar" class="form-control" autocomplete="off"/> *max 2mb 
+                          <textarea id="isi" name="isi" required="required" class="form-control" rows="5" placeholder='Masukkan Isi Surat'></textarea>
                         </div>
                       </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="penutup">Penutup <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                          <textarea id="penutup" name="penutup" required="required" class="form-control" rows="3" placeholder='Masukkan Penutup Surat'></textarea>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="penandatangan_surat">Penandatangan Surat <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                          <input type="text" id="penandatangan_surat" name="penandatangan_surat" required="required" maxlength="100" placeholder="Masukkan Nama Penandatangan Surat" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <a href="databagian.php" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Batal</a>
-                          <button type="submit" name="input" value="Simpan" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Simpan</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                          <button type="reset" class="btn btn-primary">Reset</button>
                         </div>
                       </div>
 
                     </form>
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>
@@ -161,7 +172,7 @@ include "login/ceksession.php";
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Arsip Surat Desa Candirejo Borobudur
           </div>
           <div class="clearfix"></div>
         </footer>
@@ -184,68 +195,16 @@ include "login/ceksession.php";
     <!-- bootstrap-daterangepicker -->
     <script src="../assets/vendors/moment/min/moment.min.js"></script>
     <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <!-- bootstrap-wysiwyg -->
-    <script src="../assets/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-    <script src="../assets/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-    <script src="../assets/vendors/google-code-prettify/src/prettify.js"></script>
-    <!-- jQuery Tags Input -->
-    <script src="../assets/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-    <!-- Switchery -->
-    <script src="../assets/vendors/switchery/dist/switchery.min.js"></script>
-    <!-- Select2 -->
-    <script src="../assets/vendors/select2/dist/js/select2.full.min.js"></script>
-        <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
     <!-- bootstrap-datetimepicker -->    
     <script src="../assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <!-- Parsley -->
-    <script src="../assets/vendors/parsleyjs/dist/parsley.min.js"></script>
-    <!-- Autosize -->
-    <script src="../assets/vendors/autosize/dist/autosize.min.js"></script>
-    <!-- jQuery autocomplete -->
-    <script src="../assets/vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-    <!-- starrr -->
-    <script src="../assets/vendors/starrr/dist/starrr.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="../assets/build/js/custom.min.js"></script>
-	 <!-- Initialize datetimepicker -->
-<script>
-    $('#myDatepicker').datetimepicker();
     
-    $('#myDatepicker2').datetimepicker({
-        format: 'DD.MM.YYYY'
-    });
-    
-    $('#myDatepicker3').datetimepicker({
-        format: 'hh:mm A'
-    });
-    
-    $('#myDatepicker4').datetimepicker({
-        ignoreReadonly: true,
-        allowInputToggle: true
-    });
-
-    $('#datetimepicker6').datetimepicker();
-    
-    $('#datetimepicker7').datetimepicker({
-        useCurrent: false
-    });
-    
-    $("#datetimepicker6").on("dp.change", function(e) {
-        $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-    });
-    
-    $("#datetimepicker7").on("dp.change", function(e) {
-        $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-    });
-</script>
-<script language='javascript'>
-function validAngka(a)
-{
-	if(!/^[0-9.]+$/.test(a.value))
-	{
-	a.value = a.value.substring(0,a.value.length-1000);
-	}
-}
-</script>
+    <!-- Initialize datetimepicker -->
+    <script>
+      $('#myDatepicker4').datetimepicker({
+        format: 'YYYY-MM-DD'
+      });
+    </script>
   </body>
 </html>

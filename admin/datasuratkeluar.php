@@ -11,7 +11,7 @@ include "login/ceksession.php";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Arsip Surat Kota Samarinda </title>
+    <title>Arsip Surat Desa Candirejo Borobudur</title>
 
     <!-- Bootstrap -->
     <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -50,11 +50,6 @@ include "login/ceksession.php";
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
-            <div class="page-title">
-              <div class="title_right">
-                <h2>Surat Keluar ><small> Data Surat Keluar</small></h2>
-              </div>
-            </div>
 
             <div class="clearfix"></div>
 
@@ -62,7 +57,7 @@ include "login/ceksession.php";
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Data<small>Surat Keluar</small></h2>
+                    <h2>Data Surat Keluar</h2>
                     <div class="clearfix"></div>
                   </div>
                    <form action="downloadlaporan_suratkeluar.php"  name="download_suratkeluar" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">

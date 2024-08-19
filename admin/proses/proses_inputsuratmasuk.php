@@ -1,47 +1,85 @@
 <?php
 session_start();
-include "../../koneksi/koneksi.php";// Pastikan ini mengatur $db dengan benar
+include '../../koneksi/koneksi.php';
 
-// Cek apakah form sudah disubmit
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Mengambil data dari form
-    $tanggal_terima = $_POST['tanggal_terima'];
-    $tanggal_surat = $_POST['tanggal_surat'];
-    $nomor_surat = $_POST['nomor_surat'];
-    $pengirim = $_POST['pengirim'];
-    $perihal = $_POST['perihal'];
-    $kode = $_POST['kode'];
-    $keterangan = $_POST['keterangan'];
+if (isset($_POST['submit'])) {
+    // Collect the data from form input
+    $nomor_surat = mysqli_real_escape_string($db, $_POST['nomor_surat']);
+    $tanggal_terima = mysqli_real_escape_string($db, $_POST['tanggal_terima']);
+    $tanggal_surat = mysqli_real_escape_string($db, $_POST['tanggal_surat']);
+    $pengirim = mysqli_real_escape_string($db, $_POST['pengirim']);
+    $perihal = mysqli_real_escape_string($db, $_POST['perihal']);
+    $kode = mysqli_real_escape_string($db, $_POST['kode']);
+    $keterangan = mysqli_real_escape_string($db, $_POST['keterangan']);
     
-    // Mengatur direktori upload
-    $target_dir = "../surat_masuk/";
-    $target_file = $target_dir . basename($_FILES["file_surat"]["name"]);
+    date_default_timezone_set('Asia/Jakarta'); 
+    $tanggal_entry = date("Y-m-d H:i:s");
+    $thnNow = date("Y");
 
-    // Debug informasi file
-    echo '<pre>';
-    print_r($_FILES);
-    echo '</pre>';
+    // Upload file
+    $tipe_file = $_FILES['file_surat']['type'];
+    $ukuran_file = $_FILES['file_surat']['size'];
+    $ext_file = substr($_FILES['file_surat']['name'], strripos($_FILES['file_surat']['name'], '.'));    
+    $tmp_file = $_FILES['file_surat']['tmp_name'];
+    $nama_baru = $thnNow . '-' . $nomor_surat . $ext_file;
+    $path = "/Applications/XAMPP/xamppfiles/htdocs/sidesacandirejo/surat_masuk" . $nama_baru;
 
-    // Cek apakah file berhasil dipindahkan
-    if (move_uploaded_file($_FILES["file_surat"]["tmp_name"], $target_file)) {
-        echo "File ". htmlspecialchars(basename($_FILES["file_surat"]["name"])) . " berhasil diunggah.";
-        
-        // Menyimpan data ke database
-        $query = "INSERT INTO arsip_surat_masuk (tanggal_terima, tanggal_surat, nomor_surat, pengirim, perihal, kode, keterangan, file_surat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($db, $query);
-        mysqli_stmt_bind_param($stmt, "ssssssss", $tanggal_terima, $tanggal_surat, $nomor_surat, $pengirim, $perihal, $kode, $keterangan, $_FILES["file_surat"]["name"]);
-        
-        if (mysqli_stmt_execute($stmt)) {
-            echo "Data berhasil disimpan.";
+    if ($tipe_file == "application/pdf" && $ukuran_file <= 10340000) {
+        if (move_uploaded_file($tmp_file, $path)) {
+            $sql = "INSERT INTO arsip_surat_masuk (nomor_surat, tanggal_terima, tanggal_surat, pengirim, perihal, kode, keterangan, file_surat, tanggal_entry)
+                    VALUES ('$nomor_surat', '$tanggal_terima', '$tanggal_surat', '$pengirim', '$perihal', '$kode', '$keterangan', '$nama_baru', '$tanggal_entry')";
+            $execute = mysqli_query($db, $sql);
+
+            if ($execute) {
+                echo '<script>
+                        Swal.fire({
+                            icon: "success",
+                            title: "Sukses",
+                            text: "Surat masuk telah dimasukkan",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            window.location.href = "../datasuratmasuk.php";
+                        });
+                      </script>';
+            } else {
+                echo '<script>
+                        Swal.fire({
+                            icon: "error",
+                            title: "Gagal",
+                            text: "Terjadi kesalahan saat memasukkan data",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            window.location.href = "../inputsuratmasuk.php";
+                        });
+                      </script>';
+            }
         } else {
-            echo "Gagal menyimpan data: " . mysqli_error($db);
+            echo '<script>
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal",
+                        text: "Gagal mengupload file",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        window.location.href = "../inputsuratmasuk.php";
+                    });
+                  </script>';
         }
-        
-        mysqli_stmt_close($stmt);
     } else {
-        echo "Gagal mengupload file. Error: " . $_FILES["file_surat"]["error"];
+        echo '<script>
+                Swal.fire({
+                    icon: "warning",
+                    title: "Peringatan",
+                    text: "Silahkan isi semua kolom dengan benar dan upload file PDF dengan ukuran maksimal 10MB",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    window.location.href = "../inputsuratmasuk.php";
+                });
+              </script>';
     }
-    
-    mysqli_close($db); // Pastikan $db sudah terdefinisi
 }
 ?>
