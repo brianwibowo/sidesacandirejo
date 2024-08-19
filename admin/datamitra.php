@@ -62,6 +62,33 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
                 <form action="downloadlaporan_mitra.php" name="download_mitra" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                  <div class="col-md-2 col-sm-2 col-xs-6">
+                      <select name="bulan" class="select2_single form-control" tabindex="-1">
+                        <option>Pilih Bulan</option>
+                        <option value="01">Januari</option>
+                        <option value="02">Februari</option>
+                        <option value="03">Maret</option>
+                        <option value="04">April</option>
+                        <option value="05">Mei</option>
+                        <option value="06">Juni</option>
+                        <option value="07">Juli</option>
+                        <option value="08">Agustus</option>
+                        <option value="09">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                      </select>
+                  </div>
+                  <div class="col-md-2 col-sm-2 col-xs-6">
+                    <select name="tahun" class="select2_single form-control" tabindex="-1">
+                      <option>Pilih Tahun</option>
+                      <?php
+                      for ($tahun = 2024; $tahun <= 2030; $tahun++) {
+                        echo  '<option value="' . $tahun . '">' . $tahun . '</option>';
+                      }
+                      ?>
+                    </select>
+                  </div>
                   <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Mitra</button></a>
                   <a href="inputmitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Mitra</button></a>
                 </form>
