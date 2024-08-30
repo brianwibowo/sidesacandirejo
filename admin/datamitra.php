@@ -90,12 +90,12 @@ include "login/ceksession.php";
                     </select>
                   </div>
                   <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Mitra</button></a>
-                  <a href="inputmitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Mitra</button></a>
+                  <a href="inputdatamitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Mitra</button></a>
                 </form>
                 <div class="x_content">
                   <?php
                   include '../koneksi/koneksi.php';
-                  $sql1      = "SELECT * FROM data_mitra ORDER BY id ASC";
+                  $sql1      = "SELECT * FROM tb_data_mitra ORDER BY kode_data ASC";
                   $query1    = mysqli_query($db, $sql1);
                   $total    = mysqli_num_rows($query1);
                   if ($total == 0) {
@@ -104,7 +104,7 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th width="5%">ID</th>
+                          <th width="5%">Kode Data</th>
                           <th width="30%">Nama Pemilik</th>
                           <th width="30%">Nama Usaha</th>
                           <th width="25%">Legalitas Usaha</th>
@@ -116,14 +116,14 @@ include "login/ceksession.php";
                         <?php
                         while ($data = mysqli_fetch_array($query1)) {
                           echo '<tr>
-                              <td>' . htmlspecialchars($data['id']) . '</td>
+                              <td>' . htmlspecialchars($data['kode_data']) . '</td>
                               <td>' . htmlspecialchars($data['nama_pemilik']) . '</td>
                               <td>' . htmlspecialchars($data['nama_usaha']) . '</td>
                               <td>' . htmlspecialchars($data['legalitas_usaha']) . '</td>
                               <td style="text-align:center;">
-                                  <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                  <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                  <a onclick="return konfirmasi()" href="proses/proses_hapusmitra.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                  <a href="detail-mitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                  <a href="editmitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                  <a onclick="return konfirmasi()" href="proses/proses_hapusmitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                               </td>
                           </tr>';
                         }
@@ -143,7 +143,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          Supported by DRTPM 
         </div>
         <div class="clearfix"></div>
       </footer>

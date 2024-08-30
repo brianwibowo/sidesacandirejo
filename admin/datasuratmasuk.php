@@ -105,15 +105,14 @@ include "login/ceksession.php";
                       <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                           <tr>
-                            <th width="3%">No Surat</th>
+                            <th width="10%">Nomor Surat</th>
                             <th width="10%">Tanggal Terima</th>
                             <th width="10%">Tanggal Surat</th>
-                            <th width="20%">Pengirim</th>
-                            <th width="30%">Perihal</th>
-                            <th width="5%">Kode</th>
-                            <th width="10%">Keterangan</th>
-                            <th width="10%">File Surat</th>
-                            <th width="10%">Aksi</th>
+                            <th width="15%">Pengirim</th>
+                            <th width="20%">Perihal</th>
+                            <th width="10%">Kode</th>
+                            <th width="18%">Keterangan</th>
+                            <th width="15%">Aksi</th>
                           </tr>
                         </thead>
 
@@ -122,7 +121,7 @@ include "login/ceksession.php";
                           $query1 = mysqli_query($db, "SELECT * FROM arsip_surat_masuk");
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['no_surat']) . '</td>
+                                <td>' . htmlspecialchars($data['nomor_surat']) . '</td>
                                 <td>' . htmlspecialchars($data['tanggal_terima']) . '</td>
                                 <td>' . htmlspecialchars($data['tanggal_surat']) . '</td>
                                 <td>' . htmlspecialchars($data['pengirim']) . '</td>
@@ -133,8 +132,8 @@ include "login/ceksession.php";
                                     <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
                                 </td>
                                 <td style="text-align:center;">
-                                    <a href="detail-suratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editsuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a href="detail-suratmasuk.php?nomor_surat=' . $data['nomor_surat'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                    <a href="editsuratmasuk.php?nomor_surat=' . $data['nomor_surat'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
                                     <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';
@@ -156,7 +155,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          Supported by DRTPM
         </div>
         <div class="clearfix"></div>
       </footer>

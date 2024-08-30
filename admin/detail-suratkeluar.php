@@ -84,7 +84,7 @@ include "login/ceksession.php";
                     <div class="col-md-12 col-sm-12 col-xs-12">
                       <div class="profile_title">
                         <div class="col-md-6">
-                          <h2>Detail Surat Keluar </h2>
+                          <h2>Detail Surat Keluar</h2>
                         </div>
                       </div>
                       <div class="x_content">
@@ -150,7 +150,7 @@ include "login/ceksession.php";
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Supported by DRTPM <a href="https://colorlib.com">Colorlib</a>
           </div>
           <div class="clearfix"></div>
         </footer>

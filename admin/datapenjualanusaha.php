@@ -96,7 +96,7 @@ include "login/ceksession.php";
                   <div class="x_content">
                     <?php
                     include '../koneksi/koneksi.php';
-                    $sql1      = "SELECT * FROM data_penjualan_usaha ORDER BY id ASC";
+                    $sql1      = "SELECT * FROM tb_data_penjualan_usaha ORDER BY kode_data ASC";
                     $query1    = mysqli_query($db, $sql1);
                     $total    = mysqli_num_rows($query1);
                     if ($total == 0) {
@@ -105,8 +105,8 @@ include "login/ceksession.php";
                       <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                           <tr>
-                            <th width="5%">ID</th>
-                            <th width="20%">Produk</th>
+                            <th width="10%">Kode Data</th>
+                            <th width="15%">Produk</th>
                             <th width="15%">Jumlah</th>
                             <th width="15%">Harga</th>
                             <th width="15%">Total</th>
@@ -118,15 +118,15 @@ include "login/ceksession.php";
                           <?php
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['id']) . '</td>
+                                <td>' . htmlspecialchars($data['kode_data']) . '</td>
                                 <td>' . htmlspecialchars($data['produk']) . '</td>
                                 <td>' . htmlspecialchars($data['jumlah']) . '</td>
                                 <td>' . htmlspecialchars($data['harga']) . '</td>
                                 <td>' . htmlspecialchars($data['total']) . '</td>
                                 <td style="text-align:center;">
-                                    <a href="detail-penjualan.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editpenjualan.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspenjualan.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                    <a href="detail-penjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                    <a href="editpenjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspenjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';
                           }
@@ -147,7 +147,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          Supported by DRTPM
         </div>
         <div class="clearfix"></div>
       </footer>

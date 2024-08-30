@@ -21,7 +21,7 @@ $tmp_file = $_FILES['file_surat']['tmp_name'];
 $tanggal_surat = date('Y-m-d', strtotime($tanggal));
 
 // Ambil data surat keluar berdasarkan ID
-$sql = "SELECT * FROM arsip_surat_keluar WHERE nomor_surat='$id'";
+$sql = "SELECT * FROM tb_arsip_surat_keluar WHERE nomor_surat='$id'";
 $query = mysqli_query($db, $sql);
 $data = mysqli_fetch_array($query);
 

@@ -96,7 +96,7 @@ include "login/ceksession.php";
                   <div class="x_content">
                               <?php
                               include '../koneksi/koneksi.php';
-                              $sql1  		= "SELECT * FROM tb_suratkeluar order by 	id_suratkeluar asc";                        
+                              $sql1  		= "SELECT * FROM tb_arsip_surat_keluar order by nomor_surat asc";                        
                               $query1  	= mysqli_query($db, $sql1);
                               $total		= mysqli_num_rows($query1);
                               if ($total == 0) {
@@ -108,12 +108,11 @@ include "login/ceksession.php";
                         <tr>
                           <th width="15%">Nomor Surat</th>
                           <th width="10%">Tanggal Keluar</th>
-                          <th width="5%">Kode Surat</th>
-                          <th width="10%">Tanggal Surat</th>
-                          <th width="10%">Bagian</th>
-                          <th width="15%">Kepada</th>
-                          <th width="21%">Perihal</th>
-                          <th width="14%">Aksi</th>
+                          <th width="11%">Penerima</th>
+                          <th width="12%">Perihal</th>
+                          <th width="13%">Kode</th>
+                          <th width="20%">Keterangan</th>
+                          <th width="19%">Aksi</th>
                         </tr>
                       </thead>
 
@@ -122,18 +121,18 @@ include "login/ceksession.php";
                             <?php
                             while($data = mysqli_fetch_array($query1)){
                               echo'<tr>
-                              <td>	'. $data['nomor_suratkeluar'].'  	</td>
-                              <td>	'. $data['tanggalkeluar_suratkeluar'].'		</td>
-                              <td>	'. $data['kode_suratkeluar'].'	</td>
-                              <td>	'. $data['tanggalsurat_suratkeluar'].'  		</td>
-                              <td>	'. $data['nama_bagian'].'  		</td>
-                              <td>	'. $data['kepada_suratkeluar'].'		</td>
-                              <td>  '. $data['perihal_suratkeluar'].'  </td> 
+                              <td>	'. $data['nomor_surat'].'  	</td>
+                              <td>	'. $data['tanggal_keluar'].'		</td>
+                              <td>	'. $data['penerima'].'	</td>
+                              <td>	'. $data['perihal'].'  		</td>
+                              <td>	'. $data['kode'].'  		</td>
+                              <td>	'. $data['keterangan'].'		</td>
+                              <td>  '. $data['file_surat'].'  </td> 
                               <td style="text-align:center;">
-                              <a href= surat_keluar/'.$data['file_suratkeluar'].'><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
-                              <a href=detail-suratkeluar.php?id_suratkeluar='.$data['id_suratkeluar'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                              <a href=editsuratkeluar.php?id_suratkeluar='.$data['id_suratkeluar'].'><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                              <a onclick="return konfirmasi()" href=proses/proses_hapussuratkeluar.php?id_suratkeluar='.$data['id_suratkeluar'].'><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
+                              <a href= surat_keluar/'.$data['file_surat'].'><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
+                              <a href=detail-suratkeluar.php?id_suratkeluar='.$data['nomor_surat'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                              <a href=editsuratkeluar.php?id_suratkeluar='.$data['nomor_surat'].'><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                              <a onclick="return konfirmasi()" href=proses/proses_hapussuratkeluar.php?id_suratkeluar='.$data['nomor_surat'].'><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
                               </tr>';
                             }
                             ?>
@@ -152,7 +151,7 @@ include "login/ceksession.php";
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Supported by DRTPM 
           </div>
           <div class="clearfix"></div>
         </footer>

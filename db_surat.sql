@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 18 Agu 2024 pada 17.27
+-- Waktu pembuatan: 22 Agu 2024 pada 19.42
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -102,7 +102,7 @@ CREATE TABLE `tb_buat_surat` (
 --
 
 CREATE TABLE `tb_data_mitra` (
-  `id` int(11) NOT NULL,
+  `kode_data` int(11) NOT NULL,
   `nama_pemilik` varchar(100) NOT NULL,
   `nama_usaha` varchar(100) NOT NULL,
   `legalitas_usaha` text NOT NULL
@@ -115,7 +115,7 @@ CREATE TABLE `tb_data_mitra` (
 --
 
 CREATE TABLE `tb_data_pengunjung` (
-  `id` int(11) NOT NULL,
+  `kode_data` int(11) NOT NULL,
   `pilihan_paket_wisata` varchar(100) NOT NULL,
   `jenis_wisatawan` enum('Domestik','Mancanegara') NOT NULL,
   `kota` varchar(100) DEFAULT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE `tb_data_pengunjung` (
 --
 
 CREATE TABLE `tb_data_penjualan_usaha` (
-  `id` int(11) NOT NULL,
+  `kode_data` int(11) NOT NULL,
   `produk` enum('Paket wisata','Listrik','Pulsa') NOT NULL,
   `jumlah` int(11) NOT NULL,
   `harga` decimal(10,2) NOT NULL,
@@ -173,19 +173,19 @@ ALTER TABLE `tb_buat_surat`
 -- Indeks untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`kode_data`);
 
 --
 -- Indeks untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`kode_data`);
 
 --
 -- Indeks untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`kode_data`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
@@ -201,19 +201,19 @@ ALTER TABLE `tb_admin`
 -- AUTO_INCREMENT untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

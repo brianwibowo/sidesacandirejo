@@ -36,11 +36,11 @@ include "login/ceksession.php";
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
-      <!-- Profile and Sidebarmenu -->
+      <!-- Profile and Sidebar menu -->
       <?php
       include("sidebarmenu.php");
       ?>
-      <!-- /Profile and Sidebarmenu -->
+      <!-- /Profile and Sidebar menu -->
 
       <!-- top navigation -->
       <?php
@@ -61,7 +61,7 @@ include "login/ceksession.php";
                   <h2>Data Pengunjung Wisata</h2>
                   <div class="clearfix"></div>
                 </div>
-                <form action="downloadlaporan_pengunjung.php" name="download_pengunjung" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <form action="downloadlaporan_pengunjung.php" name="download_pengunjung" method="post" enctype="multipart/form-data" class="form-horizontal form-label-left">
                   <div class="col-md-2 col-sm-2 col-xs-6">
                     <select name="bulan" class="select2_single form-control" tabindex="-1">
                       <option>Pilih Bulan</option>
@@ -90,13 +90,13 @@ include "login/ceksession.php";
                     </select>
                   </div>
                   <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Pengunjung</button></a>
-                  <a href="inputpengunjung.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Pengunjung</button></a>
+                  <a href="inputdatapengunjung.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Pengunjung</button></a>
                 </form>
                 <div class="x_content">
                   <div class="x_content">
                     <?php
                     include '../koneksi/koneksi.php';
-                    $sql1      = "SELECT * FROM data_pengunjung ORDER BY id ASC";
+                    $sql1      = "SELECT * FROM tb_data_pengunjung ORDER BY kode_data ASC";
                     $query1    = mysqli_query($db, $sql1);
                     $total    = mysqli_num_rows($query1);
                     if ($total == 0) {
@@ -105,7 +105,7 @@ include "login/ceksession.php";
                       <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                           <tr>
-                            <th>ID</th>
+                            <th>Kode Data</th>
                             <th>Pilihan Paket Wisata</th>
                             <th>Jenis Wisatawan</th>
                             <th>Kota/Negara</th>
@@ -122,7 +122,7 @@ include "login/ceksession.php";
                           while ($data = mysqli_fetch_array($query1)) {
                             $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['id']) . '</td>
+                                <td>' . htmlspecialchars($data['kode_data']) . '</td>
                                 <td>' . htmlspecialchars($data['pilihan_paket_wisata']) . '</td>
                                 <td>' . htmlspecialchars($data['jenis_wisatawan']) . '</td>
                                 <td>' . htmlspecialchars($lokasi) . '</td>
@@ -131,9 +131,9 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['usia']) . '</td>
                                 <td>' . htmlspecialchars($data['agen_wisata']) . '</td>
                                 <td style="text-align:center;">
-                                    <a href="detail-pengunjung.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editpengunjung.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspengunjung.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                    <a href="detail-pengunjung.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                    <a href="editpengunjung.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspengunjung.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';
                           }
@@ -154,7 +154,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          Supported by DRTPM
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -191,6 +191,12 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
+
+  <script type="text/javascript" language="JavaScript">
+    function konfirmasi() {
+      return confirm("Apakah Anda yakin akan menghapus data ini?");
+    }
+  </script>
 </body>
 
 </html>
