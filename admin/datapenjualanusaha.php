@@ -90,7 +90,7 @@ include "login/ceksession.php";
                     </select>
                   </div>
                   <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Penjualan</button></a>
-                  <a href="inputpenjualan.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Data Penjualan</button></a>
+                  <a href="inputdatapenjualan.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Data Penjualan</button></a>
                 </form>
                 <div class="x_content">
                   <div class="x_content">
@@ -106,7 +106,7 @@ include "login/ceksession.php";
                         <thead>
                           <tr>
                             <th width="10%">Kode Data</th>
-                            <th width="15%">Produk</th>
+                            <th width="15%">Jenis Produk</th>
                             <th width="15%">Jumlah</th>
                             <th width="15%">Harga</th>
                             <th width="15%">Total</th>
@@ -119,7 +119,7 @@ include "login/ceksession.php";
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
                                 <td>' . htmlspecialchars($data['kode_data']) . '</td>
-                                <td>' . htmlspecialchars($data['produk']) . '</td>
+                                <td>' . htmlspecialchars($data['jenis_produk']) . '</td>
                                 <td>' . htmlspecialchars($data['jumlah']) . '</td>
                                 <td>' . htmlspecialchars($data['harga']) . '</td>
                                 <td>' . htmlspecialchars($data['total']) . '</td>

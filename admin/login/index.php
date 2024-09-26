@@ -35,7 +35,7 @@
         <div class="animate form login_form">
           <section class="login_content">
             <form action="proses_login.php" id="login" name="login" method="post">
-              <h1>Login Admin</h1>
+              <h1>Login</h1>
               <div class="form-group has-feedback">
                 <input type="text" id="username" name="username_admin" class="form-control" autocomplete="off" maxlength="50" placeholder="Username" required="username" />
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -54,7 +54,7 @@
               <div class="separator">
                 <div>
                   <h2><i class="fa fa-institution"></i>DESA CANDIREJO BOROBUDUR</h2>
-                  <p>©2024 PTIK UNNES</p>
+                  <p>©2024 Apriansyah Wibowo UNNES</p>
                 </div>
               </div>
             </form>
