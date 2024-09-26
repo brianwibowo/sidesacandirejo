@@ -42,7 +42,6 @@ include "koneksi/ceksession.php";
               <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="#main-header">Beranda</a></li>
                 <li class=""><a href="#feature">Tentang</a></li>
-                <li class=""><a href="#portfolio">Pengembang</a></li>
                 <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -110,78 +109,6 @@ include "koneksi/ceksession.php";
         </div>
       </div>
     </section>
-    <!---->
-    <!---->
-    <section id="portfolio" class="section-padding wow fadeInUp delay-05s">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <h2 class="service-title pad-bt15">Pengembang</h2>
-            <p class="sub-title pad-bt15">"SIDESA CANDIREJO BOROBUDUR"</p>
-            <hr class="bottom-line">
-          </div>
-          <div class="col-md-3"></div>
-          <div class="col-md-6 col-sm-6 col-xs-12 portfolio-item padding-right-zero mr-btn-15">
-            <figure>
-              <img src="img/rifki.jpg" class="img-responsive">
-              <figcaption>
-                  <h2>Apriansyah Wibowo</h2>
-                  <p>"Pend. Teknik Informatika dan Komputer UNNES"</p>
-                  <p>"Urip iku Urup"</p>
-              </figcaption>
-            </figure>
-          </div>
-          <div class="col-md-3"></div>
-        </div>
-        <hr class="bottom-line">
-      </div>
-    </section>
-    <!---->
-    <!---->
-    <section id="testimonial" class="wow fadeInUp delay-05s">
-      <div class="bg-testicolor">
-        <div class="container section-padding">
-        <div class="row">
-          <div class="testimonial-item">
-            <ul class="bxslider">
-              <li>
-                <blockquote>
-                  <img src="img/Grafikartes-Flat-Retro-Modern-Maps.ico" class="img-responsive">
-                  <p>Talent wins games, but teamwork and intelligence win championships. </p>
-                </blockquote>
-                <small>Michael Jordan</small>
-              </li>
-              <li>
-                <blockquote>
-                  <img src="img/Grafikartes-Flat-Retro-Modern-Maps.ico" class="img-responsive">
-                  <p>Alone we can do so little, together we can do so much.</p>
-                </blockquote>
-                <small>Helen Keller</small>
-              </li>
-              <li>
-                <blockquote>
-                  <img src="img/Grafikartes-Flat-Retro-Modern-Maps.ico" class="img-responsive">
-                  <p>None of us is as smart as all of us.</p>
-                </blockquote>
-                <small>Ken Blanchard</small>
-              </li>
-              <li>
-                <blockquote>
-                  <img src="img/Grafikartes-Flat-Retro-Modern-Maps.ico" class="img-responsive">
-                  <p>Coming together is a beginning. Keeping together is progress. Working together is success.</p>
-                </blockquote>
-                <small>Henry Ford</small>
-              </li>
-            </ul>
-          </div>
-        </div>
-        </div>
-      </div>
-    </section>
-    <!---->
-    <!---->
-    <!---->
-    <!---->
     <footer id="footer">
       <div class="container">
         <div class="row text-center">
