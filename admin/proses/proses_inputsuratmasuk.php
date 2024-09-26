@@ -33,12 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   VALUES ('$tanggal_terima', '$tanggal_surat', '$nomor_surat', '$pengirim', '$perihal', '$kode', '$keterangan', '$destination')";
 
         if (mysqli_query($koneksi, $query)) {
-            echo "<script>alert('Data berhasil disimpan!'); window.location='../inputsuratmasuk.php';</script>";
+            echo "<script>alert('Data berhasil disimpan!'); window.location='../datasuratmasuk.php';</script>";
         } else {
-            echo "<script>alert('Terjadi kesalahan: " . mysqli_error($koneksi) . "'); window.location='../inputsuratmasuk.php';</script>";
+            echo "<script>alert('Terjadi kesalahan: " . mysqli_error($koneksi) . "'); window.location='../datasuratmasuk.php';</script>";
         }
     } else {
-        echo "<script>alert('File gagal diupload!'); window.location='../inputsuratmasuk.php';</script>";
+        echo "<script>alert('File gagal diupload!'); window.location='../datasuratmasuk.php';</script>";
     }
 }
 

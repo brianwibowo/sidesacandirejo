@@ -1,131 +1,56 @@
 <?php
-session_start();
-include '../../koneksi/koneksi.php';
+$server   = "localhost";
+$username = "root";
+$password = "";
+$database = "db_surat";
 
-$nomor_surat = mysqli_real_escape_string($db, $_POST['nomor_surat']);
-$tanggal_terima = mysqli_real_escape_string($db, $_POST['tanggal_terima']);
-$tanggal_surat = mysqli_real_escape_string($db, $_POST['tanggal_surat']);
-$pengirim = mysqli_real_escape_string($db, $_POST['pengirim']);
-$perihal = mysqli_real_escape_string($db, $_POST['perihal']);
-$kode = mysqli_real_escape_string($db, $_POST['kode']);
-$keterangan = mysqli_real_escape_string($db, $_POST['keterangan']);
+// Koneksi ke database
+$koneksi = mysqli_connect($server, $username, $password, $database);
 
-date_default_timezone_set('Asia/Jakarta'); 
-$thnNow = date("Y");
+// Ambil data dari form
+$id = $_POST['id'];
+$tanggal_terima = $_POST['tanggal_masuk'];
+$tanggal_surat = $_POST['tanggalsurat_suratmasuk'];
+$nomor_surat = $_POST['nomor_suratmasuk'];
+$pengirim = $_POST['pengirim'];
+$perihal = $_POST['perihal'];
+$kode = $_POST['kode'];
 
-// Convert dates to the correct format
-$tgl_terima = date('Y-m-d', strtotime($tanggal_terima));
-$tgl_surat = date('Y-m-d', strtotime($tanggal_surat));
 
-// Retrieve the file information from the database based on nomor_surat
-$sql = "SELECT * FROM arsip_surat_masuk WHERE nomor_surat='$nomor_surat'";
-$query = mysqli_query($db, $sql);
-$data = mysqli_fetch_array($query);
+// Variabel untuk menyimpan nama file baru
+$nama_file = null;
 
-if ($_FILES['file_surat']['name'] == '') {
-    $ext = substr($data['file_surat'], strripos($data['file_surat'], '.'));    
-    $nama_baru = $thnNow . '-' . $nomor_surat . $ext;
-    rename("../surat_masuk/" . $data['file_surat'], "../surat_masuk/" . $nama_baru);
+// Cek apakah file baru di-upload
+if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR_OK) {
+    // Format tanggal dan jam
+    $tanggal = date('Y-m-d', strtotime($tanggal_surat));
+    $jam = date('H-i-s');
+    $nama_file = strtolower(str_replace(' ', '_', $pengirim)) . "_{$tanggal}_{$jam}.pdf";
 
-    $sql = "UPDATE arsip_surat_masuk SET 
-                tanggal_terima = '$tgl_terima',
-                tanggal_surat = '$tgl_surat',
-                pengirim = '$pengirim',
-                perihal = '$perihal',
-                kode = '$kode',
-                keterangan = '$keterangan',
-                file_surat = '$nama_baru' 
-            WHERE nomor_surat = '$nomor_surat'";
-    
-    $execute = mysqli_query($db, $sql);            
+    // Path untuk menyimpan file
+    $target_dir = "../uploads/";
+    $destination = $target_dir . $nama_file;
 
-    if ($execute) {
-        echo '<script>
-                Swal.fire({
-                    icon: "success",
-                    title: "Sukses",
-                    text: "Data surat masuk telah diubah",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(function() {
-                    window.location.href = "../detail-suratmasuk.php?nomor_surat='.$nomor_surat.'";
-                });
-              </script>';
+    // Memindahkan file ke direktori tujuan
+    if (move_uploaded_file($_FILES['file_surat']['tmp_name'], $destination)) {
+        // Jika file baru berhasil dipindahkan, update nama file di database
+        $query = "UPDATE tb_arsip_surat_masuk SET tanggal_terima='$tanggal_terima', tanggal_surat='$tanggal_surat', nomor_surat='$nomor_surat', pengirim='$pengirim', perihal='$perihal', kode='$kode' , file_path='$destination' WHERE id='$id'";
     } else {
-        echo '<script>
-                Swal.fire({
-                    icon: "error",
-                    title: "Gagal",
-                    text: "Terjadi kesalahan saat mengubah data",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(function() {
-                    window.location.href = "../editsuratmasuk.php?nomor_surat='.$nomor_surat.'";
-                });
-              </script>';
+        echo "Gagal memindahkan file.";
+        exit;
     }
 } else {
-    $tipe_file = $_FILES['file_surat']['type'];
-    $ukuran_file = $_FILES['file_surat']['size'];
-    $ext_file = substr($_FILES['file_surat']['name'], strripos($_FILES['file_surat']['name'], '.'));            
-    $tmp_file = $_FILES['file_surat']['tmp_name'];
-    
-    $nama_baru = $thnNow . '-' . $nomor_surat . $ext_file;
-    $path = "../surat_masuk/" . $nama_baru;
-
-    if ($tipe_file == "application/pdf" && $ukuran_file <= 10340000) {
-        unlink("../surat_masuk/" . $data['file_surat']);
-        move_uploaded_file($tmp_file, $path);
-        
-        $sql = "UPDATE arsip_surat_masuk SET 
-                    tanggal_terima = '$tgl_terima',
-                    tanggal_surat = '$tgl_surat',
-                    pengirim = '$pengirim',
-                    perihal = '$perihal',
-                    kode = '$kode',
-                    keterangan = '$keterangan',
-                    file_surat = '$nama_baru' 
-                WHERE nomor_surat = '$nomor_surat'";
-        
-        $execute = mysqli_query($db, $sql);            
-
-        if ($execute) {
-            echo '<script>
-                    Swal.fire({
-                        icon: "success",
-                        title: "Sukses",
-                        text: "Data surat masuk telah diubah",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        window.location.href = "../detail-suratmasuk.php?nomor_surat='.$nomor_surat.'";
-                    });
-                  </script>';
-        } else {
-            echo '<script>
-                    Swal.fire({
-                        icon: "error",
-                        title: "Gagal",
-                        text: "Terjadi kesalahan saat mengubah data",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        window.location.href = "../editsuratmasuk.php?nomor_surat='.$nomor_surat.'";
-                    });
-                  </script>';
-        }
-    } else {
-        echo '<script>
-                Swal.fire({
-                    icon: "warning",
-                    title: "Peringatan",
-                    text: "File yang Anda masukkan tidak sesuai ketentuan. Silahkan ulangi",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(function() {
-                    window.location.href = "../editsuratmasuk.php?nomor_surat='.$nomor_surat.'";
-                });
-              </script>';
-    }
+    // Jika tidak ada file baru, tetap gunakan file lama
+    $query = "UPDATE tb_arsip_surat_masuk SET tanggal_terima='$tanggal_terima', tanggal_surat='$tanggal_surat', nomor_surat='$nomor_surat', pengirim='$pengirim', perihal='$perihal', kode='$kode' WHERE id='$id'";
 }
+
+// Eksekusi query
+if (mysqli_query($koneksi, $query)) {
+    echo "<script>alert('Data berhasil diedit'); window.location='../datasuratmasuk.php';</script>";
+} else {
+    echo "Error: " . mysqli_error($koneksi);
+}
+
+// Tutup koneksi
+mysqli_close($koneksi);
 ?>

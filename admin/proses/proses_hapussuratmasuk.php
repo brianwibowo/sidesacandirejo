@@ -1,47 +1,40 @@
 <?php
-session_start();
-include '../../koneksi/koneksi.php';
+$server   = "localhost";
+$username = "root";
+$password = "";
+$database = "db_surat";
 
-if (isset($_GET['id_suratmasuk'])) {
-    $id = $_GET['id_suratmasuk'];
+// Koneksi ke database
+$koneksi = mysqli_connect($server, $username, $password, $database);
 
-    $sql2 = "SELECT * FROM tb_suratmasuk WHERE id_suratmasuk='".$id."'";                        
-    $query2 = mysqli_query($db, $sql2);
-    $data2 = mysqli_fetch_array($query2);
-    $total = mysqli_num_rows($query2);
+// Ambil ID dari URL
+$id = $_GET['id'];
 
-    if ($total == 0) {
-        echo '<script>alert("Data tidak ditemukan!"); window.history.back();</script>';
-    } else {
-        $sql = "DELETE FROM tb_suratmasuk WHERE id_suratmasuk='".$id."'";                        
-        $query = mysqli_query($db, $sql);
+// Pertama, ambil informasi file_path dari database
+$query_get_file = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE id='$id'";
+$result_get_file = mysqli_query($koneksi, $query_get_file);
 
-        if ($query) {
-            unlink("../surat_masuk/".$data2['file_suratmasuk']);
-            echo '<script>
-                    Swal.fire({
-                        icon: "success",
-                        title: "Sukses",
-                        text: "Data Surat Masuk telah Dihapus",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        window.location.href = "../datasuratmasuk.php";
-                    });
-                  </script>';
-        } else {
-            echo '<script>
-                    Swal.fire({
-                        icon: "error",
-                        title: "Gagal",
-                        text: "Gagal Menghapus Data Surat Masuk",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        window.location.href = "../datasuratmasuk.php";
-                    });
-                  </script>';
+if ($result_get_file) {
+    $data = mysqli_fetch_assoc($result_get_file);
+    $file_path = $data['file_surat'];
+
+    // Hapus record dari database
+    $query_delete = "DELETE FROM tb_arsip_surat_masuk WHERE id='$id'";
+
+    if (mysqli_query($koneksi, $query_delete)) {
+        // Jika berhasil menghapus record, hapus file dari server
+        if (file_exists($file_path)) {
+            unlink($file_path); // Menghapus file
         }
+        echo "Data surat masuk dan file berhasil dihapus.";
+        header("Location: ../datasuratmasuk.php"); // Redirect ke halaman daftar surat
+    } else {
+        echo "Error: " . mysqli_error($koneksi);
     }
+} else {
+    echo "Error: " . mysqli_error($koneksi);
 }
+
+// Tutup koneksi
+mysqli_close($koneksi);
 ?>
