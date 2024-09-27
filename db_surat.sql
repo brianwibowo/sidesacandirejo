@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 22 Agu 2024 pada 19.42
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: localhost:3306
+-- Generation Time: Sep 27, 2024 at 04:13 AM
+-- Server version: 8.0.30
+-- PHP Version: 8.3.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,19 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_admin`
+-- Table structure for table `tb_admin`
 --
 
 CREATE TABLE `tb_admin` (
-  `id_admin` int(10) NOT NULL,
+  `id_admin` int NOT NULL,
   `nama_admin` varchar(50) NOT NULL,
   `username_admin` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `gambar` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `tb_admin`
+-- Dumping data for table `tb_admin`
 --
 
 INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, `gambar`) VALUES
@@ -46,98 +46,100 @@ INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_arsip_surat_keluar`
+-- Table structure for table `tb_arsip_surat_keluar`
 --
 
 CREATE TABLE `tb_arsip_surat_keluar` (
-  `nomor_surat` varchar(50) NOT NULL,
+  `id` int NOT NULL,
+  `nomor_surat` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_keluar` date NOT NULL,
-  `penerima` varchar(100) NOT NULL,
-  `perihal` varchar(200) NOT NULL,
-  `kode` varchar(20) NOT NULL,
-  `keterangan` text DEFAULT NULL,
-  `file_surat` varchar(255) NOT NULL
+  `penerima` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `perihal` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `kode` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `keterangan` text COLLATE utf8mb4_general_ci,
+  `file_surat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_arsip_surat_masuk`
+-- Table structure for table `tb_arsip_surat_masuk`
 --
 
 CREATE TABLE `tb_arsip_surat_masuk` (
-  `nomor_surat` varchar(50) NOT NULL,
+  `id` int NOT NULL,
+  `nomor_surat` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_terima` date NOT NULL,
   `tanggal_surat` date NOT NULL,
-  `pengirim` varchar(100) NOT NULL,
-  `perihal` varchar(200) NOT NULL,
-  `kode` varchar(20) NOT NULL,
-  `keterangan` text DEFAULT NULL,
-  `file_surat` varchar(255) NOT NULL
+  `pengirim` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `perihal` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `kode` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `keterangan` text COLLATE utf8mb4_general_ci,
+  `file_surat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_buat_surat`
+-- Table structure for table `tb_buat_surat`
 --
 
 CREATE TABLE `tb_buat_surat` (
-  `nomor_surat` varchar(50) NOT NULL,
-  `kop_surat` varchar(255) NOT NULL,
-  `lampiran` text DEFAULT NULL,
-  `perihal` varchar(200) NOT NULL,
+  `nomor_surat` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `kop_surat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lampiran` text COLLATE utf8mb4_general_ci,
+  `perihal` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal` date NOT NULL,
-  `kepada` varchar(100) NOT NULL,
-  `pembuka` text NOT NULL,
-  `isi` text NOT NULL,
-  `penutup` text NOT NULL,
-  `penandatangan_surat` varchar(100) NOT NULL
+  `kepada` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `pembuka` text COLLATE utf8mb4_general_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_general_ci NOT NULL,
+  `penutup` text COLLATE utf8mb4_general_ci NOT NULL,
+  `penandatangan_surat` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_data_mitra`
+-- Table structure for table `tb_data_mitra`
 --
 
 CREATE TABLE `tb_data_mitra` (
-  `kode_data` int(11) NOT NULL,
-  `nama_pemilik` varchar(100) NOT NULL,
-  `nama_usaha` varchar(100) NOT NULL,
-  `legalitas_usaha` text NOT NULL
+  `kode_data` int NOT NULL,
+  `nama_pemilik` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_usaha` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `legalitas_usaha` text COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_data_pengunjung`
+-- Table structure for table `tb_data_pengunjung`
 --
 
 CREATE TABLE `tb_data_pengunjung` (
-  `kode_data` int(11) NOT NULL,
-  `pilihan_paket_wisata` varchar(100) NOT NULL,
-  `jenis_wisatawan` enum('Domestik','Mancanegara') NOT NULL,
-  `kota` varchar(100) DEFAULT NULL,
-  `negara` varchar(100) DEFAULT NULL,
-  `nama` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `usia` int(11) NOT NULL,
-  `agen_wisata` varchar(100) DEFAULT NULL
+  `kode_data` int NOT NULL,
+  `pilihan_paket_wisata` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `jenis_wisatawan` enum('Domestik','Mancanegara') COLLATE utf8mb4_general_ci NOT NULL,
+  `kota` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `negara` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `jenis_kelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `usia` int NOT NULL,
+  `agen_wisata` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_data_penjualan_usaha`
+-- Table structure for table `tb_data_penjualan_usaha`
 --
 
 CREATE TABLE `tb_data_penjualan_usaha` (
-  `kode_data` int(11) NOT NULL,
-  `produk` enum('Paket wisata','Listrik','Pulsa') NOT NULL,
-  `jumlah` int(11) NOT NULL,
+  `kode_data` int NOT NULL,
+  `produk` enum('Paket wisata','Listrik','Pulsa') COLLATE utf8mb4_general_ci NOT NULL,
+  `jumlah` int NOT NULL,
   `harga` decimal(10,2) NOT NULL,
-  `total` decimal(10,2) GENERATED ALWAYS AS (`jumlah` * `harga`) STORED
+  `total` decimal(10,2) GENERATED ALWAYS AS ((`jumlah` * `harga`)) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -145,75 +147,87 @@ CREATE TABLE `tb_data_penjualan_usaha` (
 --
 
 --
--- Indeks untuk tabel `tb_admin`
+-- Indexes for table `tb_admin`
 --
 ALTER TABLE `tb_admin`
   ADD PRIMARY KEY (`id_admin`),
   ADD UNIQUE KEY `username_admin` (`username_admin`);
 
 --
--- Indeks untuk tabel `tb_arsip_surat_keluar`
+-- Indexes for table `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
-  ADD PRIMARY KEY (`nomor_surat`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `tb_arsip_surat_masuk`
+-- Indexes for table `tb_arsip_surat_masuk`
 --
 ALTER TABLE `tb_arsip_surat_masuk`
-  ADD PRIMARY KEY (`nomor_surat`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `tb_buat_surat`
+-- Indexes for table `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
   ADD PRIMARY KEY (`nomor_surat`);
 
 --
--- Indeks untuk tabel `tb_data_mitra`
+-- Indexes for table `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
   ADD PRIMARY KEY (`kode_data`);
 
 --
--- Indeks untuk tabel `tb_data_pengunjung`
+-- Indexes for table `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
   ADD PRIMARY KEY (`kode_data`);
 
 --
--- Indeks untuk tabel `tb_data_penjualan_usaha`
+-- Indexes for table `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
   ADD PRIMARY KEY (`kode_data`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `tb_admin`
+-- AUTO_INCREMENT for table `tb_admin`
 --
 ALTER TABLE `tb_admin`
-  MODIFY `id_admin` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_admin` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_data_mitra`
+-- AUTO_INCREMENT for table `tb_arsip_surat_keluar`
+--
+ALTER TABLE `tb_arsip_surat_keluar`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tb_arsip_surat_masuk`
+--
+ALTER TABLE `tb_arsip_surat_masuk`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
+-- AUTO_INCREMENT for table `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
+-- AUTO_INCREMENT for table `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  MODIFY `kode_data` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

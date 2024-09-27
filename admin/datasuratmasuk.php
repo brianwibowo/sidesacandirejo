@@ -133,9 +133,7 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['kode']) . '</td>
                                 <td>' . htmlspecialchars($data['keterangan']) . '</td>
                                 <td style="text-align:center;">
-                                    <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
-                                </td>
-                                <td style="text-align:center;">
+                                <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
                                     <a href="detail-suratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
                                     <a href="editsuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
                                     <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
