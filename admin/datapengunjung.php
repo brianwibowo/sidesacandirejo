@@ -90,8 +90,9 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan
-                    Pengunjung</button></a>
+                  <a href="export/export_data_pengunjung.php" class="btn btn-success"><i class="fa fa-download"></i>
+                    Unduh Laporan
+                    Pengunjung</></a>
                   <a href="inputdatapengunjung.php"><button type="button" class="btn btn-success"><i
                         class="fa fa-plus"></i> Tambah Pengunjung</button></a>
                 </form>
