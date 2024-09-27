@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 27, 2024 at 04:13 AM
+-- Generation Time: Sep 27, 2024 at 04:19 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.8
 
@@ -85,6 +85,7 @@ CREATE TABLE `tb_arsip_surat_masuk` (
 --
 
 CREATE TABLE `tb_buat_surat` (
+  `id` int NOT NULL,
   `nomor_surat` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `kop_surat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `lampiran` text COLLATE utf8mb4_general_ci,
@@ -104,6 +105,7 @@ CREATE TABLE `tb_buat_surat` (
 --
 
 CREATE TABLE `tb_data_mitra` (
+  `id` int NOT NULL,
   `kode_data` int NOT NULL,
   `nama_pemilik` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `nama_usaha` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
@@ -117,6 +119,7 @@ CREATE TABLE `tb_data_mitra` (
 --
 
 CREATE TABLE `tb_data_pengunjung` (
+  `id` int NOT NULL,
   `kode_data` int NOT NULL,
   `pilihan_paket_wisata` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `jenis_wisatawan` enum('Domestik','Mancanegara') COLLATE utf8mb4_general_ci NOT NULL,
@@ -135,6 +138,7 @@ CREATE TABLE `tb_data_pengunjung` (
 --
 
 CREATE TABLE `tb_data_penjualan_usaha` (
+  `id` int NOT NULL,
   `kode_data` int NOT NULL,
   `produk` enum('Paket wisata','Listrik','Pulsa') COLLATE utf8mb4_general_ci NOT NULL,
   `jumlah` int NOT NULL,
@@ -169,25 +173,25 @@ ALTER TABLE `tb_arsip_surat_masuk`
 -- Indexes for table `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
-  ADD PRIMARY KEY (`nomor_surat`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  ADD PRIMARY KEY (`kode_data`);
+  ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
 -- Indexes for table `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  ADD PRIMARY KEY (`kode_data`);
+  ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
 -- Indexes for table `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  ADD PRIMARY KEY (`kode_data`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -212,22 +216,28 @@ ALTER TABLE `tb_arsip_surat_masuk`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `tb_buat_surat`
+--
+ALTER TABLE `tb_buat_surat`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  MODIFY `kode_data` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
