@@ -1,11 +1,5 @@
 <?php
-$server   = "localhost";
-$username = "root";
-$password = "";
-$database = "db_surat";
-
-// Koneksi ke database
-$koneksi = mysqli_connect($server, $username, $password, $database);
+include '../../koneksi/koneksi.php';
 
 // Ambil data dari form
 $id = $_POST['id'];
@@ -19,6 +13,10 @@ $kode = $_POST['kode'];
 
 // Variabel untuk menyimpan nama file baru
 $nama_file = null;
+$query_get_file = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE id='$id'";
+$result = mysqli_query($db, $query_get_file);
+$row = mysqli_fetch_assoc($result);
+$file_lama = $row['file_surat'];
 
 // Cek apakah file baru di-upload
 if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR_OK) {
@@ -33,8 +31,11 @@ if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR
 
     // Memindahkan file ke direktori tujuan
     if (move_uploaded_file($_FILES['file_surat']['tmp_name'], $destination)) {
+        if (file_exists($file_lama)) {
+            unlink($file_lama);
+        }
         // Jika file baru berhasil dipindahkan, update nama file di database
-        $query = "UPDATE tb_arsip_surat_masuk SET tanggal_terima='$tanggal_terima', tanggal_surat='$tanggal_surat', nomor_surat='$nomor_surat', pengirim='$pengirim', perihal='$perihal', kode='$kode' , file_path='$destination' WHERE id='$id'";
+        $query = "UPDATE tb_arsip_surat_masuk SET tanggal_terima='$tanggal_terima', tanggal_surat='$tanggal_surat', nomor_surat='$nomor_surat', pengirim='$pengirim', perihal='$perihal', kode='$kode' , file_surat='$destination' WHERE id='$id'";
     } else {
         echo "Gagal memindahkan file.";
         exit;
@@ -45,12 +46,11 @@ if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR
 }
 
 // Eksekusi query
-if (mysqli_query($koneksi, $query)) {
-    echo "<script>alert('Data berhasil diedit'); window.location='../datasuratmasuk.php';</script>";
+if (mysqli_query($db, $query)) {
+    echo "<script>alert('Data berhasil diedit');; window.location='../datasuratmasuk.php';</script>";
 } else {
-    echo "Error: " . mysqli_error($koneksi);
+    echo "Error: " . mysqli_error($db);
 }
 
 // Tutup koneksi
-mysqli_close($koneksi);
-?>
+mysqli_close($db);

@@ -1,12 +1,7 @@
 <?php
 // Menghubungkan ke database
-$server   = "localhost";
-$username = "root";
-$password = "";
-$database = "db_surat";
 
-// Koneksi ke database
-$koneksi = mysqli_connect($server, $username, $password, $database);
+include '../../koneksi/koneksi.php';
 
 
 // Cek apakah form disubmit
@@ -32,10 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $query = "INSERT INTO tb_arsip_surat_masuk (tanggal_terima, tanggal_surat, nomor_surat, pengirim, perihal, kode, keterangan, file_surat) 
                   VALUES ('$tanggal_terima', '$tanggal_surat', '$nomor_surat', '$pengirim', '$perihal', '$kode', '$keterangan', '$destination')";
 
-        if (mysqli_query($koneksi, $query)) {
+        if (mysqli_query($db, $query)) {
             echo "<script>alert('Data berhasil disimpan!'); window.location='../datasuratmasuk.php';</script>";
         } else {
-            echo "<script>alert('Terjadi kesalahan: " . mysqli_error($koneksi) . "'); window.location='../datasuratmasuk.php';</script>";
+            echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "'); window.location='../datasuratmasuk.php';</script>";
         }
     } else {
         echo "<script>alert('File gagal diupload!'); window.location='../datasuratmasuk.php';</script>";
@@ -43,4 +38,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 
-mysqli_close($koneksi);
+mysqli_close($db);
