@@ -61,7 +61,9 @@ include "login/ceksession.php";
                   <h2>Data Penjualan Usaha</h2>
                   <div class="clearfix"></div>
                 </div>
-                <form action="downloadlaporan_penjualan.php" name="download_penjualan" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <form action="downloadlaporan_penjualan.php" name="download_penjualan" method="post"
+                  enctype="multipart/form-data" id="demo-form2" data-parsley-validate
+                  class="form-horizontal form-label-left">
                   <div class="col-md-2 col-sm-2 col-xs-6">
                     <select name="bulan" class="select2_single form-control" tabindex="-1">
                       <option>Pilih Bulan</option>
@@ -89,8 +91,10 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Penjualan</button></a>
-                  <a href="inputdatapenjualan.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Data Penjualan</button></a>
+                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan
+                    Penjualan</button></a>
+                  <a href="inputdatapenjualan.php"><button type="button" class="btn btn-success"><i
+                        class="fa fa-plus"></i> Tambah Data Penjualan</button></a>
                 </form>
                 <div class="x_content">
                   <div class="x_content">
@@ -102,37 +106,37 @@ include "login/ceksession.php";
                     if ($total == 0) {
                       echo "<center><h2>Belum Ada Data Penjualan</h2></center>";
                     } else { ?>
-                      <table id="datatable" class="table table-striped table-bordered">
-                        <thead>
-                          <tr>
-                            <th width="10%">Kode Data</th>
-                            <th width="15%">Jenis Produk</th>
-                            <th width="15%">Jumlah</th>
-                            <th width="15%">Harga</th>
-                            <th width="15%">Total</th>
-                            <th width="10%">Aksi</th>
-                          </tr>
-                        </thead>
+                    <table id="datatable" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th width="10%">Kode Data</th>
+                          <th width="15%">Jenis Produk</th>
+                          <th width="15%">Jumlah</th>
+                          <th width="15%">Harga</th>
+                          <th width="15%">Total</th>
+                          <th width="10%">Aksi</th>
+                        </tr>
+                      </thead>
 
-                        <tbody>
-                          <?php
+                      <tbody>
+                        <?php
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
                                 <td>' . htmlspecialchars($data['kode_data']) . '</td>
-                                <td>' . htmlspecialchars($data['jenis_produk']) . '</td>
+                                <td>' . htmlspecialchars($data['produk']) . '</td>
                                 <td>' . htmlspecialchars($data['jumlah']) . '</td>
                                 <td>' . htmlspecialchars($data['harga']) . '</td>
                                 <td>' . htmlspecialchars($data['total']) . '</td>
                                 <td style="text-align:center;">
-                                    <a href="detail-penjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editpenjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspenjualan.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                    <a href="detail-penjualan.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                    <a href="editpenjualan.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a onclick="return konfirmasi()" href="proses/proses_hapuspenjualan.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';
                           }
                           ?>
-                        </tbody>
-                      </table>
+                      </tbody>
+                    </table>
 
                     <?php } ?>
                   </div>
@@ -185,11 +189,11 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
   <script type="text/javascript" language="JavaScript">
-    function konfirmasi() {
-      tanya = confirm("Anda yakin ingin menghapus data ini?");
-      if (tanya == true) return true;
-      else return false;
-    }
+  function konfirmasi() {
+    tanya = confirm("Anda yakin ingin menghapus data ini?");
+    if (tanya == true) return true;
+    else return false;
+  }
   </script>
 </body>
 
