@@ -24,5 +24,4 @@ if ($result_get_file) {
     echo "Error: " . mysqli_error($db);
 }
 
-// Tutup db
 mysqli_close($db);

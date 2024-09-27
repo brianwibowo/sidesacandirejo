@@ -61,23 +61,25 @@ include "login/ceksession.php";
                   <h2>Data Mitra</h2>
                   <div class="clearfix"></div>
                 </div>
-                <form action="downloadlaporan_mitra.php" name="download_mitra" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <form action="downloadlaporan_mitra.php" name="download_mitra" method="post"
+                  enctype="multipart/form-data" id="demo-form2" data-parsley-validate
+                  class="form-horizontal form-label-left">
                   <div class="col-md-2 col-sm-2 col-xs-6">
-                      <select name="bulan" class="select2_single form-control" tabindex="-1">
-                        <option>Pilih Bulan</option>
-                        <option value="01">Januari</option>
-                        <option value="02">Februari</option>
-                        <option value="03">Maret</option>
-                        <option value="04">April</option>
-                        <option value="05">Mei</option>
-                        <option value="06">Juni</option>
-                        <option value="07">Juli</option>
-                        <option value="08">Agustus</option>
-                        <option value="09">September</option>
-                        <option value="10">Oktober</option>
-                        <option value="11">November</option>
-                        <option value="12">Desember</option>
-                      </select>
+                    <select name="bulan" class="select2_single form-control" tabindex="-1">
+                      <option>Pilih Bulan</option>
+                      <option value="01">Januari</option>
+                      <option value="02">Februari</option>
+                      <option value="03">Maret</option>
+                      <option value="04">April</option>
+                      <option value="05">Mei</option>
+                      <option value="06">Juni</option>
+                      <option value="07">Juli</option>
+                      <option value="08">Agustus</option>
+                      <option value="09">September</option>
+                      <option value="10">Oktober</option>
+                      <option value="11">November</option>
+                      <option value="12">Desember</option>
+                    </select>
                   </div>
                   <div class="col-md-2 col-sm-2 col-xs-6">
                     <select name="tahun" class="select2_single form-control" tabindex="-1">
@@ -89,8 +91,10 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan Mitra</button></a>
-                  <a href="inputdatamitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Mitra</button></a>
+                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan
+                    Mitra</button></a>
+                  <a href="inputdatamitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i>
+                      Tambah Mitra</button></a>
                 </form>
                 <div class="x_content">
                   <?php
@@ -101,19 +105,19 @@ include "login/ceksession.php";
                   if ($total == 0) {
                     echo "<center><h2>Belum Ada Data Mitra</h2></center>";
                   } else { ?>
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th width="5%">Kode Data</th>
-                          <th width="30%">Nama Pemilik</th>
-                          <th width="30%">Nama Usaha</th>
-                          <th width="25%">Legalitas Usaha</th>
-                          <th width="10%">Aksi</th>
-                        </tr>
-                      </thead>
+                  <table id="datatable" class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th width="5%">Kode Data</th>
+                        <th width="30%">Nama Pemilik</th>
+                        <th width="30%">Nama Usaha</th>
+                        <th width="25%">Legalitas Usaha</th>
+                        <th width="10%">Aksi</th>
+                      </tr>
+                    </thead>
 
-                      <tbody>
-                        <?php
+                    <tbody>
+                      <?php
                         while ($data = mysqli_fetch_array($query1)) {
                           echo '<tr>
                               <td>' . htmlspecialchars($data['kode_data']) . '</td>
@@ -121,15 +125,15 @@ include "login/ceksession.php";
                               <td>' . htmlspecialchars($data['nama_usaha']) . '</td>
                               <td>' . htmlspecialchars($data['legalitas_usaha']) . '</td>
                               <td style="text-align:center;">
-                                  <a href="detail-mitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                  <a href="editmitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                  <a onclick="return konfirmasi()" href="proses/proses_hapusmitra.php?kode_data=' . $data['kode_data'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                  <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                  <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                  <a onclick="return konfirmasi()" href="proses/proses_hapusmitra.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                               </td>
                           </tr>';
                         }
                         ?>
-                      </tbody>
-                    </table>
+                    </tbody>
+                  </table>
 
                   <?php } ?>
                 </div>
@@ -143,7 +147,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-          Supported by DRTPM 
+          Supported by DRTPM
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -181,11 +185,11 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
   <script type="text/javascript" language="JavaScript">
-    function konfirmasi() {
-      tanya = confirm("Anda Yakin Akan Menghapus Data ?");
-      if (tanya == true) return true;
-      else return false;
-    }
+  function konfirmasi() {
+    tanya = confirm("Anda Yakin Akan Menghapus Data ?");
+    if (tanya == true) return true;
+    else return false;
+  }
   </script>
 
 </body>
