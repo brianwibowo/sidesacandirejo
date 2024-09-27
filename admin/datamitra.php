@@ -91,8 +91,9 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-success"><i class="fa fa-download"></i> Unduh Laporan
-                    Mitra</button></a>
+                  <a href="export/export_data_mitra.php" class="btn btn-success"><i class="fa fa-download"></i> Unduh
+                    Laporan
+                    Mitra</a></a>
                   <a href="inputdatamitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i>
                       Tambah Mitra</button></a>
                 </form>

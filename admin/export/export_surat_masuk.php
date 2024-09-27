@@ -94,4 +94,4 @@ $dompdf->setPaper('A4', 'landscape');
 $dompdf->render();
 
 // Output the generated PDF
-$dompdf->stream("laporan_surat_keluar.pdf", ["Attachment" => false]); // Set Attachment to true to force download
+$dompdf->stream("laporan_surat_masuk.pdf", ["Attachment" => false]); // Set Attachment to true to force download

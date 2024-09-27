@@ -6,7 +6,7 @@ use Dompdf\Dompdf;
 include '../../koneksi/koneksi.php';
 
 // Ambil data surat keluar dari database
-$sql = "SELECT * FROM tb_data_penjualan_usaha ORDER BY id ASC";
+$sql = "SELECT * FROM tb_data_mitra ORDER BY id ASC";
 $query = mysqli_query($db, $sql);
 
 // Start buffering output
@@ -17,7 +17,7 @@ ob_start();
 <html>
 
 <head>
-  <title>Laporan Data Penjualan Usaha</title>
+  <title>Laporan Data Mitra</title>
   <style>
   body {
     font-family: Arial, sans-serif;
@@ -49,16 +49,15 @@ ob_start();
 </head>
 
 <body>
-  <h2 class="title">Laporan Data Penjualan Usaha</h2>
+  <h2 class="title">Laporan Data Mitra</h2>
   <table>
     <thead>
       <tr>
         <th>No</th>
         <th>Kode Data</th>
-        <th>Produk</th>
-        <th>Jumlah</th>
-        <th>Harga</th>
-        <th>Total</th>
+        <th>Nama Pemilik</th>
+        <th>Nama Usaha</th>
+        <th>Legalitas Usaha</th>
       </tr>
     </thead>
     <tbody>
@@ -68,10 +67,9 @@ ob_start();
       <tr>
         <td><?php echo $no++ ?></td>
         <td><?php echo $data['kode_data']; ?></td>
-        <td><?php echo $data['produk']; ?></td>
-        <td><?php echo $data['jumlah']; ?></td>
-        <td><?php echo $data['harga']; ?></td>
-        <td><?php echo $data['total']; ?></td>
+        <td><?php echo $data['nama_pemilik']; ?></td>
+        <td><?php echo $data['nama_usaha']; ?></td>
+        <td><?php echo $data['legalitas_usaha']; ?></td>
       </tr>
       <?php } ?>
     </tbody>
@@ -94,4 +92,4 @@ $dompdf->setPaper('A4', 'landscape');
 $dompdf->render();
 
 // Output the generated PDF
-$dompdf->stream("laporan_data_penjualan_usaha.pdf", ["Attachment" => false]); // Set Attachment to true to force download
+$dompdf->stream("laporan_data_mitra.pdf", ["Attachment" => false]); // Set Attachment to true to force download
