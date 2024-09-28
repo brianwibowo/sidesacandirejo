@@ -38,14 +38,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -61,35 +61,28 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
-                  <form action="proses/proses_inputdatamitra.php" name="forminputdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                  <form action="proses/proses_inputdatamitra.php" name="forminputdatapengunjung" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kode_data">Kode Data <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kode_data">Kode Data <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kode_data" name="kode_data" required="required" maxlength="11"
-                          placeholder="Masukkan Kode Data" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="kode_data" name="kode_data" required="required" maxlength="11" placeholder="Masukkan Kode Data" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_pemilik">Nama Pemilik<span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_pemilik">Nama Pemilik<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nama_pemilik" name="nama_pemilik" required="required" maxlength="100"
-                          placeholder="Masukkan Nama Pemilik" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="nama_pemilik" name="nama_pemilik" required="required" maxlength="100" placeholder="Masukkan Nama Pemilik" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_usaha">Nama Usaha<span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_usaha">Nama Usaha<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nama_usaha" name="nama_usaha" required="required" maxlength="100"
-                          placeholder="Masukkan Nama Usaha" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="nama_usaha" name="nama_usaha" required="required" maxlength="100" placeholder="Masukkan Nama Usaha" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
 
@@ -98,11 +91,15 @@ include "login/ceksession.php";
                         Usaha<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="legalitas_usaha" name="legalitas_usaha" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                          <option value="NIB">NIB</option>
-                          <option value="PIRT">PIRT</option>
-                        </select>
+                        <input type="text" id="legalitas_usaha" name="legalitas_usaha" required="required" maxlength="100" placeholder="Masukkan Legalitas Usaha (misalnya NIB, PIRT, dsb)" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Surat <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="file_surat" accept="application/pdf" type="file" id="file_surat" class="form-control" required="required" /> *max 10mb
                       </div>
                     </div>
 
@@ -155,20 +152,20 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
-    $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
+    $(document).ready(function() {
+      $('#jenis_wisatawan').change(function() {
+        if ($(this).val() == 'Domestik') {
+          $('#kota-group').show();
+          $('#negara-group').hide();
+        } else if ($(this).val() == 'Mancanegara') {
+          $('#kota-group').hide();
+          $('#negara-group').show();
+        } else {
+          $('#kota-group').hide();
+          $('#negara-group').hide();
+        }
+      });
     });
-  });
   </script>
 </body>
 

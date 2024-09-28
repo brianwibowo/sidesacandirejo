@@ -111,12 +111,12 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th width="10%">Kode Data</th>
-                          <th width="15%">Jenis Produk</th>
-                          <th width="15%">Jumlah</th>
-                          <th width="15%">Harga</th>
-                          <th width="15%">Total</th>
-                          <th width="10%">Aksi</th>
+                          <th>Kode Data</th>
+                          <th>Jenis Produk</th>
+                          <th>Jumlah</th>
+                          <th>Harga</th>
+                          <th>Total</th>
+                          <th>Aksi</th>
                         </tr>
                       </thead>
 

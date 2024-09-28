@@ -110,6 +110,7 @@ include "login/ceksession.php";
                       <thead>
                         <tr>
                           <th>Kode Data</th>
+                          <th>Tanggal Kunjungan</th>
                           <th>Pilihan Paket Wisata</th>
                           <th>Jenis Wisatawan</th>
                           <th>Kota/Negara</th>
@@ -127,6 +128,7 @@ include "login/ceksession.php";
                             $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
                             echo '<tr>
                                 <td>' . htmlspecialchars($data['kode_data']) . '</td>
+                                <td>' . htmlspecialchars($data['tanggal_kunjungan']) . '</td>
                                 <td>' . htmlspecialchars($data['pilihan_paket_wisata']) . '</td>
                                 <td>' . htmlspecialchars($data['jenis_wisatawan']) . '</td>
                                 <td>' . htmlspecialchars($lokasi) . '</td>

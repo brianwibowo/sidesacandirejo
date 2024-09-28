@@ -121,6 +121,7 @@ CREATE TABLE `tb_data_mitra` (
 CREATE TABLE `tb_data_pengunjung` (
   `id` int NOT NULL,
   `kode_data` int NOT NULL,
+  `tanggal_kunjungan` date NOT NULL,
   `pilihan_paket_wisata` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `jenis_wisatawan` enum('Domestik','Mancanegara') COLLATE utf8mb4_general_ci NOT NULL,
   `kota` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,

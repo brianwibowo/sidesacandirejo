@@ -74,13 +74,39 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
-                        Wisata <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
-                          maxlength="100" placeholder="Masukkan Pilihan Paket Wisata"
+                        <div class='input-group date' id='myDatepicker6'>
+                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required" class="form-control" readonly="readonly" />
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket Wisata
+                        <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
                           class="form-control col-md-7 col-xs-12">
+                          <option value="">--</option>
+                          <option value="Paket Fun Game">Paket Fun Game</option>
+                          <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
+                          <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
+                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day</option>
+                          <option value="Cycling Village Tour Candirejo">Cycling Village Tour Candirejo</option>
+                          <option value="Traditional Dance">Traditional Dance</option>
+                          <option value="Walking Around Village">Walking Around Village</option>
+                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In Candirejo Village (Homestay)</option>
+                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill</option>
+                          <option value="Cooking Lesson">Cooking Lesson</option>
+                          <option value="Village Experience">Village Experience</option>
+                          <option value="Dokar Village Tour Candirejo">Dokar Village Tour Candirejo</option>
+                        </select>
                       </div>
                     </div>
 
@@ -209,6 +235,15 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
+  <script>
+  $(document).ready(function() {
+    $('#myDatepicker6').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true,
+      format: 'YYYY/MM/DD'
+    });
+  });
+  </script>
   <script>
   $(document).ready(function() {
     $('#jenis_wisatawan').change(function() {
