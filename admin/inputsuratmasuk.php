@@ -47,14 +47,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -70,88 +70,73 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
-                  <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post"
-                    enctype="multipart/form-data" id="demo-form2" data-parsley-validate
-                    class="form-horizontal form-label-left">
+                  <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Terima <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Terima <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class='input-group date' id='myDatepicker4'>
-                          <input type='text' id="tanggal_terima" name="tanggal_terima" required="required"
-                            class="form-control" readonly="readonly" />
+                          <input type='text' id="tanggal_terima" name="tanggal_terima" required="required" class="form-control" readonly="readonly" />
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
                         </div>
                       </div>
                     </div>
+                    
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Surat <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Surat <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class='input-group date' id='myDatepicker5'>
-                          <input type='text' id="tanggal_surat" name="tanggal_surat" required="required"
-                            class="form-control" readonly="readonly" />
+                          <input type='text' id="tanggal_surat" name="tanggal_surat" required="required" class="form-control" readonly="readonly" />
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
                         </div>
                       </div>
                     </div>
+
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nomor Surat <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nomor Surat <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nomor_surat" name="nomor_surat" required="required" maxlength="35"
-                          placeholder="Masukkan Nomor Surat" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="nomor_surat" name="nomor_surat" required="required" maxlength="35" placeholder="Masukkan Nomor Surat" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Pengirim <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Pengirim <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="pengirim" name="pengirim" required="required"
-                          placeholder="Masukkan Nama Pengirim" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="pengirim" name="pengirim" required="required" placeholder="Masukkan Nama Pengirim" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Perihal <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Perihal <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="perihal" name="perihal" required="required"
-                          placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="perihal" name="perihal" required="required" placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Kode <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kode" name="kode" required="required" placeholder="Masukkan Kode Surat"
-                          class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="kode" name="kode" required="required" placeholder="Masukkan Kode Surat" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="keterangan" name="keterangan" required="required" class="form-control" rows="3"
-                          placeholder='Masukkan Keterangan Surat'></textarea>
+                        <textarea id="keterangan" name="keterangan" required="required" class="form-control" rows="3" placeholder='Masukkan Keterangan Surat'></textarea>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Surat <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Surat <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="file_surat" accept="application/pdf" type="file" id="file_surat"
-                          class="form-control" required="required" /> *max 10mb
+                        <input name="file_surat" accept="application/pdf" type="file" id="file_surat" class="form-control" required="required" /> *max 10mb
                       </div>
                     </div>
                     <div class="ln_solid"></div>
@@ -220,37 +205,37 @@ include "login/ceksession.php";
 
   <!-- bootstrap-daterangepicker -->
   <script>
-  $('#myDatepicker').datetimepicker();
-  $('#myDatepicker2').datetimepicker({
-    format: 'YYYY/MM/DD'
-  });
-  $('#myDatepicker3').datetimepicker({
-    format: 'hh:mm A'
-  });
-  $('#myDatepicker4').datetimepicker({
-    ignoreReadonly: true,
-    allowInputToggle: true,
-    format: 'YYYY/MM/DD'
-  });
-  $('#myDatepicker5').datetimepicker({
-    ignoreReadonly: true,
-    allowInputToggle: true,
-    format: 'YYYY/MM/DD'
-  });
-  $('#myDatepicker6').datetimepicker({
-    ignoreReadonly: true,
-    allowInputToggle: true
-  });
-  $('#datetimepicker6').datetimepicker();
-  $('#datetimepicker7').datetimepicker({
-    useCurrent: false
-  });
-  $("#datetimepicker6").on("dp.change", function(e) {
-    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-  });
-  $("#datetimepicker7").on("dp.change", function(e) {
-    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-  });
+    $('#myDatepicker').datetimepicker();
+    $('#myDatepicker2').datetimepicker({
+      format: 'YYYY/MM/DD'
+    });
+    $('#myDatepicker3').datetimepicker({
+      format: 'hh:mm A'
+    });
+    $('#myDatepicker4').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true,
+      format: 'YYYY/MM/DD'
+    });
+    $('#myDatepicker5').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true,
+      format: 'YYYY/MM/DD'
+    });
+    $('#myDatepicker6').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true
+    });
+    $('#datetimepicker6').datetimepicker();
+    $('#datetimepicker7').datetimepicker({
+      useCurrent: false
+    });
+    $("#datetimepicker6").on("dp.change", function(e) {
+      $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    });
+    $("#datetimepicker7").on("dp.change", function(e) {
+      $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    });
   </script>
 </body>
 
