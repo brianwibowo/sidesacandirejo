@@ -91,16 +91,20 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <a href="export/export_data_mitra.php" class="btn btn-success"><i class="fa fa-download"></i> Unduh
+                  <a href="export/export_data_mitra.php" class="btn btn-danger"><i class="fa fa-download"></i> Unduh
                     Laporan
-                    Mitra</a></a>
-                  <a href="inputdatamitra.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i>
+                    PDF</a>
+                  <a href="export/exportExcel_data_mitra.php" class="btn btn-success"><i class="fa fa-download"></i>
+                    Unduh
+                    Laporan
+                    Excel</a>
+                  <a href="inputdatamitra.php"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>
                       Tambah Mitra</button></a>
                 </form>
                 <div class="x_content">
                   <?php
                   include '../koneksi/koneksi.php';
-                  $sql1      = "SELECT * FROM tb_data_mitra ORDER BY kode_data ASC";
+                  $sql1      = "SELECT * FROM tb_data_mitra ORDER BY id ASC";
                   $query1    = mysqli_query($db, $sql1);
                   $total    = mysqli_num_rows($query1);
                   if ($total == 0) {
@@ -109,10 +113,10 @@ include "login/ceksession.php";
                   <table id="datatable" class="table table-striped table-bordered">
                     <thead>
                       <tr>
-                        <th width="5%">Kode Data</th>
                         <th width="30%">Nama Pemilik</th>
                         <th width="30%">Nama Usaha</th>
                         <th width="25%">Legalitas Usaha</th>
+                        <th width="25%">Bukti Legalitas</th>
                         <th width="10%">Aksi</th>
                       </tr>
                     </thead>
@@ -121,10 +125,10 @@ include "login/ceksession.php";
                       <?php
                         while ($data = mysqli_fetch_array($query1)) {
                           echo '<tr>
-                              <td>' . htmlspecialchars($data['kode_data']) . '</td>
                               <td>' . htmlspecialchars($data['nama_pemilik']) . '</td>
                               <td>' . htmlspecialchars($data['nama_usaha']) . '</td>
                               <td>' . htmlspecialchars($data['legalitas_usaha']) . '</td>
+                              <td>' . htmlspecialchars($data['bukti_legalitas']) . '</td>
                               <td style="text-align:center;">
                                   <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
                                   <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>

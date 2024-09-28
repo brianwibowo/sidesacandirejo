@@ -91,18 +91,22 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <a href="export/export_data_penjualan_usaha.php" class="btn btn-success"><i
+                  <a href="export/export_data_penjualan_usaha.php" class="btn btn-danger"><i class="fa fa-download"></i>
+                    Unduh
+                    Laporan
+                    PDF</a>
+                  <a href="export/exportExcel_data_penjualan_usaha.php" class="btn btn-success"><i
                       class="fa fa-download"></i> Unduh
                     Laporan
-                    Penjualan</a></a>
-                  <a href="inputdatapenjualan.php"><button type="button" class="btn btn-success"><i
+                    Excel</a>
+                  <a href="inputdatapenjualan.php"><button type="button" class="btn btn-primary"><i
                         class="fa fa-plus"></i> Tambah Data Penjualan</button></a>
                 </form>
                 <div class="x_content">
                   <div class="x_content">
                     <?php
                     include '../koneksi/koneksi.php';
-                    $sql1      = "SELECT * FROM tb_data_penjualan_usaha ORDER BY kode_data ASC";
+                    $sql1      = "SELECT * FROM tb_data_penjualan_usaha ORDER BY id ASC";
                     $query1    = mysqli_query($db, $sql1);
                     $total    = mysqli_num_rows($query1);
                     if ($total == 0) {
@@ -111,7 +115,6 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Kode Data</th>
                           <th>Jenis Produk</th>
                           <th>Jumlah</th>
                           <th>Harga</th>
@@ -124,11 +127,10 @@ include "login/ceksession.php";
                         <?php
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['kode_data']) . '</td>
                                 <td>' . htmlspecialchars($data['produk']) . '</td>
                                 <td>' . htmlspecialchars($data['jumlah']) . '</td>
-                                <td>' . htmlspecialchars($data['harga']) . '</td>
-                                <td>' . htmlspecialchars($data['total']) . '</td>
+                                <td>' . htmlspecialchars(number_format($data['harga'], 0, ',', '.')) . '</td>
+                                <td>' . htmlspecialchars(number_format($data['total'], 0, ',', '.')) . '</td>
                                 <td style="text-align:center;">
                                     <a href="detail-penjualan.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
                                     <a href="editpenjualan.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>

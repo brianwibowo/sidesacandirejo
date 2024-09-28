@@ -91,10 +91,12 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <a href="export/export_surat_masuk.php" class=" btn btn-success"><i class="fa fa-download"></i> Unduh
-                    Laporan Surat
-                    Masuk</a></a>
-                  <a href="inputsuratmasuk.php"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i>
+                  <a href="export/export_surat_masuk.php" class=" btn btn-danger"><i class="fa fa-download"></i> Unduh
+                    Laporan PDF</a>
+                  <a href="export/exportExcel_surat_masuk.php" class=" btn btn-success"><i class="fa fa-download"></i>
+                    Unduh
+                    Laporan Excel</a>
+                  <a href="inputsuratmasuk.php"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>
                       Tambah Surat Masuk</button></a>
                 </form>
                 <div class="x_content">

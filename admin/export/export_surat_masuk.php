@@ -6,7 +6,7 @@ use Dompdf\Dompdf;
 include '../../koneksi/koneksi.php';
 
 
-$sql = "SELECT * FROM tb_arsip_surat_masuk ORDER BY nomor_surat ASC";
+$sql = "SELECT * FROM tb_arsip_surat_masuk ORDER BY id ASC";
 $query = mysqli_query($db, $sql);
 
 // Start buffering output

@@ -90,17 +90,21 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <a href="export/export_data_pengunjung.php" class="btn btn-success"><i class="fa fa-download"></i>
+                  <a href="export/export_data_pengunjung.php" class="btn btn-danger"><i class="fa fa-download"></i>
                     Unduh Laporan
-                    Pengunjung</></a>
-                  <a href="inputdatapengunjung.php"><button type="button" class="btn btn-success"><i
+                    PDF</></a>
+                  <a href="export/exportExcel_data_pengunjung.php" class="btn btn-success"><i
+                      class="fa fa-download"></i>
+                    Unduh Laporan
+                    Excel</></a>
+                  <a href="inputdatapengunjung.php"><button type="button" class="btn btn-primary"><i
                         class="fa fa-plus"></i> Tambah Pengunjung</button></a>
                 </form>
                 <div class="x_content">
                   <div class="x_content">
                     <?php
                     include '../koneksi/koneksi.php';
-                    $sql1      = "SELECT * FROM tb_data_pengunjung ORDER BY kode_data ASC";
+                    $sql1      = "SELECT * FROM tb_data_pengunjung ORDER BY id ASC";
                     $query1    = mysqli_query($db, $sql1);
                     $total    = mysqli_num_rows($query1);
                     if ($total == 0) {
@@ -109,7 +113,6 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Kode Data</th>
                           <th>Tanggal Kunjungan</th>
                           <th>Pilihan Paket Wisata</th>
                           <th>Jenis Wisatawan</th>
@@ -127,7 +130,6 @@ include "login/ceksession.php";
                           while ($data = mysqli_fetch_array($query1)) {
                             $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['kode_data']) . '</td>
                                 <td>' . htmlspecialchars($data['tanggal_kunjungan']) . '</td>
                                 <td>' . htmlspecialchars($data['pilihan_paket_wisata']) . '</td>
                                 <td>' . htmlspecialchars($data['jenis_wisatawan']) . '</td>
