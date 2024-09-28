@@ -138,7 +138,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     header('Expires: 0');
 
     // Kirim file PDF ke browser (download otomatis)
-    $dompdf->stream("Surat_$nomor_surat.pdf", ["Attachment" => 1]);
+    $dompdf->stream("Surat_$nomor_surat.pdf", ["Attachment" => false]);
 }
 else {
     echo "Data tidak lengkap!";
