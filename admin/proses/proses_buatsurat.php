@@ -3,14 +3,19 @@ session_start();
 require '../../dompdf/autoload.inc.php'; 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
+include '../../koneksi/koneksi.php';
 if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['kepada']) && isset($_POST['pembuka']) && isset($_POST['isi']) && isset($_POST['penutup']) && isset($_POST['penandatangan_surat'])) {
     
+    $pdf_dir = '../uploads/'; // Ensure this directory exists and is writable
+    $pdf_filename = "Surat_" . htmlspecialchars($_POST['nomor_surat']) . ".pdf";
+
+    // Prepare to save PDF in the directory
+    $pdf_path = $pdf_dir . $pdf_filename;
     // Direktori untuk menyimpan file gambar
-    $target_dir = "../uploads/";
+    $target_dir = "../images/";
     
-    $file_extension = pathinfo('../uploads/kopsurat.jpg', PATHINFO_EXTENSION);
-    $target_file = "../uploads/kopsurat.jpg";
+    $file_extension = pathinfo('../images/kopsurat.jpg', PATHINFO_EXTENSION);
+    $target_file = "../images/kopsurat.jpg";
     $image_data = file_get_contents($target_file);
     $base64_image = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
     // Periksa apakah file gambar berhasil diupload
@@ -134,25 +139,30 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 </html>
 
     ";
-
-    // Load konten HTML ke DomPDF
     $dompdf->loadHtml($html);
-
-    // Set ukuran dan orientasi kertas (opsional)
     $dompdf->setPaper('A4', 'portrait');
-
-    // Render PDF
     $dompdf->render();
-    // Header tambahan untuk memastikan file dikenali sebagai PDF
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="Surat_' . $nomor_surat . '.pdf"');
-    header('Cache-Control: no-cache, must-revalidate');
-    header('Expires: 0');
 
-    // Kirim file PDF ke browser (download otomatis)
-    $dompdf->stream("Surat_$nomor_surat.pdf", ["Attachment" => false]);
+    // Save the file locally
+    file_put_contents($pdf_path, $dompdf->output());
+
+    // Insert record into the database
+    $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
+                  VALUES ('$tanggal', '$nomor_surat', '$kepada', '$perihal', '-','Dibuat dari fitur Buat surat' , '$pdf_path')";
+    
+    if (mysqli_query($db, $query)) {
+        // Header for downloading PDF
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $pdf_filename . '"');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: 0');
+
+        // Output PDF to browser
+        $dompdf->stream($pdf_filename, ["Attachment" => false]);
+}else {
+    echo "Error: " . mysqli_error($db);
+}
 }
 else {
     echo "Data tidak lengkap!";
 }
-?>

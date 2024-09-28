@@ -116,9 +116,9 @@ include "login/ceksession.php";
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="keterangan">Keterangan <span
-                          class="required">*</span></label>
+                          class="required"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="keterangan" name="keterangan" required="required" class="form-control" rows="3"
+                        <textarea id="keterangan" name="keterangan" class="form-control" rows="3"
                           placeholder="Masukkan Keterangan Surat"></textarea>
                       </div>
                     </div>
