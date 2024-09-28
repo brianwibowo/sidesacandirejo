@@ -80,15 +80,7 @@ include "login/ceksession.php";
                       </div>
                     </div>
 
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kop_surat">Kop Surat <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="file" id="kop_surat" name="kop_surat" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
+
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="lampiran">Lampiran
@@ -132,6 +124,15 @@ include "login/ceksession.php";
                           placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kepada">Lokasi Penerima <span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="kepada" name="lokasi" required="required" maxlength="100"
+                          placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pembuka">Pembuka <span
@@ -168,9 +169,9 @@ include "login/ceksession.php";
                         Surat <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="penandatangan_surat" name="penandatangan_surat" required="required"
-                          maxlength="100" placeholder="Masukkan Nama Penandatangan Surat"
-                          class="form-control col-md-7 col-xs-12">
+                        <textarea type="text" id="penandatangan_surat" rows="3" name="penandatangan_surat"
+                          required="required" maxlength="100" placeholder="Masukkan Nama Penandatangan Surat"
+                          class="form-control col-md-7 col-xs-12"></textarea>
                       </div>
                     </div>
 

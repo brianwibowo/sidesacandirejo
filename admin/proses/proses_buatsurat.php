@@ -9,32 +9,34 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     // Direktori untuk menyimpan file gambar
     $target_dir = "../uploads/";
     
+    $file_extension = pathinfo('../uploads/kopsurat.jpg', PATHINFO_EXTENSION);
+    $target_file = "../uploads/kopsurat.jpg";
+    $image_data = file_get_contents($target_file);
+    $base64_image = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
     // Periksa apakah file gambar berhasil diupload
-    if (isset($_FILES['kop_surat']) && $_FILES['kop_surat']['error'] === UPLOAD_ERR_OK) {
-        // Buat nama file unik menggunakan uniqid() dan ekstensinya
-        $file_extension = pathinfo($_FILES["kop_surat"]["name"], PATHINFO_EXTENSION);
-        $unique_filename = uniqid('kop_surat_', true) . '.' . $file_extension; // Menambahkan prefix dan memastikan ekstensi file
-        $target_file = $target_dir . $unique_filename;
 
-        // Validasi apakah file gambar sudah diupload
-        if (move_uploaded_file($_FILES["kop_surat"]["tmp_name"], $target_file)) {
-            // Baca file gambar dan konversi ke Base64
-            $image_data = file_get_contents($target_file);
-            $base64_image = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
-        } else {
-            die("Error: Gagal mengupload gambar kop surat.");
-        }
-    } else {
-        die("Error: Tidak ada file kop surat atau terjadi masalah pada upload.");
-    }
 
     // Ambil data dari form
     $nomor_surat = htmlspecialchars($_POST['nomor_surat']); // Escaping input
     $tanggal = htmlspecialchars($_POST['tanggal']);
+    $tanggal_input = htmlspecialchars($_POST['tanggal']); 
+    $date = DateTime::createFromFormat('Y-m-d', $tanggal_input);
+    
+    $bulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    ];
+    
+    $bulan_angka = (int)$date->format('n'); 
+    $tanggal_format = $date->format('d') . ' ' . $bulan[$bulan_angka] . ' ' . $date->format('Y'); 
+
     $kepada = htmlspecialchars($_POST['kepada']);
+    $lokasi_penerima = htmlspecialchars($_POST['lokasi']);
     $pembuka = htmlspecialchars($_POST['pembuka']);
     $isi = htmlspecialchars($_POST['isi']);
     $penutup = htmlspecialchars($_POST['penutup']);
+    $perihal = htmlspecialchars($_POST['perihal']);
     $penandatangan_surat = htmlspecialchars($_POST['penandatangan_surat']);
     $lampiran = isset($_POST['lampiran']) ? htmlspecialchars($_POST['lampiran']) : '-';  // Optional field
 
@@ -51,9 +53,10 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 <head>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Times New Romans
             line-height: 1.6;
-            margin: 0;
+            font-size : 16 px;
+            margin: 1cm;
             background-color: #ffffff; /* White background for print */
             color: #000; /* Black text for print */
         }
@@ -78,6 +81,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
         }
         .content {
             margin: 20px 0;
+            text-align:justify;
         }
         h5 {
             margin: 5px 0;
@@ -92,11 +96,10 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             margin: 10px 0;
         }
         .signature {
-            margin-top: 80px;
-            text-align: right; /* Align signature to the right */
+            margin-top: 60px;
         }
         .isi {
-        margin-left:30px;
+        margin : 20px 0;
         }
 
     </style>
@@ -105,20 +108,26 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     <div class='container'>
         <div class='kop-surat'>
             <img src='$base64_image' alt='Kop Surat'><br>
-            <h5>Nomor Surat: $nomor_surat</h5>
         </div>
         <div class='content'>
-            <p><strong>Tanggal:</strong> $tanggal</p>
-            <p><strong>Kepada:</strong> $kepada</p>
-            <p><strong>Lampiran:</strong> $lampiran</p>
-            <hr>
+            <p>$tanggal_format</p>
+            <br>
+            <p><span style='padding-right: 60px;'>No</span>: $nomor_surat <br>
+            <span style='padding-right: 17px;'>Lampiran</span>: $lampiran <br>
+            <span style='padding-right: 34px;'>Perihal</span>: <strong>$perihal</strong></p>
+            <br>
+            <p> 
+            Kepada Yth.<br>
+            <b>$kepada</b><br>
+            <b>$lokasi_penerima</b>
+            </p><br>
             <p class='pembuka'>".nl2br($pembuka)."</p>
             <p class='isi'>".nl2br($isi)."</p>
             <p class='penutup'>".nl2br($penutup)."</p>
         </div>
         <div class='signature'>
             <p>Hormat kami,</p>
-            <p><strong>$penandatangan_surat</strong></p>
+            <p style='margin-top:90px'>".nl2br($penandatangan_surat)."</p>
         </div>
     </div>
 </body>
