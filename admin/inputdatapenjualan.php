@@ -68,7 +68,7 @@ include "login/ceksession.php";
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Produk<span
                           class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_produk" name="jenis_produk" required="required"
+                        <select id="jenis_produk" name="produk" required="required"
                           class="form-control col-md-7 col-xs-12">
                           <option value="Listrik">Listrik</option>
                           <option value="Pulsa">Pulsa</option>

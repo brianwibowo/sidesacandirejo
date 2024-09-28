@@ -54,7 +54,6 @@ ob_start();
     <thead>
       <tr>
         <th>No</th>
-        <th>Kode Data</th>
         <th>Produk</th>
         <th>Jumlah</th>
         <th>Harga</th>
@@ -67,7 +66,6 @@ ob_start();
         ?>
       <tr>
         <td><?php echo $no++ ?></td>
-        <td><?php echo $data['kode_data']; ?></td>
         <td><?php echo $data['produk']; ?></td>
         <td><?php echo $data['jumlah']; ?></td>
         <td><?php echo $data['harga']; ?></td>

@@ -127,7 +127,9 @@ include "login/ceksession.php";
                         <?php
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
-                                <td>' . htmlspecialchars($data['produk']) . '</td>
+                               <td>' . htmlspecialchars($data['produk']) . 
+                                  ($data['produk'] === 'Paket wisata' ? ' ( ' . htmlspecialchars($data['paket_wisata']) . ' )' : '') . 
+                              '</td>
                                 <td>' . htmlspecialchars($data['jumlah']) . '</td>
                                 <td>' . htmlspecialchars(number_format($data['harga'], 0, ',', '.')) . '</td>
                                 <td>' . htmlspecialchars(number_format($data['total'], 0, ',', '.')) . '</td>

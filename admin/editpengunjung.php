@@ -87,16 +87,6 @@ include "login/ceksession.php";
                           ?>
 
                     <input type=hidden name="id_suratkeluar" value="<?php echo $id;?>">
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kode_data">Kode Data <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" value="<?= $data['kode_data'] ?>" id="kode_data" name="kode_data"
-                          required="required" maxlength="11" placeholder="Masukkan Kode Data"
-                          class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket

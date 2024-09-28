@@ -63,22 +63,16 @@ include "login/ceksession.php";
                   <br />
                   <form action="proses/proses_inputdatapengunjung.php" name="forminputdatapengunjung" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kode_data">Kode Data <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kode_data" name="kode_data" required="required" maxlength="11"
-                          placeholder="Masukkan Kode Data" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
+
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan
+                        <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class='input-group date' id='myDatepicker6'>
-                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required" class="form-control" readonly="readonly" />
+                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required"
+                            class="form-control" readonly="readonly" />
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
@@ -87,7 +81,8 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket Wisata
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
+                        Wisata
                         <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -97,12 +92,15 @@ include "login/ceksession.php";
                           <option value="Paket Fun Game">Paket Fun Game</option>
                           <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
                           <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
-                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day</option>
+                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day
+                          </option>
                           <option value="Cycling Village Tour Candirejo">Cycling Village Tour Candirejo</option>
                           <option value="Traditional Dance">Traditional Dance</option>
                           <option value="Walking Around Village">Walking Around Village</option>
-                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In Candirejo Village (Homestay)</option>
-                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill</option>
+                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In
+                            Candirejo Village (Homestay)</option>
+                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill
+                          </option>
                           <option value="Cooking Lesson">Cooking Lesson</option>
                           <option value="Village Experience">Village Experience</option>
                           <option value="Dokar Village Tour Candirejo">Dokar Village Tour Candirejo</option>
@@ -178,8 +176,7 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata <span
-                          class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"

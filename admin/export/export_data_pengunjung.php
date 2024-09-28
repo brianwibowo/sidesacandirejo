@@ -54,7 +54,6 @@ ob_start();
     <thead>
       <tr>
         <th>No</th>
-        <th>Kode Data</th>
         <th>Nama</th>
         <th>Jenis Kelamin</th>
         <th>Usia</th>
@@ -71,7 +70,6 @@ ob_start();
         ?>
       <tr>
         <td><?php echo $no++ ?></td>
-        <td><?php echo $data['kode_data']; ?></td>
         <td><?php echo $data['nama']; ?></td>
         <td><?php echo $data['jenis_kelamin']; ?></td>
         <td><?php echo $data['usia']; ?></td>

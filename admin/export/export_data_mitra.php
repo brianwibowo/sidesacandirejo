@@ -5,11 +5,10 @@ use Dompdf\Dompdf;
 
 include '../../koneksi/koneksi.php';
 
-// Ambil data surat keluar dari database
 $sql = "SELECT * FROM tb_data_mitra ORDER BY id ASC";
 $query = mysqli_query($db, $sql);
 
-// Start buffering output
+
 ob_start();
 ?>
 
@@ -54,7 +53,6 @@ ob_start();
     <thead>
       <tr>
         <th>No</th>
-        <th>Kode Data</th>
         <th>Nama Pemilik</th>
         <th>Nama Usaha</th>
         <th>Legalitas Usaha</th>
@@ -66,7 +64,6 @@ ob_start();
         ?>
       <tr>
         <td><?php echo $no++ ?></td>
-        <td><?php echo $data['kode_data']; ?></td>
         <td><?php echo $data['nama_pemilik']; ?></td>
         <td><?php echo $data['nama_usaha']; ?></td>
         <td><?php echo $data['legalitas_usaha']; ?></td>
