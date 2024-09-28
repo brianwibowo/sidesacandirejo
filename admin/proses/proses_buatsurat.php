@@ -54,7 +54,6 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
             background-color: #ffffff; /* White background for print */
             color: #000; /* Black text for print */
         }
@@ -69,9 +68,13 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             margin-bottom: 20px;
         }
         .kop-surat img {
-            width: 100%;
-            height: auto;
-            max-width: 300px; /* Limit image width */
+            width: 100vw; /* 100% dari lebar viewport */
+            height: auto; /* Menjaga rasio aspek */
+            max-width: none; /* Hapus batasan lebar maksimum */
+            margin: 0; /* Hapus margin untuk memenuhi layar */
+            position: relative; /* Menjaga posisi relatif */
+            left: 50%; /* Mengatur posisi gambar */
+            transform: translateX(-50%); /* Menggeser gambar ke kiri untuk memenuhi layar */
         }
         .content {
             margin: 20px 0;
