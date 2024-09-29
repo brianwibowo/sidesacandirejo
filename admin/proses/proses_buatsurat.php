@@ -117,7 +117,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
         <div class='content'>
             <p>$tanggal_format</p>
             <br>
-            <p><span style='padding-right: 60px;'>No</span>: $nomor_surat <br>
+            <p><span style='padding-right: 34px;'>Nomor</span>: $nomor_surat <br>
             <span style='padding-right: 17px;'>Lampiran</span>: $lampiran <br>
             <span style='padding-right: 34px;'>Perihal</span>: <strong>$perihal</strong></p>
             <br>
@@ -130,9 +130,9 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             <p class='isi'>".nl2br($isi)."</p>
             <p class='penutup'>".nl2br($penutup)."</p>
         </div>
-        <div class='signature'>
+        <div class='signature'> 
             <p>Hormat kami,</p>
-            <p style='margin-top:90px'>".nl2br($penandatangan_surat)."</p>
+            <p style='margin-top:100px'>".nl2br($penandatangan_surat)."</p>
         </div>
     </div>
 </body>
