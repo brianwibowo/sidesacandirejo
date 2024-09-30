@@ -76,7 +76,7 @@ $kategori = [
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Data Mitra><small>Edit Data Mitra</small></h2>
+                  <h2>Data Mitra<small>Edit Data Mitra</small></h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -118,23 +118,30 @@ $kategori = [
                         Usaha<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="legalitas_usaha" name="legalitas_usaha" required="required"
+                        <input value="<?php echo $data['legalitas_usaha'];?>" type="text" id="kepada_suratkeluar"
+                          name="legalitas_usaha" required="required" placeholder="Masukkan Tujuan Surat"
                           class="form-control col-md-7 col-xs-12">
-                          <?php
-                            foreach ($kategori as $item) {
-                                // Periksa apakah item ini adalah item yang dipilih dari database
-                                $selected = ($item == $selected_value) ? "selected" : "";
-                                echo "<option value='" . $item . "' $selected>" . $item . "</option>";
-                            }
-                            ?>
-                        </select>
                       </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Bukti Legalitas
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="bukti_legalitas" accept="application/pdf" type="file" id="buktikeluar"
+                          class="form-control" autocomplete="off" />
+                        <?php if (!empty($data['bukti_legalitas'])): ?>
+                        <a href="<?php echo 'data_mitra/'.$data['bukti_legalitas'] ?>"><b>Lihat File
+                            Sebelumnya</b></a>
+                        <?php endif; ?>
+                        (Maksimal 10 MB)
+                      </div>
+
                     </div>
                     <input type="hidden" value="<?= $data['id']?>" name="id">
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <a href="datasuratkeluar.php" class="btn btn-success"><span
+                        <a href="datamitra.php" class="btn btn-success"><span
                             class="glyphicon glyphicon-arrow-left"></span> Batal</a>
                         <button type="submit" name="update" value="Update" class="btn btn-primary"><i
                             class="glyphicon glyphicon-plus"></i> Simpan</button>

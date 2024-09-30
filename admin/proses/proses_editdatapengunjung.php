@@ -2,7 +2,6 @@
 session_start();
 include '../../koneksi/koneksi.php';
 $id = $_POST['id'];
-$kode_data = $_POST['kode_data'];
 $pilihan = $_POST['pilihan_paket_wisata'];
 $jenis = $_POST['jenis_wisatawan'];
 $nama = $_POST['nama'];
@@ -19,7 +18,6 @@ if ($jenis == "Domestik") {
 }
 
 $query = "UPDATE tb_data_pengunjung SET 
-            kode_data = '$kode_data',
             pilihan_paket_wisata = '$pilihan', 
             jenis_wisatawan = '$jenis', 
             kota = '$kota', 
