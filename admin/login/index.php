@@ -53,8 +53,8 @@
 
               <div class="separator">
                 <div>
-                  <h2><i class="fa fa-institution"></i>DESA CANDIREJO BOROBUDUR</h2>
-                  <p>©2024 Apriansyah Wibowo UNNES</p>
+                  <h2><i class="fa fa-institution"></i>DESA WISATA CANDIREJO</h2>
+                  <p>Tim Pengabdian DRTPM UNNES. All Right Reserved</p>
                 </div>
               </div>
             </form>
