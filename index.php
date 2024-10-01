@@ -112,7 +112,7 @@ include "koneksi/ceksession.php";
     <footer id="footer">
       <div class="container">
         <div class="row text-center">
-          <p>&copy; Apriansyah Wibowo. All Rights Reserved.</p>
+          <p>&copy; Tim Pengabdian DRTPM UNNES. All Rights Reserved.</p>
           <div class="credits">
   </div>
     <script src="js/jquery.min.js"></script>
