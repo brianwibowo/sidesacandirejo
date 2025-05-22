@@ -4,7 +4,6 @@
 	$id				= $_SESSION['id'];
 	$nama	 		= mysqli_real_escape_string($db,$_POST['nama_admin']);
 	$username		= mysqli_real_escape_string($db,$_POST['username_admin']);
-	$password   	= mysqli_real_escape_string($db,sha1($_POST['password']));
 	$gambar			= $_FILES['gambar']['name'];
 	
 	$sql  		= "SELECT * FROM tb_admin where id_admin='".$_SESSION['id']."'";                        
@@ -18,7 +17,6 @@
 		$sql = "UPDATE tb_admin set 
 						nama_admin 			= '$nama',
 						username_admin		= '$username',
-						password			= '$password',
 						gambar				= '$nama_b' 
 				where id_admin = $id";
 				
@@ -46,7 +44,6 @@
 			$sql = "UPDATE tb_admin set 
 						nama_admin 			= '$nama',
 						username_admin		= '$username',
-						password			= '$password',
 						gambar				= '$nama_baru' 
 				where id_admin = $id";
 				

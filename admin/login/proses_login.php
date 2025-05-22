@@ -4,7 +4,7 @@ include "../../koneksi/koneksi.php";
 
 // Ambil data username dan password dari form
 $username = mysqli_real_escape_string($db, $_POST['username_admin']);
-$password = $_POST['password']; // Password yang diinputkan oleh user
+$password	=	mysqli_real_escape_string($db,sha1($_POST['password'])); 
 
 // Query untuk mendapatkan data user berdasarkan username dan password
 $query = mysqli_query($db, "SELECT * FROM tb_admin WHERE username_admin='$username' AND password='$password'");
