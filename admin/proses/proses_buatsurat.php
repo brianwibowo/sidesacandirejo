@@ -1,10 +1,13 @@
 <?php
 session_start();
+
 require '../../dompdf/autoload.inc.php'; 
+include '../../koneksi/koneksi.php';
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
-include '../../koneksi/koneksi.php';
-if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['kepada']) && isset($_POST['pembuka']) && isset($_POST['isi']) && isset($_POST['penutup']) && isset($_POST['penandatangan_surat'])) {
+
+if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['kepada']) && isset($_POST['isi'])) {
     
     $pdf_dir = '../uploads/'; // Ensure this directory exists and is writable
     $pdf_filename = "Surat_" . htmlspecialchars($_POST['nomor_surat']) . ".pdf";
@@ -17,9 +20,17 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     $file_extension = pathinfo('../images/kopsurat.jpg', PATHINFO_EXTENSION);
     $target_file = "../images/kopsurat.jpg";
     $image_data = file_get_contents($target_file);
-    $base64_image = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
-    // Periksa apakah file gambar berhasil diupload
+    $base64_image_kopsurat = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
 
+    $file_extension = pathinfo('../images/ttd_kepala_desa.png', PATHINFO_EXTENSION);
+    $target_file = "../images/ttd_kepala_desa.png";
+    $image_data = file_get_contents($target_file);
+    $base64_image_kepala_desa = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
+
+    $file_extension = pathinfo('../images/ttd_sekretaris.png', PATHINFO_EXTENSION);
+    $target_file = "../images/ttd_sekretaris.png";
+    $image_data = file_get_contents($target_file);
+    $base64_image_sekretaris = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
 
     // Ambil data dari form
     $nomor_surat = htmlspecialchars($_POST['nomor_surat']); // Escaping input
@@ -38,11 +49,8 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 
     $kepada = htmlspecialchars($_POST['kepada']);
     $lokasi_penerima = htmlspecialchars($_POST['lokasi']);
-    $pembuka = htmlspecialchars($_POST['pembuka']);
     $isi = htmlspecialchars($_POST['isi']);
-    $penutup = htmlspecialchars($_POST['penutup']);
     $perihal = htmlspecialchars($_POST['perihal']);
-    $penandatangan_surat = htmlspecialchars($_POST['penandatangan_surat']);
     $lampiran = isset($_POST['lampiran']) ? htmlspecialchars($_POST['lampiran']) : '-';  // Optional field
 
     // Konfigurasi DomPDF
@@ -57,11 +65,15 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 <html lang='id'>
 <head>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+      
         body {
             font-family: Times New Romans
             line-height: 1.6;
             font-size : 16 px;
-            margin: 1cm;
+            margin: 0.5cm;
             background-color: #ffffff; /* White background for print */
             color: #000; /* Black text for print */
         }
@@ -101,7 +113,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             margin: 10px 0;
         }
         .signature {
-            margin-top: 60px;
+            margin-top: 10px;
         }
         .isi {
         margin : 20px 0;
@@ -112,7 +124,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 <body>
     <div class='container'>
         <div class='kop-surat'>
-            <img src='$base64_image' alt='Kop Surat'><br>
+            <img src='$base64_image_kopsurat' alt='Kop Surat'><br>
         </div>
         <div class='content'>
             <p>$tanggal_format</p>
@@ -122,18 +134,34 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             <span style='padding-right: 34px;'>Perihal</span>: <strong>$perihal</strong></p>
             <br>
             <p> 
-            Kepada Yth.<br>
-            <b>$kepada</b><br>
-            <b>$lokasi_penerima</b>
+            <i>Kepada Yth.<i><br>
+            <b>Bapak/Ibu $kepada</b><br>
+            <b>di $lokasi_penerima</b>
             </p><br>
-            <p class='pembuka'>".nl2br($pembuka)."</p>
+            <p class='pembuka'>Puji syukur kepada Allah SWT atas limpahan rahmat_Nya.
+            Sholawat dan salam selalu tercurah kepada junjungan kita, Nabi Muhammad SAW.</p>
             <p class='isi'>".nl2br($isi)."</p>
-            <p class='penutup'>".nl2br($penutup)."</p>
+            <p class='penutup'>Demikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami sampaikan terima kasih.</p>
         </div>
         <div class='signature'> 
-            <p>Hormat kami,</p>
-            <p style='margin-top:100px'>".nl2br($penandatangan_surat)."</p>
-        </div>
+        <p style='text-align:center; font-weight: bold;'>Pengurus <br> Koperasi Desa Wisata Candirejo</p><br>
+        <table style='width:100%; text-align: center;'>
+            <tr>
+                <td style='width: 50%; padding: 10px;'>
+                    <img src='$base64_image_kepala_desa' alt='Penandatangan Surat' width='200px'><br>
+                    <p>Ersyidik</p>
+                    <p>Ketua</p>
+                </td>
+                <td style='width: 50%; padding: 10px;'>
+                    <img src='$base64_image_sekretaris' alt='Penandatangan Surat' width='90px'><br>
+                    <p>Rifa</p>
+                    <p>Sekretaris</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    
     </div>
 </body>
 </html>
