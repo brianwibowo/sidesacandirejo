@@ -86,22 +86,51 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="legalitas_usaha">Legalitas
-                        Usaha<span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="alamat">Alamat<span
+                          class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="legalitas_usaha" name="legalitas_usaha" required="required"
-                          maxlength="100" placeholder="Masukkan Legalitas Usaha (misalnya NIB, PIRT, dsb)"
-                          class="form-control col-md-7 col-xs-12">
+                        <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder="Masukkan Alamat Lengkap"></textarea>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Bukti Legalitas
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nomor_telp">Nomor Telepon<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="nomor_telp" name="nomor_telp" required="required" maxlength="20"
+                          placeholder="Masukkan Nomor Telepon" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="legalitas_usaha">Legalitas Usaha<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="legalitas_usaha" name="legalitas_usaha" required="required" maxlength="100"
+                          placeholder="Masukkan Legalitas Usaha" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Bukti Legalitas
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input name="bukti_legalitas" accept="application/pdf" type="file" id="bukti_legalitas"
-                          class="form-control" /> *max 10mb
+                          class="form-control" autocomplete="off" />
+                        (Maksimal 10 MB)
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto Kegiatan Usaha
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="foto_kegiatan[]" accept="image/*" type="file" id="foto_kegiatan"
+                          class="form-control" multiple />
+                        <small class="text-muted">Pilih satu atau lebih foto (Maksimal 2MB per foto)</small>
                       </div>
                     </div>
 

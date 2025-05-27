@@ -12,6 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tanggal_surat = $_POST['tanggal_surat'];
     $nomor_surat = $_POST['nomor_surat'];
     $pengirim = $_POST['pengirim'];
+    $penerima_surat = $_POST['penerima_surat'];
+    $disposisi = $_POST['disposisi'];
     $perihal = $_POST['perihal'];
     $kode = $_POST['kode'];
     $keterangan = $_POST['keterangan'];
@@ -22,10 +24,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $target_dir = "../uploads/"; 
     $destination = $target_dir . $nama_file;
+
+    // Handle lampiran foto
+    $lampiran_foto = null;
+    if (isset($_FILES['lampiran_foto']) && $_FILES['lampiran_foto']['error'] == UPLOAD_ERR_OK) {
+        $foto_name = strtolower(str_replace(' ', '_', $pengirim)) . "_foto_{$tanggal}_{$jam}." . pathinfo($_FILES['lampiran_foto']['name'], PATHINFO_EXTENSION);
+        $foto_destination = $target_dir . $foto_name;
+        if (move_uploaded_file($_FILES['lampiran_foto']['tmp_name'], $foto_destination)) {
+            $lampiran_foto = $foto_destination;
+        }
+    }
     
     if (move_uploaded_file($_FILES['file_surat']['tmp_name'], $destination)) {
-        $query = "INSERT INTO tb_arsip_surat_masuk (tanggal_terima, tanggal_surat, nomor_surat, pengirim, perihal, kode, keterangan, file_surat) 
-                  VALUES ('$tanggal_terima', '$tanggal_surat', '$nomor_surat', '$pengirim', '$perihal', '$kode', '$keterangan', '$destination')";
+        $query = "INSERT INTO tb_arsip_surat_masuk (tanggal_terima, tanggal_surat, nomor_surat, pengirim, penerima_surat, disposisi, perihal, kode, keterangan, file_surat, lampiran_foto) 
+                  VALUES ('$tanggal_terima', '$tanggal_surat', '$nomor_surat', '$pengirim', '$penerima_surat', '$disposisi', '$perihal', '$kode', '$keterangan', '$destination', " . ($lampiran_foto ? "'$lampiran_foto'" : "NULL") . ")";
 
         if (mysqli_query($db, $query)) {
             echo "<script>alert('Data berhasil disimpan!'); window.location='../datasuratmasuk.php';</script>";

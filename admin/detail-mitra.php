@@ -94,19 +94,68 @@ include "login/ceksession.php";
                       <tbody>
                         <tr>
                           <td>Kode Data</td>
+                          <td>:</td>
                           <td><?php echo $data['kode_data']?></td>
                         </tr>
                         <tr>
                           <td>Nama Pemilik</td>
+                          <td>:</td>
                           <td><?php echo $data['nama_pemilik']?></td>
                         </tr>
                         <tr>
                           <td>Nama Usaha</td>
+                          <td>:</td>
                           <td><?php echo $data['nama_usaha']?></td>
                         </tr>
                         <tr>
+                          <td>Alamat</td>
+                          <td>:</td>
+                          <td><?php echo $data['alamat']?></td>
+                        </tr>
+                        <tr>
+                          <td>Nomor Telepon</td>
+                          <td>:</td>
+                          <td><?php echo $data['nomor_telp']?></td>
+                        </tr>
+                        <tr>
                           <td>Legalitas Usaha</td>
+                          <td>:</td>
                           <td><?php echo $data['legalitas_usaha']?></td>
+                        </tr>
+                        <tr>
+                          <td>Bukti Legalitas</td>
+                          <td>:</td>
+                          <td>
+                            <?php if(!empty($data['bukti_legalitas'])): ?>
+                                <a href="uploads/<?php echo basename($data['bukti_legalitas']); ?>" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="fa fa-download"></i> Download File
+                                </a>
+                            <?php else: ?>
+                                <span class="text-muted">Tidak ada file</span>
+                            <?php endif; ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Foto Kegiatan</td>
+                          <td>:</td>
+                          <td>
+                            <?php if(!empty($data['foto_kegiatan'])): ?>
+                                <div class="row">
+                                    <?php 
+                                    $fotos = explode(',', $data['foto_kegiatan']);
+                                    foreach($fotos as $foto): 
+                                    ?>
+                                    <div class="col-md-4 mb-2">
+                                        <a href="uploads/foto_kegiatan/<?php echo basename($foto); ?>" target="_blank">
+                                            <img src="uploads/foto_kegiatan/<?php echo basename($foto); ?>" class="img-thumbnail" style="max-height: 150px; width: 100%; object-fit: cover;">
+                                        </a>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <span class="text-muted">Tidak ada foto</span>
+                            <?php endif; ?>
+                          </td>
                         </tr>
                       </tbody>
                     </table>

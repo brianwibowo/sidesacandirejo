@@ -75,12 +75,7 @@ include "login/ceksession.php";
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Terima <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date' id='myDatepicker4'>
-                          <input type='text' id="tanggal_terima" name="tanggal_terima" required="required" class="form-control" readonly="readonly" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
+                        <input type="text" id="tanggal_terima" name="tanggal_terima" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
                       </div>
                     </div>
                     
@@ -88,12 +83,7 @@ include "login/ceksession.php";
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Surat <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date' id='myDatepicker5'>
-                          <input type='text' id="tanggal_surat" name="tanggal_surat" required="required" class="form-control" readonly="readonly" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
+                        <input type="text" id="tanggal_surat" name="tanggal_surat" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
                       </div>
                     </div>
 
@@ -109,6 +99,20 @@ include "login/ceksession.php";
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input type="text" id="pengirim" name="pengirim" required="required" placeholder="Masukkan Nama Pengirim" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Penerima <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="penerima_surat" name="penerima_surat" required="required" placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Disposisi <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="disposisi" name="disposisi" required="required" class="form-control" rows="3" placeholder="Masukkan Disposisi Surat"></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -139,11 +143,18 @@ include "login/ceksession.php";
                         <input name="file_surat" accept="application/pdf" type="file" id="file_surat" class="form-control" required="required" /> *max 10mb
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Lampiran Foto
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="lampiran_foto" accept="image/*" type="file" id="lampiran_foto" class="form-control" /> *max 2mb
+                      </div>
+                    </div>
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="submit" class="btn btn-success">Submit</button>
-                        <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="reset" class="btn btn-primary" onclick="resetForm()">Reset</button>
                       </div>
                     </div>
 

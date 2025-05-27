@@ -46,6 +46,8 @@ echo '<!DOCTYPE html>
             <th>Tanggal Terima</th>
             <th>Tanggal Surat</th>
             <th>Pengirim</th>
+            <th>Penerima</th>
+            <th>Disposisi</th>
             <th>Perihal</th>
             <th>Kode</th>
             <th>Keterangan</th>
@@ -63,13 +65,15 @@ if (mysqli_num_rows($result) > 0) {
                 <td>' . htmlspecialchars($row['tanggal_terima']) . '</td>
                 <td>' . htmlspecialchars($row['tanggal_surat']) . '</td>
                 <td>' . htmlspecialchars($row['pengirim']) . '</td>
+                <td>' . htmlspecialchars($row['penerima_surat']) . '</td>
+                <td>' . htmlspecialchars($row['disposisi']) . '</td>
                 <td>' . htmlspecialchars($row['perihal']) . '</td>
                 <td>' . htmlspecialchars($row['kode']) . '</td>
                 <td>' . htmlspecialchars($row['keterangan']) . '</td>
               </tr>';
     }
 } else {
-    echo '<tr><td colspan="7" style="text-align:center;">Tidak ada data</td></tr>';
+    echo '<tr><td colspan="9" style="text-align:center;">Tidak ada data</td></tr>';
 }
 
 echo '    </table>

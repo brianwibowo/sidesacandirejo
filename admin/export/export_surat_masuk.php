@@ -57,6 +57,8 @@ ob_start();
         <th>Tanggal Terima</th>
         <th>Tanggal Surat</th>
         <th>Pengirim</th>
+        <th>Penerima</th>
+        <th>Disposisi</th>
         <th>Perihal</th>
         <th>Kode</th>
         <th>Keterangan</th>
@@ -69,6 +71,8 @@ ob_start();
         <td><?php echo $data['tanggal_terima']; ?></td>
         <td><?php echo $data['tanggal_surat']; ?></td>
         <td><?php echo $data['pengirim']; ?></td>
+        <td><?php echo $data['penerima_surat']; ?></td>
+        <td><?php echo $data['disposisi']; ?></td>
         <td><?php echo $data['perihal']; ?></td>
         <td><?php echo $data['kode']; ?></td>
         <td><?php echo $data['keterangan']; ?></td>

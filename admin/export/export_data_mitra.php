@@ -55,6 +55,8 @@ ob_start();
         <th>No</th>
         <th>Nama Pemilik</th>
         <th>Nama Usaha</th>
+        <th>Alamat</th>
+        <th>Nomor Telepon</th>
         <th>Legalitas Usaha</th>
       </tr>
     </thead>
@@ -66,6 +68,8 @@ ob_start();
         <td><?php echo $no++ ?></td>
         <td><?php echo $data['nama_pemilik']; ?></td>
         <td><?php echo $data['nama_usaha']; ?></td>
+        <td><?php echo $data['alamat']; ?></td>
+        <td><?php echo $data['nomor_telp']; ?></td>
         <td><?php echo $data['legalitas_usaha']; ?></td>
       </tr>
       <?php } ?>

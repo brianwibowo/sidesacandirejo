@@ -121,8 +121,28 @@ include "login/ceksession.php";
                           <td><?php echo $data['perihal']?></td>
                         </tr>
                         <tr>
+                          <td>Penerima</td>
+                          <td><?php echo $data['penerima_surat']?></td>
+                        </tr>
+                        <tr>
+                          <td>Disposisi</td>
+                          <td><?php echo $data['disposisi']?></td>
+                        </tr>
+                        <tr>
                           <td>File</td>
                           <td><a href="<?php echo 'uploads/'.$data['file_surat'].''?>"><b>Unduh File</b></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Lampiran Foto</td>
+                          <td>
+                            <?php if(!empty($data['lampiran_foto'])): ?>
+                              <a href="<?php echo 'uploads/'.$data['lampiran_foto']?>" target="_blank">
+                                <img src="<?php echo 'uploads/'.$data['lampiran_foto']?>" alt="Lampiran Foto" style="max-width: 200px;">
+                              </a>
+                            <?php else: ?>
+                              Tidak ada lampiran foto
+                            <?php endif; ?>
                           </td>
                         </tr>
                       </tbody>

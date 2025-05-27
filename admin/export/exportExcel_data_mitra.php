@@ -25,6 +25,8 @@ echo "
 <tr>
     <th>Nama Pemilik</th>
     <th>Nama Usaha</th>
+    <th>Alamat</th>
+    <th>Nomor Telepon</th>
     <th>Legalitas Usaha</th>
 </tr>";
 
@@ -32,6 +34,8 @@ while ($data = mysqli_fetch_array($query)) {
     echo "<tr>
         <td>" . htmlspecialchars($data['nama_pemilik']) . "</td>
         <td>" . htmlspecialchars($data['nama_usaha']) . "</td>
+        <td>" . htmlspecialchars($data['alamat']) . "</td>
+        <td>" . htmlspecialchars($data['nomor_telp']) . "</td>
         <td>" . htmlspecialchars($data['legalitas_usaha']) . "</td>
     </tr>";
 }

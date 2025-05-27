@@ -85,21 +85,24 @@ CREATE TABLE `tb_arsip_surat_masuk` (
   `tanggal_terima` date NOT NULL,
   `tanggal_surat` date NOT NULL,
   `pengirim` varchar(100) NOT NULL,
+  `penerima_surat` varchar(100) NOT NULL,
+  `disposisi` text DEFAULT NULL,
   `perihal` varchar(200) NOT NULL,
   `kode` varchar(20) NOT NULL,
   `keterangan` text DEFAULT NULL,
-  `file_surat` varchar(255) NOT NULL
+  `file_surat` varchar(255) NOT NULL,
+  `lampiran_foto` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_arsip_surat_masuk`
 --
 
-INSERT INTO `tb_arsip_surat_masuk` (`id`, `nomor_surat`, `tanggal_terima`, `tanggal_surat`, `pengirim`, `perihal`, `kode`, `keterangan`, `file_surat`) VALUES
-(10, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf'),
-(11, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf'),
-(12, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf'),
-(13, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf');
+INSERT INTO `tb_arsip_surat_masuk` (`id`, `nomor_surat`, `tanggal_terima`, `tanggal_surat`, `pengirim`, `penerima_surat`, `disposisi`, `perihal`, `kode`, `keterangan`, `file_surat`, `lampiran_foto`) VALUES
+(10, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', 'Sosialisasi Inovasi Daerah', 'UND', ''),
+(11, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', 'Promosi Edu Trip', 'UND', ''),
+(12, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', 'UND', ''),
+(13, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', 'a.n Andrianto Setiawan', 'IZP', '');
 
 -- --------------------------------------------------------
 

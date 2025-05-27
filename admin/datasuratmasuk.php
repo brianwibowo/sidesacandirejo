@@ -112,14 +112,16 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th width="10%">Nomor Surat</th>
-                          <th width="10%">Tanggal Terima</th>
-                          <th width="10%">Tanggal Surat</th>
-                          <th width="15%">Pengirim</th>
-                          <th width="20%">Perihal</th>
-                          <th width="10%">Kode</th>
-                          <th width="18%">Keterangan</th>
-                          <th width="15%">Aksi</th>
+                          <th width="8%">Nomor Surat</th>
+                          <th width="8%">Tanggal Terima</th>
+                          <th width="8%">Tanggal Surat</th>
+                          <th width="10%">Pengirim</th>
+                          <th width="10%">Penerima</th>
+                          <th width="10%">Disposisi</th>
+                          <th width="12%">Perihal</th>
+                          <th width="8%">Kode</th>
+                          <th width="10%">Keterangan</th>
+                          <th width="3%">Aksi</th>
                         </tr>
                       </thead>
 
@@ -132,18 +134,21 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['tanggal_terima']) . '</td>
                                 <td>' . htmlspecialchars($data['tanggal_surat']) . '</td>
                                 <td>' . htmlspecialchars($data['pengirim']) . '</td>
+                                <td>' . htmlspecialchars($data['penerima_surat']) . '</td>
+                                <td>' . htmlspecialchars($data['disposisi']) . '</td>
                                 <td>' . htmlspecialchars($data['perihal']) . '</td>
                                 <td>' . htmlspecialchars($data['kode']) . '</td>
                                 <td>' . htmlspecialchars($data['keterangan']) . '</td>
-                                <td style="text-align:center;">
-                                <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
-                                    <a href="detail-suratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editsuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                                    <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                <td style="text-align:center; white-space: nowrap;">
+                                <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a><br>
+                                ' . ($data['lampiran_foto'] ? '<a href="surat_masuk/' . htmlspecialchars($data['lampiran_foto']) . '"><button type="button" title="Lihat Foto" class="btn btn-info btn-xs"><i class="fa fa-image"></i></button></a><br>' : '') . '
+                                <a href="detail-suratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
+                                <a href="editsuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
+                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';
                           }
-                          ?>
+                        ?>
                       </tbody>
                     </table>
 

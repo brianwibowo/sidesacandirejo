@@ -90,14 +90,8 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date'>
-                          <input value="<?php echo $data['tanggal_terima'] ?>" type='date' id="tanggalmasuk_suratmasuk"
-                            name="tanggal_masuk" required="required" class="form-control" required="required"
-                            readonly="readonly" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
+                        <input value="<?php echo $data['tanggal_terima'] ?>" type="text" id="tanggalmasuk_suratmasuk"
+                          name="tanggal_masuk" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
                       </div>
                     </div>
                     <div class="form-group">
@@ -135,17 +129,8 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <fieldset>
-                          <div class="control-group">
-                            <div class="controls">
-                              <input value="<?= $data['tanggal_terima']; ?>" type="date"
-                                class="form-control has-feedback-left" name="tanggalsurat_suratmasuk"
-                                aria-describedby="inputSuccess2Status3" required="required">
-                              <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                              <span id="inputSuccess2Status3" class="sr-only">(success)</span>
-                            </div>
-                          </div>
-                        </fieldset>
+                        <input value="<?php echo $data['tanggal_surat']; ?>" type="text"
+                          class="form-control" name="tanggalsurat_suratmasuk" required="required" placeholder="Contoh: 22/05/2025" />
                       </div>
                     </div>
                     <div class="form-group">
@@ -159,11 +144,38 @@ include "login/ceksession.php";
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Penerima <span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input value="<?php echo $data['penerima_surat'];?>" type="text" id="penerima_surat" name="penerima_surat"
+                          required="required" placeholder="Masukkan Nama Penerima"
+                          class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Disposisi <span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="disposisi" name="disposisi" required="required" class="form-control"
+                          rows="3" placeholder='Masukkan Disposisi Surat'><?php echo $data['disposisi'];?></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Perihal <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="perihal_suratmasuk" name="perihal" required="required" class="form-control"
                           rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal'];?></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="keterangan" name="keterangan" required="required" class="form-control"
+                          rows="3" placeholder='Masukkan Keterangan Surat'><?php echo $data['keterangan'];?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -174,6 +186,19 @@ include "login/ceksession.php";
                           class="form-control" autocomplete="off" /><a
                           href="<?php echo 'uploads/'.$data['file_surat'].''?>"><b>Lihat File
                             Sebelumnya</b></a></input> (Maksimal 10 MB )
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Lampiran Foto
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="lampiran_foto" accept="image/*" type="file" id="lampiran_foto"
+                          class="form-control" autocomplete="off" />
+                        <?php if($data['lampiran_foto']) { ?>
+                          <a href="<?php echo 'uploads/'.$data['lampiran_foto'].''?>"><b>Lihat Foto
+                            Sebelumnya</b></a>
+                        <?php } ?>
+                        (Maksimal 2 MB )
                       </div>
                     </div>
                     <div class="form-group">
@@ -190,6 +215,7 @@ include "login/ceksession.php";
                             class="glyphicon glyphicon-arrow-left"></span> Batal</a>
                         <button type="submit" name="update" value="Update" class="btn btn-primary"><i
                             class="glyphicon glyphicon-plus"></i> Simpan</button>
+                        <button type="reset" class="btn btn-warning" onclick="resetForm()"><i class="fa fa-refresh"></i> Reset</button>
                       </div>
                     </div>
 
@@ -289,6 +315,16 @@ include "login/ceksession.php";
     if (!/^[0-9.]+$/.test(a.value)) {
       a.value = a.value.substring(0, a.value.length - 1000);
     }
+  }
+  </script>
+  <script>
+    function resetForm() {
+      // Reset all form fields
+      document.forms['demo-form2'].reset();
+      
+      // Reset file inputs
+      document.getElementById('file_suratmasuk').value = '';
+      document.getElementById('lampiran_foto').value = '';
   }
   </script>
 </body>

