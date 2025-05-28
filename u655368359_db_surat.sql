@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: May 22, 2025 at 07:33 AM
--- Server version: 10.11.10-MariaDB
--- PHP Version: 7.2.34
+-- Host: localhost
+-- Waktu pembuatan: 27 Bulan Mei 2025 pada 12.30
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_admin`
+-- Struktur dari tabel `tb_admin`
 --
 
 CREATE TABLE `tb_admin` (
@@ -36,7 +36,7 @@ CREATE TABLE `tb_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_admin`
+-- Dumping data untuk tabel `tb_admin`
 --
 
 INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, `gambar`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_arsip_surat_keluar`
+-- Struktur dari tabel `tb_arsip_surat_keluar`
 --
 
 CREATE TABLE `tb_arsip_surat_keluar` (
@@ -62,7 +62,7 @@ CREATE TABLE `tb_arsip_surat_keluar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_arsip_surat_keluar`
+-- Dumping data untuk tabel `tb_arsip_surat_keluar`
 --
 
 INSERT INTO `tb_arsip_surat_keluar` (`id`, `nomor_surat`, `tanggal_keluar`, `penerima`, `perihal`, `kode`, `keterangan`, `file_surat`) VALUES
@@ -76,16 +76,16 @@ INSERT INTO `tb_arsip_surat_keluar` (`id`, `nomor_surat`, `tanggal_keluar`, `pen
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_arsip_surat_masuk`
+-- Struktur dari tabel `tb_arsip_surat_masuk`
 --
 
 CREATE TABLE `tb_arsip_surat_masuk` (
   `id` int(11) NOT NULL,
   `nomor_surat` varchar(50) NOT NULL,
-  `tanggal_terima` date NOT NULL,
-  `tanggal_surat` date NOT NULL,
+  `tanggal_terima` varchar(50) NOT NULL,
+  `tanggal_surat` varchar(50) NOT NULL,
   `pengirim` varchar(100) NOT NULL,
-  `penerima_surat` varchar(100) NOT NULL,
+  `penerima_surat` varchar(100) DEFAULT NULL,
   `disposisi` text DEFAULT NULL,
   `perihal` varchar(200) NOT NULL,
   `kode` varchar(20) NOT NULL,
@@ -95,19 +95,20 @@ CREATE TABLE `tb_arsip_surat_masuk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_arsip_surat_masuk`
+-- Dumping data untuk tabel `tb_arsip_surat_masuk`
 --
 
 INSERT INTO `tb_arsip_surat_masuk` (`id`, `nomor_surat`, `tanggal_terima`, `tanggal_surat`, `pengirim`, `penerima_surat`, `disposisi`, `perihal`, `kode`, `keterangan`, `file_surat`, `lampiran_foto`) VALUES
-(10, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', 'Sosialisasi Inovasi Daerah', 'UND', ''),
-(11, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', 'Promosi Edu Trip', 'UND', ''),
-(12, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', 'UND', ''),
-(13, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', 'a.n Andrianto Setiawan', 'IZP', '');
+(10, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', NULL, NULL, 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', NULL),
+(11, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', NULL, NULL, 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', NULL),
+(12, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', NULL, NULL, 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', NULL),
+(13, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', NULL, NULL, 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', NULL),
+(15, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'saas', '../uploads/a_2025-05-26_20-06-28.pdf', '../uploads/a_foto_2025-05-26_20-24-17.jpg');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_buat_surat`
+-- Struktur dari tabel `tb_buat_surat`
 --
 
 CREATE TABLE `tb_buat_surat` (
@@ -127,29 +128,33 @@ CREATE TABLE `tb_buat_surat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_mitra`
+-- Struktur dari tabel `tb_data_mitra`
 --
 
 CREATE TABLE `tb_data_mitra` (
   `id` int(11) NOT NULL,
   `nama_pemilik` varchar(100) NOT NULL,
   `nama_usaha` varchar(100) NOT NULL,
+  `alamat` text NOT NULL,
+  `nomor_telp` varchar(20) NOT NULL,
   `legalitas_usaha` text NOT NULL,
-  `bukti_legalitas` varchar(255) DEFAULT NULL
+  `bukti_legalitas` varchar(255) DEFAULT NULL,
+  `foto_kegiatan` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_mitra`
+-- Dumping data untuk tabel `tb_data_mitra`
 --
 
-INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `legalitas_usaha`, `bukti_legalitas`) VALUES
-(8, 'Agus Santoso', 'Food', 'PIRT', '../uploads/food_12-00-22.pdf'),
-(10, 'Apriansyah Wibowo', 'Pembuatan Website', 'NIB', '../uploads/pembuatan_website_18-06-16.pdf');
+INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomor_telp`, `legalitas_usaha`, `bukti_legalitas`, `foto_kegiatan`) VALUES
+(8, 'Agus Santoso', 'Food', '', '', 'PIRT', '../uploads/food_12-00-22.pdf', NULL),
+(10, 'Apriansyah Wibowo', 'Pembuatan Website', '', '', 'NIB', '../uploads/pembuatan_website_18-06-16.pdf', NULL),
+(12, 's', 's', 'a', 'a', 'a', '../uploads/s_19-00-53.pdf', '../uploads/foto_kegiatan/s_kegiatan_0_19-15-10.jpg');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_pengunjung`
+-- Struktur dari tabel `tb_data_pengunjung`
 --
 
 CREATE TABLE `tb_data_pengunjung` (
@@ -166,7 +171,7 @@ CREATE TABLE `tb_data_pengunjung` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_pengunjung`
+-- Dumping data untuk tabel `tb_data_pengunjung`
 --
 
 INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `jenis_kelamin`, `usia`, `agen_wisata`) VALUES
@@ -176,7 +181,7 @@ INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisa
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_penjualan_usaha`
+-- Struktur dari tabel `tb_data_penjualan_usaha`
 --
 
 CREATE TABLE `tb_data_penjualan_usaha` (
@@ -189,7 +194,7 @@ CREATE TABLE `tb_data_penjualan_usaha` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_penjualan_usaha`
+-- Dumping data untuk tabel `tb_data_penjualan_usaha`
 --
 
 INSERT INTO `tb_data_penjualan_usaha` (`id`, `produk`, `paket_wisata`, `jumlah`, `harga`) VALUES
@@ -204,90 +209,90 @@ INSERT INTO `tb_data_penjualan_usaha` (`id`, `produk`, `paket_wisata`, `jumlah`,
 --
 
 --
--- Indexes for table `tb_admin`
+-- Indeks untuk tabel `tb_admin`
 --
 ALTER TABLE `tb_admin`
   ADD PRIMARY KEY (`id_admin`),
   ADD UNIQUE KEY `username_admin` (`username_admin`);
 
 --
--- Indexes for table `tb_arsip_surat_keluar`
+-- Indeks untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_arsip_surat_masuk`
+-- Indeks untuk tabel `tb_arsip_surat_masuk`
 --
 ALTER TABLE `tb_arsip_surat_masuk`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_buat_surat`
+-- Indeks untuk tabel `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_data_mitra`
+-- Indeks untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
--- Indexes for table `tb_data_pengunjung`
+-- Indeks untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
--- Indexes for table `tb_data_penjualan_usaha`
+-- Indeks untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `tb_admin`
+-- AUTO_INCREMENT untuk tabel `tb_admin`
 --
 ALTER TABLE `tb_admin`
   MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `tb_arsip_surat_keluar`
+-- AUTO_INCREMENT untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `tb_arsip_surat_masuk`
+-- AUTO_INCREMENT untuk tabel `tb_arsip_surat_masuk`
 --
 ALTER TABLE `tb_arsip_surat_masuk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `tb_buat_surat`
+-- AUTO_INCREMENT untuk tabel `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_data_mitra`
+-- AUTO_INCREMENT untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `tb_data_pengunjung`
+-- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tb_data_penjualan_usaha`
+-- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;

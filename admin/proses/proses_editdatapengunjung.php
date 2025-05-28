@@ -5,8 +5,7 @@ $id = $_POST['id'];
 $pilihan = $_POST['pilihan_paket_wisata'];
 $jenis = $_POST['jenis_wisatawan'];
 $nama = $_POST['nama'];
-$kelamin = $_POST['jenis_kelamin'];
-$usia = $_POST['usia'];
+$pax = $_POST['pax'];
 $agen_wisata = !empty($_POST['agen_wisata']) ? $_POST['agen_wisata'] : NULL; 
 
 if ($jenis == "Domestik") {
@@ -23,8 +22,7 @@ $query = "UPDATE tb_data_pengunjung SET
             kota = '$kota', 
             negara = '$negara', 
             nama = '$nama', 
-            jenis_kelamin = '$kelamin', 
-            usia = '$usia', 
+            pax = '$pax', 
             agen_wisata = '$agen_wisata' WHERE id='$id'";
 
 if (mysqli_query($db, $query)) {

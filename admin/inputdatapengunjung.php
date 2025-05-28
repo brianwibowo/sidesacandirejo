@@ -89,6 +89,8 @@ include "login/ceksession.php";
                         <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
                           class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
+                          <option value="Breakfast/Lunch/Diner Only">Breakfast/Lunch/Diner Only</option>
+                          <option value="Studi Banding">Studi Banding</option>
                           <option value="Paket Fun Game">Paket Fun Game</option>
                           <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
                           <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
@@ -153,25 +155,10 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_kelamin">Jenis Kelamin <span
-                          class="required">*</span>
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_kelamin" name="jenis_kelamin" required="required"
+                        <input type="number" id="pax" name="pax" required="required" min="1" placeholder="Masukkan Jumlah Pax"
                           class="form-control col-md-7 col-xs-12">
-                          <option value="Laki-laki">Laki-laki</option>
-                          <option value="Perempuan">Perempuan</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="usia">Usia <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="usia" name="usia" required="required" maxlength="3"
-                          placeholder="Masukkan Usia Pengunjung" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
 

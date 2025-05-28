@@ -55,8 +55,7 @@ ob_start();
       <tr>
         <th>No</th>
         <th>Nama</th>
-        <th>Jenis Kelamin</th>
-        <th>Usia</th>
+        <th>Pax (Jumlah Wisatawan)</th>
         <th>Pilihan Paket Wisata</th>
         <th>Jenis Wisatawan</th>
         <th>Kota/Negara</th>
@@ -71,8 +70,7 @@ ob_start();
       <tr>
         <td><?php echo $no++ ?></td>
         <td><?php echo $data['nama']; ?></td>
-        <td><?php echo $data['jenis_kelamin']; ?></td>
-        <td><?php echo $data['usia']; ?></td>
+        <td><?php echo $data['pax']; ?></td>
         <td><?php echo $data['pilihan_paket_wisata']; ?></td>
         <td><?php echo $data['jenis_wisatawan']; ?></td>
         <td><?php echo $lokasi ?></td>

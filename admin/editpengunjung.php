@@ -150,31 +150,9 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_kelamin">Jenis Kelamin <span
-                          class="required">*</span>
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_kelamin" name="jenis_kelamin" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                          <?php
-                          $jenis_kelamin=['Laki-laki', 'Perempuan'];
-                          $selected_kelamin = $data['jenis_kelamin'];
-                            foreach ($jenis_kelamin as $jenis) {
-                                $selected = ($jenis == $selected_kelamin) ? "selected" : "";
-                                echo "<option value='" . $jenis . "' $selected>" . $jenis . "</option>";
-                            }
-                            ?>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="usia">Usia <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="usia" value="<?= $data['usia']?>" name="usia" required="required"
-                          maxlength="3" placeholder="Masukkan Usia Pengunjung" class="form-control col-md-7 col-xs-12">
+                        <input type="number" id="pax" name="pax" required="required" min="1" placeholder="Masukkan jumlah wisatawan" value="<?= $data['pax'] ?? '' ?>" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
 

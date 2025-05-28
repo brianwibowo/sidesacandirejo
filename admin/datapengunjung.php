@@ -118,8 +118,7 @@ include "login/ceksession.php";
                           <th>Jenis Wisatawan</th>
                           <th>Kota/Negara</th>
                           <th>Nama</th>
-                          <th>Jenis Kelamin</th>
-                          <th>Usia</th>
+                          <th>Pax (Jumlah Wisatawan)</th>
                           <th>Agen Wisata</th>
                           <th>Aksi</th>
                         </tr>
@@ -135,12 +134,11 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['jenis_wisatawan']) . '</td>
                                 <td>' . htmlspecialchars($lokasi) . '</td>
                                 <td>' . htmlspecialchars($data['nama']) . '</td>
-                                <td>' . htmlspecialchars($data['jenis_kelamin']) . '</td>
-                                <td>' . htmlspecialchars($data['usia']) . '</td>
+                                <td>' . htmlspecialchars($data['pax']) . ' orang</td>
                                 <td>' . htmlspecialchars($data['agen_wisata']) . '</td>
                                 <td style="text-align:center;">
-                                    <a href="detail-datapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                                    <a href="editpengunjung.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a href="detail-datapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
+                                    <a href="editpengunjung.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
                                     <a onclick="return konfirmasi()" href="proses/proses_hapusdatapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';

@@ -109,12 +109,8 @@ include "login/ceksession.php";
                             <td><?php echo $data['nama']; ?></td>
                           </tr>
                           <tr>
-                            <td>Jenis Kelamin</td>
-                            <td><?php echo $data['jenis_kelamin']; ?></td>
-                          </tr>
-                          <tr>
-                            <td>Usia</td>
-                            <td><?php echo $data['usia']; ?></td>
+                            <td>Pax (Jumlah Wisatawan)</td>
+                            <td><?php echo $data['pax']; ?></td>
                           </tr>
                           <tr>
                             <td>Agen Wisata</td>
