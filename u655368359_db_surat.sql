@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 27 Bulan Mei 2025 pada 12.30
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 28 Bulan Mei 2025 pada 15.54
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -149,7 +149,8 @@ CREATE TABLE `tb_data_mitra` (
 INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomor_telp`, `legalitas_usaha`, `bukti_legalitas`, `foto_kegiatan`) VALUES
 (8, 'Agus Santoso', 'Food', '', '', 'PIRT', '../uploads/food_12-00-22.pdf', NULL),
 (10, 'Apriansyah Wibowo', 'Pembuatan Website', '', '', 'NIB', '../uploads/pembuatan_website_18-06-16.pdf', NULL),
-(12, 's', 's', 'a', 'a', 'a', '../uploads/s_19-00-53.pdf', '../uploads/foto_kegiatan/s_kegiatan_0_19-15-10.jpg');
+(12, 's', 's', 'a', 'a', 'a', '../uploads/s_19-00-53.pdf', '../uploads/foto_kegiatan/s_kegiatan_0_19-15-10.jpg'),
+(13, 'farid', 'arkiel', 'oihagoiha9haebs', '08551237361', 'legal', 'uploads/arkiel_14-44-00.pdf', 'uploads/foto_kegiatan/arkiel_kegiatan_0_14-44-00.jpg');
 
 -- --------------------------------------------------------
 
@@ -165,18 +166,20 @@ CREATE TABLE `tb_data_pengunjung` (
   `kota` varchar(100) DEFAULT NULL,
   `negara` varchar(100) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('Laki-laki','Perempuan') NOT NULL,
-  `usia` int(11) NOT NULL,
-  `agen_wisata` varchar(100) DEFAULT NULL
+  `agen_wisata` varchar(100) DEFAULT NULL,
+  `pax` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `tb_data_pengunjung`
 --
 
-INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `jenis_kelamin`, `usia`, `agen_wisata`) VALUES
-(3, '2024-09-30', 'Paket Pelajar - Live In Candirejo', 'Mancanegara', '', 'Malaysia', 'Jamal Musa', 'Laki-laki', 24, 'liveinvillage - Tour'),
-(4, '2024-10-10', 'Paket Pelajar - Live In Candirejo', 'Domestik', 'Semarang', '', 'Jilan Nafihanan', 'Perempuan', 21, 'Traveloka');
+INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `agen_wisata`, `pax`) VALUES
+(3, '2024-09-30', 'Paket Pelajar - Live In Candirejo', 'Mancanegara', '', 'Malaysia', 'Jamal Musa', 'liveinvillage - Tour', 1),
+(4, '2024-10-10', 'Paket Pelajar - Live In Candirejo', 'Domestik', 'Semarang', '', 'Jilan Nafihanan', 'Traveloka', 1),
+(5, '2025-05-28', 'Breakfast/Lunch/Diner Only', 'Domestik', 'semarang', '', 'Nizar Arhamni', '', 3),
+(7, '2025-05-06', 'Dokar Village Tour with/without Lunch', 'Mancanegara', '', 'jepang', 'arham', 'arhamcorp', 4),
+(8, '2025-05-31', 'Cycling Village Tour with/without Lunch', 'Mancanegara', '', 'jepang', 'filol', 'arhamcorp', 7);
 
 -- --------------------------------------------------------
 
@@ -283,13 +286,13 @@ ALTER TABLE `tb_buat_surat`
 -- AUTO_INCREMENT untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
