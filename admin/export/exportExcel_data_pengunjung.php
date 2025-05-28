@@ -28,8 +28,7 @@ echo "
     <th>Jenis Wisatawan</th>
     <th>Kota/Negara</th>
     <th>Nama</th>
-    <th>Jenis Kelamin</th>
-    <th>Usia</th>
+    <th>Pax (Jumlah Wisatawan)</th>
     <th>Agen Wisata</th>
 </tr>";
 
@@ -41,8 +40,7 @@ while ($data = mysqli_fetch_array($query)) {
         <td>" . htmlspecialchars($data['jenis_wisatawan']) . "</td>
         <td>" . htmlspecialchars($lokasi) . "</td>
         <td>" . htmlspecialchars($data['nama']) . "</td>
-        <td>" . htmlspecialchars($data['jenis_kelamin']) . "</td>
-        <td>" . htmlspecialchars($data['usia']) . "</td>
+        <td>" . htmlspecialchars($data['pax']) . "</td>
         <td>" . htmlspecialchars($data['agen_wisata']) . "</td>
     </tr>";
 }

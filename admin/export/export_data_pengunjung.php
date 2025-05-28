@@ -55,10 +55,10 @@ ob_start();
       <tr>
         <th>No</th>
         <th>Nama</th>
-        <th>Pax (Jumlah Wisatawan)</th>
         <th>Pilihan Paket Wisata</th>
         <th>Jenis Wisatawan</th>
         <th>Kota/Negara</th>
+        <th>Pax (Jumlah Wisatawan)</th>
         <th>Agen Wisata</th>
       </tr>
     </thead>
@@ -70,10 +70,10 @@ ob_start();
       <tr>
         <td><?php echo $no++ ?></td>
         <td><?php echo $data['nama']; ?></td>
-        <td><?php echo $data['pax']; ?></td>
         <td><?php echo $data['pilihan_paket_wisata']; ?></td>
         <td><?php echo $data['jenis_wisatawan']; ?></td>
         <td><?php echo $lokasi ?></td>
+        <td><?php echo $data['pax']; ?></td>
         <td><?php echo $data['agen_wisata']; ?></td>
       </tr>
       <?php } ?>
