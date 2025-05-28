@@ -89,15 +89,35 @@ include "login/ceksession.php";
                     <input type=hidden name="id_suratkeluar" value="<?php echo $id;?>">
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
-                        Wisata <span class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="pilihan_paket_wisata" value="<?= $data['pilihan_paket_wisata'] ?>"
-                          name="pilihan_paket_wisata" required="required" maxlength="100"
-                          placeholder="Masukkan Pilihan Paket Wisata" class="form-control col-md-7 col-xs-12">
-                      </div>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket Wisata <span class="required">*</span></label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                      <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required" class="form-control">
+                        <option value="">--</option>
+                        <?php
+                        $paket_list = [
+                          "Breakfast/Lunch/Diner Only",
+                          "Studi Banding",
+                          "Paket Fun Game",
+                          "Paket Pelajar - Live In Candirejo",
+                          "Paket Pelajar – Field Trip One Day",
+                          "Paket Pelajar – Field Trip Half Day",
+                          "Cycling Village Tour with/without Lunch",
+                          "Traditional Dance",
+                          "Walking Around Village with/without Lunch",
+                          "Stay At Local House In Candirejo Village (Homestay)",
+                          "Serenade At The Foot Of Menoreh Hill",
+                          "Cooking lesson with/without Tour",
+                          "Village Experience",
+                          "Dokar Village Tour with/without Lunch"
+                        ];
+                        foreach ($paket_list as $paket) {
+                          $selected = (strpos($data['pilihan_paket_wisata'], $paket) !== false) ? "selected" : "";
+                          echo "<option value='$paket' $selected>$paket</option>";
+                        }
+                        ?>
+                      </select>
                     </div>
+                  </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Wisatawan
@@ -201,6 +221,7 @@ include "login/ceksession.php";
 
   <!-- jQuery -->
   <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
+
   <!-- Bootstrap -->
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- FastClick -->

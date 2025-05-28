@@ -81,8 +81,7 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
-                        Wisata
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket Wisata
                         <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -94,18 +93,15 @@ include "login/ceksession.php";
                           <option value="Paket Fun Game">Paket Fun Game</option>
                           <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
                           <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
-                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day
-                          </option>
-                          <option value="Cycling Village Tour Candirejo">Cycling Village Tour Candirejo</option>
+                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day</option>
+                          <option value="Cycling Village Tour Candirejo">Cycling Village Tour with/without Lunch</option>
                           <option value="Traditional Dance">Traditional Dance</option>
-                          <option value="Walking Around Village">Walking Around Village</option>
-                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In
-                            Candirejo Village (Homestay)</option>
-                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill
-                          </option>
-                          <option value="Cooking Lesson">Cooking Lesson</option>
+                          <option value="Walking Around Village">Walking Around Village with/without Lunch</option>
+                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In Candirejo Village (Homestay)</option>
+                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill</option>
+                          <option value="Cooking Lesson">Cooking lesson with/without Tour</option>
                           <option value="Village Experience">Village Experience</option>
-                          <option value="Dokar Village Tour Candirejo">Dokar Village Tour Candirejo</option>
+                          <option value="Dokar Village Tour Candirejo">Dokar Village Tour with/without Lunch</option>
                         </select>
                       </div>
                     </div>
