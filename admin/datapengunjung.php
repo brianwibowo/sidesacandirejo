@@ -12,7 +12,7 @@ include "login/ceksession.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Data Pengunjung Wisata</title>
+  <title>Data Pengunjung Wisata Desa Candirejo Borobudur</title>
 
   <!-- Bootstrap -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -115,10 +115,11 @@ include "login/ceksession.php";
                         <tr>
                           <th>Tanggal Kunjungan</th>
                           <th>Pilihan Paket Wisata</th>
+                          <th>Detail Paket</th>
                           <th>Jenis Wisatawan</th>
                           <th>Kota/Negara</th>
                           <th>Nama</th>
-                          <th>Pax (Jumlah Wisatawan)</th>
+                          <th>Pax</th>
                           <th>Agen Wisata</th>
                           <th>Aksi</th>
                         </tr>
@@ -127,18 +128,95 @@ include "login/ceksession.php";
                       <tbody>
                         <?php
                           while ($data = mysqli_fetch_array($query1)) {
+                            // Format nama paket wisata untuk ditampilkan
+                            $paket_display = '';
+                            switch($data['pilihan_paket_wisata']) {
+                              case 'meal_only':
+                                $paket_display = 'Breakfast/Lunch/Dinner Only';
+                                break;
+                              case 'studi_banding':
+                                $paket_display = 'Studi Banding';
+                                break;
+                              case 'fun_game':
+                                $paket_display = 'Paket Fun Game';
+                                break;
+                              case 'pelajar_live_in':
+                                $paket_display = 'Paket Pelajar - Live In Candirejo';
+                                break;
+                              case 'pelajar_field_trip_one_day':
+                                $paket_display = 'Paket Pelajar – Field Trip One Day';
+                                break;
+                              case 'pelajar_field_trip_half_day':
+                                $paket_display = 'Paket Pelajar – Field Trip Half Day';
+                                break;
+                              case 'cycling_tour':
+                                $paket_display = 'Cycling Village Tour Candirejo';
+                                break;
+                              case 'traditional_dance':
+                                $paket_display = 'Traditional Dance';
+                                break;
+                              case 'walking_tour':
+                                $paket_display = 'Walking Around Village';
+                                break;
+                              case 'homestay':
+                                $paket_display = 'Stay At Local House In Candirejo Village (Homestay)';
+                                break;
+                              case 'serenade':
+                                $paket_display = 'Serenade At The Foot Of Menoreh Hill';
+                                break;
+                              case 'cooking_lesson':
+                                $paket_display = 'Cooking Lesson';
+                                break;
+                              case 'village_experience':
+                                $paket_display = 'Village Experience';
+                                break;
+                              case 'dokar_tour':
+                                $paket_display = 'Dokar Village Tour Candirejo';
+                                break;
+                              default:
+                                $paket_display = htmlspecialchars($data['pilihan_paket_wisata']);
+                            }
+
+                            // Format detail paket berdasarkan opsi tambahan yang sesuai dengan paket utama
+                            $detail_paket = '';
+                            $paket_utama = $data['pilihan_paket_wisata'];
+                            
+                            // Untuk paket cycling_tour, dokar_tour, walking_tour - tampilkan opsi makan
+                            if (in_array($paket_utama, ['cycling_tour', 'dokar_tour', 'walking_tour']) && !empty($data['opsi_makan_tour'])) {
+                              $detail_paket = ($data['opsi_makan_tour'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
+                            }
+                            // Untuk paket meal_only - tampilkan jenis makanan
+                            elseif ($paket_utama == 'meal_only' && !empty($data['jenis_makanan_paket'])) {
+                              $makanan_map = [
+                                'breakfast' => 'Breakfast',
+                                'lunch' => 'Lunch', 
+                                'dinner' => 'Dinner'
+                              ];
+                              $detail_paket = $makanan_map[$data['jenis_makanan_paket']] ?? $data['jenis_makanan_paket'];
+                            }
+                            // Untuk paket cooking_lesson - tampilkan opsi cooking
+                            elseif ($paket_utama == 'cooking_lesson' && !empty($data['opsi_cooking_lesson'])) {
+                              $detail_paket = ($data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'Cooking Lesson + Tour' : 'Cooking Lesson Saja';
+                            }
+                            
+                            if (empty($detail_paket)) {
+                              $detail_paket = '-';
+                            }
+
                             $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
+                            
                             echo '<tr>
                                 <td>' . htmlspecialchars($data['tanggal_kunjungan']) . '</td>
-                                <td>' . htmlspecialchars($data['pilihan_paket_wisata']) . '</td>
+                                <td>' . $paket_display . '</td>
+                                <td>' . $detail_paket . '</td>
                                 <td>' . htmlspecialchars($data['jenis_wisatawan']) . '</td>
                                 <td>' . htmlspecialchars($lokasi) . '</td>
                                 <td>' . htmlspecialchars($data['nama']) . '</td>
                                 <td>' . htmlspecialchars($data['pax']) . ' orang</td>
-                                <td>' . htmlspecialchars($data['agen_wisata']) . '</td>
+                                <td>' . htmlspecialchars($data['agen_wisata'] ?? '-') . '</td>
                                 <td style="text-align:center;">
-                                    <a href="detail-datapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
-                                    <a href="editpengunjung.php?id=' . $data['id'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
+                                    <a href="detail-datapengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
+                                    <a href="editpengunjung.php?id=' . urlencode($data['id'])  . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
                                     <a onclick="return konfirmasi()" href="proses/proses_hapusdatapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
                                 </td>
                             </tr>';

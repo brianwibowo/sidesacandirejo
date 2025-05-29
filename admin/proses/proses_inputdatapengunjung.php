@@ -11,9 +11,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama = $_POST['nama'];
     $pax = $_POST['pax'];
     $agen_wisata = isset($_POST['agen_wisata']) ? $_POST['agen_wisata'] : null;
+    
+    // Ambil opsi tambahan
+    $opsi_makan_tour = isset($_POST['opsi_makan_tour']) ? $_POST['opsi_makan_tour'] : null;
+    $jenis_makanan = isset($_POST['jenis_makanan']) ? $_POST['jenis_makanan'] : null;
+    $opsi_cooking_tour = isset($_POST['opsi_cooking_tour']) ? $_POST['opsi_cooking_tour'] : null;
 
-    $query = "INSERT INTO tb_data_pengunjung ( tanggal_kunjungan, pilihan_paket_wisata, jenis_wisatawan, kota, negara, nama, pax, agen_wisata) 
-              VALUES ('$tanggal_kunjungan', '$pilihan_paket_wisata', '$jenis_wisatawan', '$kota', '$negara', '$nama', '$pax', '$agen_wisata')";
+    // Query dengan semua field yang sesuai dengan struktur database
+    $query = "INSERT INTO tb_data_pengunjung (
+                tanggal_kunjungan, 
+                pilihan_paket_wisata, 
+                opsi_makan_tour, 
+                jenis_makanan_paket, 
+                opsi_cooking_lesson, 
+                jenis_wisatawan, 
+                kota, 
+                negara, 
+                nama, 
+                pax, 
+                agen_wisata
+              ) VALUES (
+                '$tanggal_kunjungan', 
+                '$pilihan_paket_wisata', 
+                '$opsi_makan_tour', 
+                '$jenis_makanan', 
+                '$opsi_cooking_tour', 
+                '$jenis_wisatawan', 
+                '$kota', 
+                '$negara', 
+                '$nama', 
+                '$pax', 
+                '$agen_wisata'
+              )";
 
     if (mysqli_query($db, $query)) {
         echo "<script>alert('Data pengunjung berhasil disimpan!'); window.location='../datapengunjung.php';</script>";
