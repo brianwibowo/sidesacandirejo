@@ -90,7 +90,7 @@ include "login/ceksession.php";
                       ?>
                     </select>
                   </div>
-                  <a href="export/exportt_data_pengunjung.php" class="btn btn-danger"><i class="fa fa-download"></i>
+                  <a href="export/export_data_pengunjung.php" class="btn btn-danger"><i class="fa fa-download"></i>
                     Unduh Laporan
                     PDF</></a>
                   <a href="export/exportExcel_data_pengunjung.php" class="btn btn-success"><i

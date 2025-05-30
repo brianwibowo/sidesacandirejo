@@ -88,20 +88,54 @@ include "login/ceksession.php";
                         <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
                           class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
-                          <option value="Breakfast/Lunch/Diner Only">Breakfast/Lunch/Diner Only</option>
-                          <option value="Studi Banding">Studi Banding</option>
-                          <option value="Paket Fun Game">Paket Fun Game</option>
-                          <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
-                          <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
-                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day</option>
-                          <option value="Cycling Village Tour Candirejo">Cycling Village Tour with/without Lunch</option>
-                          <option value="Traditional Dance">Traditional Dance</option>
-                          <option value="Walking Around Village">Walking Around Village with/without Lunch</option>
-                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In Candirejo Village (Homestay)</option>
-                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="Cooking Lesson">Cooking lesson with/without Tour</option>
-                          <option value="Village Experience">Village Experience</option>
-                          <option value="Dokar Village Tour Candirejo">Dokar Village Tour with/without Lunch</option>
+                          <option value="meal_only">Breakfast/Lunch/Diner Only</option>
+                          <option value="studi_banding">Studi Banding</option>
+                          <option value="fun_game">Paket Fun Game</option>
+                          <option value="pelajar_live_in">Paket Pelajar - Live In Candirejo</option>
+                          <option value="pelajar_field_trip_one_day">Paket Pelajar – Field Trip One Day</option>
+                          <option value="pelajar_field_trip_half_day">Paket Pelajar – Field Trip Half Day</option>
+                          <option value="cycling_tour">Cycling Village Tour with/without Lunch</option>
+                          <option value="traditional_dance">Traditional Dance</option>
+                          <option value="walking_tour">Walking Around Village with/without Lunch</option>
+                          <option value="homestay">Stay At Local House In Candirejo Village (Homestay)</option>
+                          <option value="serenade">Serenade At The Foot Of Menoreh Hill</option>
+                          <option value="cooking_lesson">Cooking lesson with/without Tour</option>
+                          <option value="village_experience">Village Experience</option>
+                          <option value="dokar_tour">Dokar Village Tour with/without Lunch</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_makan_tour_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_makan_tour">Opsi Makan Tour</label>
+                      <div class="col-md-9">
+                        <select id="opsi_makan_tour" name="opsi_makan_tour" class="form-control">
+                          <option value="">--</option>
+                          <option value="without_lunch">Without Lunch</option>
+                          <option value="with_lunch">With Lunch</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="jenis_makanan_paket_group" style="display:none;">
+                      <label class="control-label col-md-3" for="jenis_makanan_paket">Jenis Makanan</label>
+                      <div class="col-md-9">
+                        <select id="jenis_makanan_paket" name="jenis_makanan_paket" class="form-control">
+                          <option value="">--</option>
+                          <option value="breakfast">Breakfast</option>
+                          <option value="lunch">Lunch</option>
+                          <option value="dinner">Dinner</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_cooking_lesson_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_cooking_lesson">Opsi Cooking Lesson</label>
+                      <div class="col-md-9">
+                        <select id="opsi_cooking_lesson" name="opsi_cooking_lesson" class="form-control">
+                          <option value="">--</option>
+                          <option value="lesson_only">Lesson Only</option>
+                          <option value="lesson_with_tour">Lesson With Tour</option>
                         </select>
                       </div>
                     </div>
@@ -220,23 +254,53 @@ include "login/ceksession.php";
     $('#myDatepicker6').datetimepicker({
       ignoreReadonly: true,
       allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+      format: 'YYYY-MM-DD'
     });
-  });
-  </script>
-  <script>
-  $(document).ready(function() {
+
+    $('#pilihan_paket_wisata').change(function() {
+        let paket = $(this).val();
+        
+        // Reset dan hide semua optional fields
+        $('#opsi_makan_tour_group').hide();
+        $('#jenis_makanan_paket_group').hide();
+        $('#opsi_cooking_lesson_group').hide();
+        
+        // Reset values
+        $('#opsi_makan_tour').val('');
+        $('#jenis_makanan_paket').val('');
+        $('#opsi_cooking_lesson').val('');
+        
+        // Show relevant fields based on selected package
+        if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
+            $('#opsi_makan_tour_group').show();
+        }
+        if (paket === 'meal_only') {
+            $('#jenis_makanan_paket_group').show();
+        }
+        if (paket === 'cooking_lesson') {
+            $('#opsi_cooking_lesson_group').show();
+        }
+    });
+
     $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
+        const jenis = $(this).val();
+        
+        if (jenis == 'Domestik') {
+            $('#kota-group').show();
+            $('#negara-group').hide();
+            $('#kota').attr('required', true);
+            $('#negara').removeAttr('required').val(''); // Clear negara field
+        } else if (jenis == 'Mancanegara') {
+            $('#kota-group').hide();
+            $('#negara-group').show();
+            $('#negara').attr('required', true);
+            $('#kota').removeAttr('required').val(''); // Clear kota field
+        } else {
+            $('#kota-group').hide();
+            $('#negara-group').hide();
+            $('#kota').removeAttr('required').val('');
+            $('#negara').removeAttr('required').val('');
+        }
     });
   });
   </script>

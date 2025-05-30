@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: May 29, 2025 at 07:59 AM
--- Server version: 10.11.10-MariaDB
--- PHP Version: 7.2.34
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 30 Bulan Mei 2025 pada 23.37
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_admin`
+-- Struktur dari tabel `tb_admin`
 --
 
 CREATE TABLE `tb_admin` (
@@ -36,7 +36,7 @@ CREATE TABLE `tb_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tb_admin`
+-- Dumping data untuk tabel `tb_admin`
 --
 
 INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, `gambar`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_arsip_surat_keluar`
+-- Struktur dari tabel `tb_arsip_surat_keluar`
 --
 
 CREATE TABLE `tb_arsip_surat_keluar` (
@@ -62,7 +62,7 @@ CREATE TABLE `tb_arsip_surat_keluar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_arsip_surat_keluar`
+-- Dumping data untuk tabel `tb_arsip_surat_keluar`
 --
 
 INSERT INTO `tb_arsip_surat_keluar` (`id`, `nomor_surat`, `tanggal_keluar`, `penerima`, `perihal`, `kode`, `keterangan`, `file_surat`) VALUES
@@ -81,7 +81,7 @@ INSERT INTO `tb_arsip_surat_keluar` (`id`, `nomor_surat`, `tanggal_keluar`, `pen
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_arsip_surat_masuk`
+-- Struktur dari tabel `tb_arsip_surat_masuk`
 --
 
 CREATE TABLE `tb_arsip_surat_masuk` (
@@ -100,7 +100,7 @@ CREATE TABLE `tb_arsip_surat_masuk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_arsip_surat_masuk`
+-- Dumping data untuk tabel `tb_arsip_surat_masuk`
 --
 
 INSERT INTO `tb_arsip_surat_masuk` (`id`, `nomor_surat`, `tanggal_terima`, `tanggal_surat`, `pengirim`, `penerima_surat`, `disposisi`, `perihal`, `kode`, `keterangan`, `file_surat`, `lampiran_foto`) VALUES
@@ -112,7 +112,7 @@ INSERT INTO `tb_arsip_surat_masuk` (`id`, `nomor_surat`, `tanggal_terima`, `tang
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_buat_surat`
+-- Struktur dari tabel `tb_buat_surat`
 --
 
 CREATE TABLE `tb_buat_surat` (
@@ -132,7 +132,7 @@ CREATE TABLE `tb_buat_surat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_mitra`
+-- Struktur dari tabel `tb_data_mitra`
 --
 
 CREATE TABLE `tb_data_mitra` (
@@ -147,7 +147,7 @@ CREATE TABLE `tb_data_mitra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_mitra`
+-- Dumping data untuk tabel `tb_data_mitra`
 --
 
 INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomor_telp`, `legalitas_usaha`, `bukti_legalitas`, `foto_kegiatan`) VALUES
@@ -157,7 +157,7 @@ INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomo
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_pengunjung`
+-- Struktur dari tabel `tb_data_pengunjung`
 --
 
 CREATE TABLE `tb_data_pengunjung` (
@@ -176,17 +176,17 @@ CREATE TABLE `tb_data_pengunjung` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_pengunjung`
+-- Dumping data untuk tabel `tb_data_pengunjung`
 --
 
 INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `opsi_makan_tour`, `jenis_makanan_paket`, `opsi_cooking_lesson`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `agen_wisata`, `pax`) VALUES
-(13, '2025-05-29', 'meal_only', 'without_lunch', 'breakfast', 'lesson_only', 'Domestik', 'Semarang', '', 'Abdul', 'Bola Ayam', 1),
-(14, '0000-00-00', 'dokar_tour', 'with_lunch', '', 'lesson_only', 'Domestik', 'Semarang', '', 'Abdull', 'ABaba', 12);
+(23, '2025-05-29', 'walking_tour', 'with_lunch', NULL, NULL, 'Domestik', 'semarang', NULL, 'arham', 'arhamcorp', 2),
+(25, '2025-06-02', 'traditional_dance', NULL, NULL, NULL, 'Domestik', 'semarang', NULL, 'Nizar Arhamni', 'arhamcorp', 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_data_penjualan_usaha`
+-- Struktur dari tabel `tb_data_penjualan_usaha`
 --
 
 CREATE TABLE `tb_data_penjualan_usaha` (
@@ -199,7 +199,7 @@ CREATE TABLE `tb_data_penjualan_usaha` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_data_penjualan_usaha`
+-- Dumping data untuk tabel `tb_data_penjualan_usaha`
 --
 
 INSERT INTO `tb_data_penjualan_usaha` (`id`, `produk`, `paket_wisata`, `jumlah`, `harga`) VALUES
@@ -214,90 +214,90 @@ INSERT INTO `tb_data_penjualan_usaha` (`id`, `produk`, `paket_wisata`, `jumlah`,
 --
 
 --
--- Indexes for table `tb_admin`
+-- Indeks untuk tabel `tb_admin`
 --
 ALTER TABLE `tb_admin`
   ADD PRIMARY KEY (`id_admin`),
   ADD UNIQUE KEY `username_admin` (`username_admin`);
 
 --
--- Indexes for table `tb_arsip_surat_keluar`
+-- Indeks untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_arsip_surat_masuk`
+-- Indeks untuk tabel `tb_arsip_surat_masuk`
 --
 ALTER TABLE `tb_arsip_surat_masuk`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_buat_surat`
+-- Indeks untuk tabel `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tb_data_mitra`
+-- Indeks untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
--- Indexes for table `tb_data_pengunjung`
+-- Indeks untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
--- Indexes for table `tb_data_penjualan_usaha`
+-- Indeks untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `tb_admin`
+-- AUTO_INCREMENT untuk tabel `tb_admin`
 --
 ALTER TABLE `tb_admin`
   MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `tb_arsip_surat_keluar`
+-- AUTO_INCREMENT untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `tb_arsip_surat_masuk`
+-- AUTO_INCREMENT untuk tabel `tb_arsip_surat_masuk`
 --
 ALTER TABLE `tb_arsip_surat_masuk`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `tb_buat_surat`
+-- AUTO_INCREMENT untuk tabel `tb_buat_surat`
 --
 ALTER TABLE `tb_buat_surat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_data_mitra`
+-- AUTO_INCREMENT untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `tb_data_pengunjung`
+-- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT for table `tb_data_penjualan_usaha`
+-- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;

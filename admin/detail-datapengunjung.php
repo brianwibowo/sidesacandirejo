@@ -72,7 +72,7 @@ include "login/ceksession.php";
                         <?php endif; ?>
                       </div>
                     </div>
-                    <h3 align="center"><?php echo $data['nama']; ?></h3>
+                    <h3 align="center"><?php echo isset($data['nama']) ? $data['nama'] : 'N/A'; ?></h3>
                     <br />
                   </div>
                   <div class="col-md-9 col-sm-9 col-xs-12">
@@ -86,35 +86,35 @@ include "login/ceksession.php";
                         <tbody>
                           <tr>
                             <td width="50%">Kode Data</td>
-                            <td><?php echo $data['kode_data']; ?></td>
+                            <td><?php echo isset($data['kode_data']) ? $data['kode_data'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Pilihan Paket Wisata</td>
-                            <td><?php echo $data['pilihan_paket_wisata']; ?></td>
+                            <td><?php echo isset($data['pilihan_paket_wisata']) ? $data['pilihan_paket_wisata'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Jenis Wisatawan</td>
-                            <td><?php echo $data['jenis_wisatawan']; ?></td>
+                            <td><?php echo isset($data['jenis_wisatawan']) ? $data['jenis_wisatawan'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Kota</td>
-                            <td><?php echo $data['kota']; ?></td>
+                            <td><?php echo isset($data['kota']) ? $data['kota'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Negara</td>
-                            <td><?php echo $data['negara']; ?></td>
+                            <td><?php echo isset($data['negara']) ? $data['negara'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Nama</td>
-                            <td><?php echo $data['nama']; ?></td>
+                            <td><?php echo isset($data['nama']) ? $data['nama'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Pax (Jumlah Wisatawan)</td>
-                            <td><?php echo $data['pax']; ?></td>
+                            <td><?php echo isset($data['pax']) ? $data['pax'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
                             <td>Agen Wisata</td>
-                            <td><?php echo $data['agen_wisata']; ?></td>
+                            <td><?php echo isset($data['agen_wisata']) ? $data['agen_wisata'] : 'N/A'; ?></td>
                           </tr>
                         </tbody>
                       </table>

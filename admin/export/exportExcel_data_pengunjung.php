@@ -34,9 +34,82 @@ echo "
 
 while ($data = mysqli_fetch_array($query)) {
     $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
+    
+    // Format nama paket wisata untuk ditampilkan (sama seperti di datapengunjung.php)
+    $paket_display = '';
+    switch($data['pilihan_paket_wisata']) {
+        case 'meal_only':
+            $paket_display = 'Breakfast/Lunch/Dinner Only';
+            break;
+        case 'studi_banding':
+            $paket_display = 'Studi Banding';
+            break;
+        case 'fun_game':
+            $paket_display = 'Paket Fun Game';
+            break;
+        case 'pelajar_live_in':
+            $paket_display = 'Paket Pelajar - Live In Candirejo';
+            break;
+        case 'pelajar_field_trip_one_day':
+            $paket_display = 'Paket Pelajar – Field Trip One Day';
+            break;
+        case 'pelajar_field_trip_half_day':
+            $paket_display = 'Paket Pelajar – Field Trip Half Day';
+            break;
+        case 'cycling_tour':
+            $paket_display = 'Cycling Village Tour Candirejo';
+            break;
+        case 'traditional_dance':
+            $paket_display = 'Traditional Dance';
+            break;
+        case 'walking_tour':
+            $paket_display = 'Walking Around Village';
+            break;
+        case 'homestay':
+            $paket_display = 'Stay At Local House In Candirejo Village (Homestay)';
+            break;
+        case 'serenade':
+            $paket_display = 'Serenade At The Foot Of Menoreh Hill';
+            break;
+        case 'cooking_lesson':
+            $paket_display = 'Cooking Lesson';
+            break;
+        case 'village_experience':
+            $paket_display = 'Village Experience';
+            break;
+        case 'dokar_tour':
+            $paket_display = 'Dokar Village Tour Candirejo';
+            break;
+        default:
+            $paket_display = htmlspecialchars($data['pilihan_paket_wisata']);
+    }
+    
+    // Format detail paket berdasarkan opsi tambahan
+    $detail_paket = '';
+    $paket_utama = $data['pilihan_paket_wisata'];
+    
+    // Tambahkan detail ke dalam paket display jika ada
+    if (in_array($paket_utama, ['cycling_tour', 'dokar_tour', 'walking_tour']) && !empty($data['opsi_makan_tour'])) {
+        $detail = ($data['opsi_makan_tour'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
+        $paket_display .= ' (' . $detail . ')';
+    }
+    elseif ($paket_utama == 'meal_only' && !empty($data['jenis_makanan_paket'])) {
+        $makanan_map = [
+            'breakfast' => 'Breakfast',
+            'lunch' => 'Lunch', 
+            'dinner' => 'Dinner'
+        ];
+        $detail = $makanan_map[$data['jenis_makanan_paket']] ?? $data['jenis_makanan_paket'];
+        $paket_display .= ' (' . $detail . ')';
+    }
+    elseif ($paket_utama == 'cooking_lesson' && !empty($data['opsi_cooking_lesson'])) {
+        $detail = ($data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'With Tour' : 'Lesson Only';
+        $paket_display .= ' (' . $detail . ')';
+    }
+    
     echo "<tr>
         <td>" . htmlspecialchars($data['tanggal_kunjungan']) . "</td>
-        <td>" . htmlspecialchars($data['pilihan_paket_wisata']) . "</td>
+        <td>" . $paket_display . "</td>
         <td>" . htmlspecialchars($data['jenis_wisatawan']) . "</td>
         <td>" . htmlspecialchars($lokasi) . "</td>
         <td>" . htmlspecialchars($data['nama']) . "</td>
