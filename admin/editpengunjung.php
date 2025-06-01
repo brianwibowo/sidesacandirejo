@@ -7,8 +7,8 @@ ob_start();
 // Ambil ID dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 if (empty($id)) {
-    echo "<script>alert('ID tidak valid!'); window.location='datapengunjung.php';</script>";
-    exit;
+  echo "<script>alert('ID tidak valid!'); window.location='datapengunjung.php';</script>";
+  exit;
 }
 
 // Ambil data pengunjung berdasarkan ID dengan prepared statement untuk keamanan
@@ -17,15 +17,17 @@ $stmt = mysqli_prepare($db, $query);
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
-$data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+$data_pengunjung = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-if (!$data) {
-    echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
-    exit;
+if (!$data_pengunjung) {
+  echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
+  exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
@@ -65,65 +67,84 @@ if (!$data) {
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
                     <!-- Hidden input untuk ID -->
-                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($data['id'] ?? $id); ?>">
+                    <input type="hidden" name="id"
+                      value="<?php echo htmlspecialchars($data_pengunjung['id'] ?? $id); ?>">
                     <!-- Debug output to check values -->
-                    <?php 
+                    <?php
                     // Uncomment for debugging
-                    // echo "<!-- Debug: ID from URL: $id, ID from data: " . ($data['id'] ?? 'not set') . " -->"; 
+                    // echo "<!-- Debug: ID from URL: $id, ID from data: " . ($data_pengunjung['id'] ?? 'not set') . " -->"; 
                     ?>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan
+                        <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class='input-group date' id='myDatepicker6'>
-                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required" class="form-control" readonly="readonly" value="<?php echo htmlspecialchars($data['tanggal_kunjungan']?? ''); ?>" />
+                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required"
+                            class="form-control" readonly="readonly"
+                            value="<?php echo htmlspecialchars(date('d-m-Y', strtotime($data_pengunjung['tanggal_kunjungan'] ?? ''))); ?>" />
                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                       </div>
                     </div>
-
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket Wisata <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
+                        Wisata <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required" class="form-control col-md-7 col-xs-12">
+                        <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
+                          class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
-                          <option value="meal_only" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'meal_only') ? 'selected' : ''; ?>>Breakfast/Lunch/Dinner Only</option>
-                          <option value="studi_banding" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'studi_banding') ? 'selected' : ''; ?>>Studi Banding</option>
-                          <option value="fun_game" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'fun_game') ? 'selected' : ''; ?>>Paket Fun Game</option>
-                          <option value="pelajar_live_in" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'pelajar_live_in') ? 'selected' : ''; ?>>Paket Pelajar - Live In Candirejo</option>
-                          <option value="pelajar_field_trip_one_day" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'pelajar_field_trip_one_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip One Day</option>
-                          <option value="pelajar_field_trip_half_day" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'pelajar_field_trip_half_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip Half Day</option>
-                          <option value="cycling_tour" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'cycling_tour') ? 'selected' : ''; ?>>Cycling Village Tour with/without Lunch</option>
-                          <option value="traditional_dance" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'traditional_dance') ? 'selected' : ''; ?>>Traditional Dance</option>
-                          <option value="walking_tour" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'walking_tour') ? 'selected' : ''; ?>>Walking Around Village with/without Lunch</option>
-                          <option value="homestay" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
-                          <option value="serenade" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="cooking_lesson" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'cooking_lesson') ? 'selected' : ''; ?>>Cooking lesson with/without Tour</option>
-                          <option value="village_experience" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'village_experience') ? 'selected' : ''; ?>>Village Experience</option>
-                          <option value="dokar_tour" <?php echo (isset($data['pilihan_paket_wisata']) && $data['pilihan_paket_wisata'] == 'dokar_tour') ? 'selected' : ''; ?>>Dokar Village Tour with/without Lunch</option>
+                          <option value="meal_only" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'meal_only') ? 'selected' : ''; ?>>Breakfast/Lunch/Dinner Only</option>
+                          <option value="studi_banding" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'studi_banding') ? 'selected' : ''; ?>>Studi
+                            Banding</option>
+                          <option value="fun_game" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'fun_game') ? 'selected' : ''; ?>>Paket Fun Game</option>
+                          <option value="pelajar_live_in" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_live_in') ? 'selected' : ''; ?>>Paket
+                            Pelajar - Live In Candirejo</option>
+                          <option value="pelajar_field_trip_one_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_one_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip One Day</option>
+                          <option value="pelajar_field_trip_half_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_half_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip Half Day</option>
+                          <option value="cycling_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cycling_tour') ? 'selected' : ''; ?>>Cycling
+                            Village Tour with/without Lunch</option>
+                          <option value="traditional_dance" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'traditional_dance') ? 'selected' : ''; ?>>
+                            Traditional Dance</option>
+                          <option value="walking_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'walking_tour') ? 'selected' : ''; ?>>Walking
+                            Around Village with/without Lunch</option>
+                          <option value="homestay" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
+                          <option value="serenade" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
+                          <option value="cooking_lesson" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cooking_lesson') ? 'selected' : ''; ?>>Cooking
+                            lesson with/without Tour</option>
+                          <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>
+                            Village Experience</option>
+                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar
+                            Village
+                            Tour with/without Lunch</option>
                         </select>
                       </div>
                     </div>
 
-                    <div class="form-group" id="opsi_makan_tour_group" style="display:none;">
+
+                    <div class="form-group" id="opsi_makan_tour_group" style="display:block;">
                       <label class="control-label col-md-3" for="opsi_makan_tour">Opsi Makan Tour</label>
                       <div class="col-md-9">
                         <select id="opsi_makan_tour" name="opsi_makan_tour" class="form-control">
                           <option value="">--</option>
-                          <option value="without_lunch" <?php echo (isset($data['opsi_makan_tour']) && $data['opsi_makan_tour'] == 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
-                          <option value="with_lunch" <?php echo (isset($data['opsi_makan_tour']) && $data['opsi_makan_tour'] == 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
+                          <option value="without_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'without_lunch') ? 'selected' : ''; ?>>Without Lunch
+                          </option>
+                          <option value="with_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
                         </select>
+
                       </div>
                     </div>
+
 
                     <div class="form-group" id="jenis_makanan_paket_group" style="display:none;">
                       <label class="control-label col-md-3" for="jenis_makanan_paket">Jenis Makanan</label>
                       <div class="col-md-9">
                         <select id="jenis_makanan_paket" name="jenis_makanan_paket" class="form-control">
                           <option value="">--</option>
-                          <option value="breakfast" <?php echo (isset($data['jenis_makanan_paket']) && $data['jenis_makanan_paket'] == 'breakfast') ? 'selected' : ''; ?>>Breakfast</option>
-                          <option value="lunch" <?php echo (isset($data['jenis_makanan_paket']) && $data['jenis_makanan_paket'] == 'lunch') ? 'selected' : ''; ?>>Lunch</option>
-                          <option value="dinner" <?php echo (isset($data['jenis_makanan_paket']) && $data['jenis_makanan_paket'] == 'dinner') ? 'selected' : ''; ?>>Dinner</option>
+                          <option value="breakfast" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'breakfast') ? 'selected' : ''; ?>>Breakfast
+                          </option>
+                          <option value="lunch" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'lunch') ? 'selected' : ''; ?>>Lunch</option>
+                          <option value="dinner" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'dinner') ? 'selected' : ''; ?>>Dinner</option>
                         </select>
                       </div>
                     </div>
@@ -133,55 +154,74 @@ if (!$data) {
                       <div class="col-md-9">
                         <select id="opsi_cooking_lesson" name="opsi_cooking_lesson" class="form-control">
                           <option value="">--</option>
-                          <option value="lesson_only" <?php echo (isset($data['opsi_cooking_lesson']) && $data['opsi_cooking_lesson'] == 'lesson_only') ? 'selected' : ''; ?>>Lesson Only</option>
-                          <option value="lesson_with_tour" <?php echo (isset($data['opsi_cooking_lesson']) && $data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>Lesson With Tour</option>
+                          <option value="lesson_only" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_only') ? 'selected' : ''; ?>>Lesson Only
+                          </option>
+                          <option value="lesson_with_tour" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>
+                            Lesson With Tour</option>
                         </select>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Wisatawan <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Wisatawan
+                        <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_wisatawan" name="jenis_wisatawan" required="required" class="form-control col-md-7 col-xs-12">
+                        <select id="jenis_wisatawan" name="jenis_wisatawan" required="required"
+                          class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
-                          <option value="Domestik" <?php echo (isset($data['jenis_wisatawan']) && $data['jenis_wisatawan'] == 'Domestik') ? 'selected' : ''; ?>>Domestik</option>
-                          <option value="Mancanegara" <?php echo (isset($data['jenis_wisatawan']) && $data['jenis_wisatawan'] == 'Mancanegara') ? 'selected' : ''; ?>>Mancanegara</option>
+                          <option value="Domestik" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Domestik') ? 'selected' : ''; ?>>Domestik</option>
+                          <option value="Mancanegara" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Mancanegara') ? 'selected' : ''; ?>>Mancanegara
+                          </option>
                         </select>
                       </div>
                     </div>
 
                     <div class="form-group" id="kota-group" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kota">Kota <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kota">Kota <span
+                          class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kota" name="kota" maxlength="100" placeholder="Masukkan Kota" class="form-control col-md-7 col-xs-12" value="<?php echo htmlspecialchars($data['kota'] ?? ''); ?>">
+                        <input type="text" id="kota" name="kota" maxlength="100" placeholder="Masukkan Kota"
+                          class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['kota'] ?? ''); ?>">
                       </div>
                     </div>
 
                     <div class="form-group" id="negara-group" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="negara">Negara <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="negara">Negara <span
+                          class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="negara" name="negara" maxlength="100" placeholder="Masukkan Negara" class="form-control col-md-7 col-xs-12" value="<?php echo htmlspecialchars($data['negara'] ?? ''); ?>">
+                        <input type="text" id="negara" name="negara" maxlength="100" placeholder="Masukkan Negara"
+                          class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['negara'] ?? ''); ?>">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama">Nama <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama">Nama <span
+                          class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nama" name="nama" required="required" maxlength="100" placeholder="Masukkan Nama Pengunjung" class="form-control col-md-7 col-xs-12" value="<?php echo htmlspecialchars($data['nama'] ?? ''); ?>">
+                        <input type="text" id="nama" name="nama" required="required" maxlength="100"
+                          placeholder="Masukkan Nama Pengunjung" class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['nama'] ?? ''); ?>">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span
+                          class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="pax" name="pax" required="required" min="1" placeholder="Masukkan Jumlah Pax" class="form-control col-md-7 col-xs-12" value="<?php echo htmlspecialchars($data['pax'] ?? ''); ?>">
+                        <input type="number" id="pax" name="pax" required="required" min="1"
+                          placeholder="Masukkan Jumlah Pax" class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['pax'] ?? ''); ?>">
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100" placeholder="Masukkan Agen Wisata (Opsional)" class="form-control col-md-7 col-xs-12" value="<?php echo htmlspecialchars($data['agen_wisata'] ?? ''); ?>">
+                        <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"
+                          placeholder="Masukkan Agen Wisata (Opsional)" class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['agen_wisata'] ?? ''); ?>">
                       </div>
                     </div>
 
@@ -214,71 +254,80 @@ if (!$data) {
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     $('#myDatepicker6').datetimepicker({
       ignoreReadonly: true,
       allowInputToggle: true,
       format: 'YYYY-MM-DD'
     });
-
-    $('#pilihan_paket_wisata').change(function() {
-        let paket = $(this).val();
-        
-        // Reset dan hide semua optional fields
-        $('#opsi_makan_tour_group').hide();
-        $('#jenis_makanan_paket_group').hide();
-        $('#opsi_cooking_lesson_group').hide();
-        
-        // Reset values
+  
+    function showHideFields() {
+      let paket = $('#pilihan_paket_wisata').val();
+  
+      // Hide semua optional fields terlebih dahulu
+      $('#opsi_makan_tour_group').hide();
+      $('#jenis_makanan_paket_group').hide();
+      $('#opsi_cooking_lesson_group').hide();
+  
+      // Show relevant fields based on selected package
+      if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
+        $('#opsi_makan_tour_group').show();
+      }
+      if (paket === 'meal_only') {
+        $('#jenis_makanan_paket_group').show();
+      }
+      if (paket === 'cooking_lesson') {
+        $('#opsi_cooking_lesson_group').show();
+      }
+    }
+  
+    $('#pilihan_paket_wisata').change(function () {
+      let paket = $(this).val();
+  
+      // Reset values HANYA jika user mengubah pilihan (bukan saat load)
+      if ($(this).data('user-changed')) {
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
-        
-        // Show relevant fields based on selected package
-        if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
-            $('#opsi_makan_tour_group').show();
-        }
-        if (paket === 'meal_only') {
-            $('#jenis_makanan_paket_group').show();
-        }
-        if (paket === 'cooking_lesson') {
-            $('#opsi_cooking_lesson_group').show();
-        }
+      }
+  
+      showHideFields();
+      
+      // Set flag bahwa user sudah mengubah pilihan
+      $(this).data('user-changed', true);
     });
-
-    $('#jenis_wisatawan').change(function() {
-        const jenis = $(this).val();
-        
-        if (jenis == 'Domestik') {
-            $('#kota-group').show();
-            $('#negara-group').hide();
-            $('#kota').attr('required', true);
-            $('#negara').removeAttr('required').val('');
-        } else if (jenis == 'Mancanegara') {
-            $('#kota-group').hide();
-            $('#negara-group').show();
-            $('#negara').attr('required', true);
-            $('#kota').removeAttr('required').val('');
-        } else {
-            $('#kota-group').hide();
-            $('#negara-group').hide();
-            $('#kota').removeAttr('required').val('');
-            $('#negara').removeAttr('required').val('');
-        }
+  
+    $('#jenis_wisatawan').change(function () {
+      const jenis = $(this).val();
+  
+      if (jenis == 'Domestik') {
+        $('#kota-group').show();
+        $('#negara-group').hide();
+        $('#kota').attr('required', true);
+        $('#negara').removeAttr('required').val('');
+      } else if (jenis == 'Mancanegara') {
+        $('#kota-group').hide();
+        $('#negara-group').show();
+        $('#negara').attr('required', true);
+        $('#kota').removeAttr('required').val('');
+      } else {
+        $('#kota-group').hide();
+        $('#negara-group').hide();
+        $('#kota').removeAttr('required').val('');
+        $('#negara').removeAttr('required').val('');
+      }
     });
-
-    // Initialize pada saat load pertama kali
-    const initialPaket = $('#pilihan_paket_wisata').val();
-    if (initialPaket) {
-        $('#pilihan_paket_wisata').trigger('change');
-    }
+  
+    // Initialize pada saat load pertama kali TANPA mereset values
+    showHideFields();
     
     const initialJenis = $('#jenis_wisatawan').val();
     if (initialJenis) {
-        $('#jenis_wisatawan').trigger('change');
+      $('#jenis_wisatawan').trigger('change');
     }
   });
   </script>
 </body>
+
 </html>
 <?php ob_end_flush(); // Tambahkan ini ?>
