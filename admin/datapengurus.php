@@ -14,6 +14,12 @@ include "login/ceksession.php";
 
   <title>Data Pengurus Desa Candirejo Borobudur</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="icon" type="image/png" href="../img/icon.ico">
+  <link rel="apple-touch-icon" href="../img/icon.ico">
+
   <!-- Bootstrap -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->

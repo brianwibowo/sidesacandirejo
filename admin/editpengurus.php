@@ -34,6 +34,13 @@ if (!$data_pengurus) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit Data Pengurus - Arsip Desa Candirejo</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="icon" type="image/png" href="../img/icon.ico">
+  <link rel="apple-touch-icon" href="../img/icon.ico">
+
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">

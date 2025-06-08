@@ -1,33 +1,41 @@
 <?php
+session_start();
 include '../../koneksi/koneksi.php';
 
-if(isset($_GET['No'])){
-    $No = $_GET['No'];
+if (isset($_GET['No'])) {
+    $No = mysqli_real_escape_string($db, $_GET['No']);
     
-    // Get the file path before deleting
-    $query_get_file = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE No = $No";
-    $result = mysqli_query($db, $query_get_file);
-    $row = mysqli_fetch_assoc($result);
-    $file_path = $row['file_surat'];
+    // Get file name before deleting
+    $query = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE No = '$No'";
+    $result = mysqli_query($db, $query);
+    $data = mysqli_fetch_assoc($result);
     
-    // Delete the record
-    $query = "DELETE FROM tb_arsip_surat_masuk WHERE No = $No";
-    if(mysqli_query($db, $query)){
-        // Delete the file if it exists
-        if(file_exists($file_path)){
-            unlink($file_path);
-        }
-        
-        // Reorder the No column
-        $query_reorder = "SET @count = 0; 
-                         UPDATE tb_arsip_surat_masuk SET No = @count:= @count + 1 
-                         ORDER BY No;";
-        mysqli_multi_query($db, $query_reorder);
-        
-        echo "<script>alert('Data berhasil dihapus!'); window.location='../datasuratmasuk.php';</script>";
-    } else {
-        echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "'); window.location='../datasuratmasuk.php';</script>";
+    // Delete file if it exists
+    $upload_dir = '../uploads/surat_masuk/';
+    if (!empty($data['file_surat']) && file_exists($upload_dir . $data['file_surat'])) {
+        @unlink($upload_dir . $data['file_surat']);
     }
+    
+    // Delete from database
+    $query = "DELETE FROM tb_arsip_surat_masuk WHERE No = '$No'";
+    
+    if (mysqli_query($db, $query)) {
+        // Reorder IDs
+        $query = "SET @count = 0";
+        mysqli_query($db, $query);
+        
+        $query = "UPDATE tb_arsip_surat_masuk SET No = @count:= @count + 1";
+        mysqli_query($db, $query);
+        
+        $query = "ALTER TABLE tb_arsip_surat_masuk AUTO_INCREMENT = 1";
+        mysqli_query($db, $query);
+        
+        echo "<script>alert('Data berhasil dihapus!'); window.location='../arsipsuratmasuk.php';</script>";
+    } else {
+        echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../arsipsuratmasuk.php';</script>";
+    }
+} else {
+    echo "<script>alert('Nomor tidak valid!'); window.location='../arsipsuratmasuk.php';</script>";
 }
 
 mysqli_close($db);

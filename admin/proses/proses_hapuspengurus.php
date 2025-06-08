@@ -25,6 +25,16 @@ if (isset($_GET['id'])) {
     $query = "DELETE FROM tb_data_pengurus WHERE id = '$id'";
     
     if (mysqli_query($db, $query)) {
+        // Reorder IDs
+        $query = "SET @count = 0";
+        mysqli_query($db, $query);
+        
+        $query = "UPDATE tb_data_pengurus SET id = @count:= @count + 1";
+        mysqli_query($db, $query);
+        
+        $query = "ALTER TABLE tb_data_pengurus AUTO_INCREMENT = 1";
+        mysqli_query($db, $query);
+        
         echo "<script>alert('Data berhasil dihapus!'); window.location='../datapengurus.php';</script>";
     } else {
         echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../datapengurus.php';</script>";

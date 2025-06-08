@@ -1,29 +1,41 @@
-<?php 
+<?php
+session_start();
 include '../../koneksi/koneksi.php';
 
-$id = $_GET['id'];
-
-$sql_select = "SELECT bukti_legalitas FROM tb_data_mitra WHERE id = '$id'";
-$result = mysqli_query($db, $sql_select);
-
-if ($result) {
-    $row = mysqli_fetch_assoc($result);
-    $file_to_delete = $row['bukti_legalitas'];
-    $sql_delete = "DELETE FROM tb_data_mitra WHERE id = '$id'";
-
-    if (mysqli_query($db, $sql_delete)) {
-        if (!empty($file_to_delete) && file_exists($file_to_delete)) {
-            unlink($file_to_delete); 
-        }
-        echo "<script>
-            alert('Hapus Data Berhasil');
-            window.location.href = '../datamitra.php';
-            </script>";
+if (isset($_GET['id'])) {
+    $id = mysqli_real_escape_string($db, $_GET['id']);
+    
+    // Get file name before deleting
+    $query = "SELECT logo FROM tb_data_mitra WHERE id = '$id'";
+    $result = mysqli_query($db, $query);
+    $data = mysqli_fetch_assoc($result);
+    
+    // Delete file if it exists
+    $upload_dir = '../uploads/mitra/';
+    if (!empty($data['logo']) && file_exists($upload_dir . $data['logo'])) {
+        @unlink($upload_dir . $data['logo']);
+    }
+    
+    // Delete from database
+    $query = "DELETE FROM tb_data_mitra WHERE id = '$id'";
+    
+    if (mysqli_query($db, $query)) {
+        // Reorder IDs
+        $query = "SET @count = 0";
+        mysqli_query($db, $query);
+        
+        $query = "UPDATE tb_data_mitra SET id = @count:= @count + 1";
+        mysqli_query($db, $query);
+        
+        $query = "ALTER TABLE tb_data_mitra AUTO_INCREMENT = 1";
+        mysqli_query($db, $query);
+        
+        echo "<script>alert('Data berhasil dihapus!'); window.location='../datamitra.php';</script>";
     } else {
-        echo "Error deleting record: " . mysqli_error($db);
+        echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../datamitra.php';</script>";
     }
 } else {
-    echo "Error retrieving file: " . mysqli_error($db);
+    echo "<script>alert('ID tidak valid!'); window.location='../datamitra.php';</script>";
 }
 
 mysqli_close($db);

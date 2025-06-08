@@ -12,7 +12,13 @@ include "login/ceksession.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Arsip Surat Desa Candirejo Borobudur</title>
+  <title>Detail Data Pengurus - Arsip Desa Candirejo</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
+  <link rel="icon" type="image/png" href="../img/icon.ico">
+  <link rel="apple-touch-icon" href="../img/icon.ico">
 
   <!-- Bootstrap -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -181,7 +187,7 @@ include "login/ceksession.php";
     <!-- footer content -->
     <footer>
       <div class="pull-right">
-        Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+
       </div>
       <div class="clearfix"></div>
     </footer>
