@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-require '../../dompdf/autoload.inc.php'; 
+require '../../dompdf/autoload.inc.php';
 include '../../koneksi/koneksi.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['kepada']) && isset($_POST['isi'])) {
-    
+if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['kepada'])) {
+
     $pdf_dir = '../uploads/'; // Ensure this directory exists and is writable
     $pdf_filename = "Surat_" . htmlspecialchars($_POST['nomor_surat']) . ".pdf";
 
@@ -16,7 +16,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     $pdf_path = $pdf_dir . $pdf_filename;
     // Direktori untuk menyimpan file gambar
     $target_dir = "../images/";
-    
+
     $file_extension = pathinfo('../images/kopsurat.jpg', PATHINFO_EXTENSION);
     $target_file = "../images/kopsurat.jpg";
     $image_data = file_get_contents($target_file);
@@ -35,23 +35,38 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     // Ambil data dari form
     $nomor_surat = htmlspecialchars($_POST['nomor_surat']); // Escaping input
     $tanggal = htmlspecialchars($_POST['tanggal']);
-    $tanggal_input = htmlspecialchars($_POST['tanggal']); 
+    $tanggal_input = htmlspecialchars($_POST['tanggal']);
     $date = DateTime::createFromFormat('Y-m-d', $tanggal_input);
-    
+
     $bulan = [
-        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
     ];
-    
-    $bulan_angka = (int)$date->format('n'); 
-    $tanggal_format = $date->format('d') . ' ' . $bulan[$bulan_angka] . ' ' . $date->format('Y'); 
+
+    $bulan_angka = (int) $date->format('n');
+    $tanggal_format = $date->format('Y') . ' ' . $bulan[$bulan_angka] . ' ' . $date->format('d');
 
     $kepada = htmlspecialchars($_POST['kepada']);
     $lokasi_penerima = htmlspecialchars($_POST['lokasi']);
-    $isi = htmlspecialchars($_POST['isi']);
+    $tanggal_acara = htmlspecialchars($_POST['tanggal_acara']);
+    $waktu_acara = htmlspecialchars($_POST['waktu_acara']);
+    $tempat_acara = htmlspecialchars($_POST['tempat_acara']);
+    $keperluan = htmlspecialchars($_POST['keperluan']);
     $perihal = htmlspecialchars($_POST['perihal']);
     $lampiran = isset($_POST['lampiran']) ? htmlspecialchars($_POST['lampiran']) : '-';  // Optional field
+
+    $tanggal_acara_input = DateTime::createFromFormat('Y-m-d', $tanggal_acara);
+    $tanggal_acara_format = $tanggal_acara_input ? $tanggal_acara_input->format('d') . ' ' . $bulan[$bulan_angka] . ' ' . $tanggal_acara_input->format('Y') : '-';
 
     // Konfigurasi DomPDF
     $options = new Options();
@@ -115,8 +130,8 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
         .signature {
             margin-top: 10px;
         }
-        .isi {
-        margin : 20px 0;
+        .content {
+            margin-left: 20px;
         }
 
     </style>
@@ -131,7 +146,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             <br>
             <p><span style='padding-right: 34px;'>Nomor</span>: $nomor_surat <br>
             <span style='padding-right: 17px;'>Lampiran</span>: $lampiran <br>
-            <span style='padding-right: 34px;'>Perihal</span>: <strong>$perihal</strong></p>
+            <span style='padding-right: 34px;'>Perihal</span>: <strong>Undangan</strong></p>
             <br>
             <p> 
             <i>Kepada Yth.<i><br>
@@ -140,7 +155,13 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
             </p><br>
             <p class='pembuka'>Puji syukur kepada Allah SWT atas limpahan rahmat_Nya.
             Sholawat dan salam selalu tercurah kepada junjungan kita, Nabi Muhammad SAW.</p>
-            <p class='isi'>".nl2br($isi)."</p>
+            <p class='isi'>Dengan ini mengharapkan kepada Bapak/Ibu/Saudara, Besok pada:</p>
+            <div class='content'>
+                <p>Hari/Tanggal&nbsp;&nbsp;: $tanggal_acara_format</p>
+                <p>Waktu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: $waktu_acara</p>
+                <p>Tempat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: $tempat_acara</p>
+                <p>Acara&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: $keperluan</p>
+            </div>
             <p class='penutup'>Demikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami sampaikan terima kasih.</p>
         </div>
         <div class='signature'> 
@@ -148,12 +169,12 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
         <table style='width:100%; text-align: center;'>
             <tr>
                 <td style='width: 50%; padding: 10px;'>
-                    <img src='$base64_image_kepala_desa' alt='Penandatangan Surat' width='200px'><br>
+                    <img src='$base64_image_kepala_desa' alt='Penandatangan Surat' height='90px'><br>
                     <p>Ersyidik</p>
                     <p>Ketua</p>
                 </td>
                 <td style='width: 50%; padding: 10px;'>
-                    <img src='$base64_image_sekretaris' alt='Penandatangan Surat' width='90px'><br>
+                    <img src='$base64_image_sekretaris' alt='Penandatangan Surat' height='90px'><br>
                     <p>Rifa</p>
                     <p>Sekretaris</p>
                 </td>
@@ -177,7 +198,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     // Insert record into the database
     $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
                   VALUES ('$tanggal', '$nomor_surat', '$kepada', '$perihal', '-','Dibuat dari fitur Buat surat' , '$pdf_path')";
-    
+
     if (mysqli_query($db, $query)) {
         // Header for downloading PDF
         header('Content-Type: application/pdf');
@@ -187,10 +208,9 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
 
         // Output PDF to browser
         $dompdf->stream($pdf_filename, ["Attachment" => false]);
-}else {
-    echo "Error: " . mysqli_error($db);
-}
-}
-else {
+    } else {
+        echo "Error: " . mysqli_error($db);
+    }
+} else {
     echo "Data tidak lengkap!";
 }
