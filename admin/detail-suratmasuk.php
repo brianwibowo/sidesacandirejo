@@ -78,7 +78,7 @@ include "login/ceksession.php";
                 </div>
                 <?php include '../koneksi/koneksi.php';
                      $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_arsip_surat_masuk where id='".$id."'";                        
+                     $sql  		= "SELECT * FROM tb_arsip_surat_masuk where No='".$id."'";                        
                      $query  	= mysqli_query($db, $sql);
                      $data 		= mysqli_fetch_array($query);?>
                 <div class="x_content">
@@ -102,7 +102,7 @@ include "login/ceksession.php";
                         </tr>
                         <tr>
                           <td>Nomor Urut</td>
-                          <td><?php echo $data['id']?></td>
+                          <td><?php echo $data['No']?></td>
                         </tr>
                         <tr>
                           <td>Nomor Surat</td>

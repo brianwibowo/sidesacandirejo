@@ -71,6 +71,22 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <?php
+                    include '../koneksi/koneksi.php';
+                    // Get the last No from database
+                    $query = "SELECT MAX(No) as last_no FROM tb_arsip_surat_masuk";
+                    $result = mysqli_query($db, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    $next_no = $row['last_no'] + 1;
+                    ?>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nomor Urut <span class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" value="<?php echo $next_no; ?>" id="No" name="No" required="required" maxlength="4"
+                          placeholder="Nomor Urut" class="form-control col-md-7 col-xs-12" readonly>
+                      </div>
+                    </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Terima <span class="required">*</span>
                       </label>

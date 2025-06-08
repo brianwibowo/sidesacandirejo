@@ -94,7 +94,7 @@ include "login/ceksession.php";
                       <tbody>
                         <tr>
                           <td>Kode Data</td>
-                          <td><?php echo $data['kode_data']?></td>
+                          <td><?php echo !empty($data['kode_data']) ? $data['kode_data'] : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Produk</td>

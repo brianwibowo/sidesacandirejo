@@ -6,12 +6,12 @@ ini_set('display_errors', 1);
 include '../../koneksi/koneksi.php';
 
 // Validasi input
-if (!isset($_POST['id']) || empty($_POST['id'])) {
-    die("<script>alert('ID tidak valid'); window.location='../datasuratmasuk.php';</script>");
+if (!isset($_POST['No']) || empty($_POST['No'])) {
+    die("<script>alert('Nomor tidak valid'); window.location='../datasuratmasuk.php';</script>");
 }
 
 // Ambil data dari form
-$id = mysqli_real_escape_string($db, $_POST['id']);
+$No = mysqli_real_escape_string($db, $_POST['No']);
 $tanggal_terima = mysqli_real_escape_string($db, $_POST['tanggal_masuk']);
 $tanggal_surat = mysqli_real_escape_string($db, $_POST['tanggalsurat_suratmasuk']);
 $nomor_surat = mysqli_real_escape_string($db, $_POST['nomor_suratmasuk']);
@@ -24,7 +24,7 @@ $keterangan = isset($_POST['keterangan']) ? mysqli_real_escape_string($db, $_POS
 
 // Variabel untuk menyimpan nama file baru
 $nama_file = null;
-$query_get_file = "SELECT file_surat, lampiran_foto FROM tb_arsip_surat_masuk WHERE id='$id'";
+$query_get_file = "SELECT file_surat, lampiran_foto FROM tb_arsip_surat_masuk WHERE No='$No'";
 $result = mysqli_query($db, $query_get_file);
 
 if (!$result) {
@@ -69,7 +69,7 @@ if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR
                     kode='$kode',
                     keterangan='$keterangan',
                     file_surat='$destination' 
-                WHERE id='$id'";
+                WHERE No='$No'";
     } else {
         die("<script>alert('Gagal memindahkan file surat.'); window.location='../datasuratmasuk.php';</script>");
     }
@@ -85,7 +85,7 @@ if (isset($_FILES['file_surat']) && $_FILES['file_surat']['error'] == UPLOAD_ERR
                 perihal='$perihal', 
                 kode='$kode',
                 keterangan='$keterangan'
-            WHERE id='$id'";
+            WHERE No='$No'";
 }
 
 // Handle lampiran foto
@@ -112,7 +112,7 @@ if (isset($_FILES['lampiran_foto']) && $_FILES['lampiran_foto']['error'] == UPLO
                     kode='$kode',
                     keterangan='$keterangan',
                     lampiran_foto='$foto_destination' 
-                WHERE id='$id'";
+                WHERE No='$No'";
     } else {
         die("<script>alert('Gagal memindahkan file foto.'); window.location='../datasuratmasuk.php';</script>");
     }

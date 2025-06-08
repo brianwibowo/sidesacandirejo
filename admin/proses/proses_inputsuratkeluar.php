@@ -17,8 +17,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $destination = $target_dir.$nama_file;
 
     if(move_uploaded_file($_FILES['file_surat']['tmp_name'], $destination)){
-        $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
-                  VALUES ('$tgl_keluar', '$nomor_surat', '$penerima', '$perihal', '$kode', '$keterangan', '$destination')";
+        // Get the last No value
+        $query_last_no = "SELECT MAX(No) as last_no FROM tb_arsip_surat_keluar";
+        $result = mysqli_query($db, $query_last_no);
+        $row = mysqli_fetch_assoc($result);
+        $next_no = ($row['last_no'] ?? 0) + 1;
+
+        $query = "INSERT INTO tb_arsip_surat_keluar (No, tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
+                  VALUES ('$next_no', '$tgl_keluar', '$nomor_surat', '$penerima', '$perihal', '$kode', '$keterangan', '$destination')";
 
         if (mysqli_query($db, $query)) {
             echo "<script>alert('Data berhasil disimpan!'); window.location='../datasuratkeluar.php';</script>";

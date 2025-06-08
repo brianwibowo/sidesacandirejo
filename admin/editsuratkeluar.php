@@ -40,6 +40,11 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <style>
+    #tanggalkeluar_suratkeluar {
+      text-align: left;
+    }
+  </style>
 </head>
 
 <body class="nav-md">
@@ -79,7 +84,7 @@ include "login/ceksession.php";
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <?php include '../koneksi/koneksi.php';
                             $id			= mysqli_real_escape_string($db,$_GET['id']);
-                            $sql  		= "SELECT * FROM tb_arsip_surat_keluar where id='".$id."'";                        
+                            $sql  		= "SELECT * FROM tb_arsip_surat_keluar where No='".$id."'";                        
                             $query  	= mysqli_query($db, $sql);
                             $data 		= mysqli_fetch_array($query);
                           ?>
@@ -90,14 +95,18 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date'>
-                          <input value="<?php echo $data['tanggal_keluar'] ?>" type='date'
-                            id="tanggalkeluar_suratkeluar" name="tanggal_keluar" required="required"
-                            class="form-control" required="required" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
+                        <input value="<?php echo $data['tanggal_keluar'] ?>" type="text" id="tanggal_keluar"
+                          name="tanggal_keluar" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
+                      </div>
+                     
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Nomor Urut <span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" class="form-control" id="No" name="No" value="<?php echo $data['No']; ?>" readonly>
                       </div>
                     </div>
                     <div class="form-group">
@@ -160,7 +169,8 @@ include "login/ceksession.php";
                           required="required" readonly="readonly" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <input type="hidden" value="<?= $data['id']?>" name="id">
+                 
+                    <input type="hidden" value="<?= $data['No']?>" name="id">
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

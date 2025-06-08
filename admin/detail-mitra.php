@@ -95,7 +95,7 @@ include "login/ceksession.php";
                         <tr>
                           <td>Kode Data</td>
                           <td>:</td>
-                          <td><?php echo $data['kode_data']?></td>
+                          <td><?php echo !empty($data['kode_data']) ? $data['kode_data'] : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Nama Pemilik</td>
@@ -106,6 +106,11 @@ include "login/ceksession.php";
                           <td>Nama Usaha</td>
                           <td>:</td>
                           <td><?php echo $data['nama_usaha']?></td>
+                        </tr>
+                        <tr>
+                          <td>Kategori Usaha</td>
+                          <td>:</td>
+                          <td><?php echo $data['kategori_usaha']?></td>
                         </tr>
                         <tr>
                           <td>Alamat</td>

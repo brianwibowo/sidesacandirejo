@@ -4,6 +4,7 @@ include '../../koneksi/koneksi.php';
 $id = $_POST['id'];
 $nama_pemilik = $_POST['nama_pemilik'];
 $nama_usaha = $_POST['nama_usaha'];
+$kategori_usaha = $_POST['kategori_usaha'];
 $alamat = $_POST['alamat'];
 $nomor_telp = $_POST['nomor_telp'];
 $legalitas_usaha = $_POST['legalitas_usaha'];
@@ -106,6 +107,7 @@ if (!empty($foto_paths)) {
 $query = "UPDATE tb_data_mitra SET 
     nama_pemilik='$nama_pemilik', 
     nama_usaha='$nama_usaha', 
+    kategori_usaha='$kategori_usaha',
     alamat='$alamat',
     nomor_telp='$nomor_telp',
     legalitas_usaha='$legalitas_usaha'

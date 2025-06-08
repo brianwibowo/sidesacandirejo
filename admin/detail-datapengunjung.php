@@ -58,15 +58,17 @@ include "login/ceksession.php";
                   $sql = "SELECT * FROM tb_data_pengunjung WHERE id='$id'";
                   $query = mysqli_query($db, $sql);
                   $data = mysqli_fetch_array($query);
+                  
+      
                   ?>
                 <div class="x_content">
                   <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                     <div class="profile_img">
                       <div id="crop-avatar">
                         <!-- Current avatar -->
-                        <?php if (!empty($data['foto_wisatawan'])): ?>
+                        <?php if (!empty($data['foto'])): ?>
                         <img class="img-responsive avatar-view"
-                          src="../foto_wisatawan/<?php echo $data['foto_wisatawan']; ?>" alt="Avatar">
+                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data['foto']); ?>" alt="Avatar">
                         <?php else: ?>
                         <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
                         <?php endif; ?>
@@ -86,7 +88,7 @@ include "login/ceksession.php";
                         <tbody>
                           <tr>
                             <td width="50%">Kode Data</td>
-                            <td><?php echo isset($data['kode_data']) ? $data['kode_data'] : 'N/A'; ?></td>
+                            <td><?php echo isset($data['kode_data']) ? $data['kode_data'] : '-'; ?></td>
                           </tr>
                           <tr>
                             <td>Pilihan Paket Wisata</td>
@@ -102,7 +104,7 @@ include "login/ceksession.php";
                           </tr>
                           <tr>
                             <td>Negara</td>
-                            <td><?php echo isset($data['negara']) ? $data['negara'] : 'N/A'; ?></td>
+                            <td><?php echo isset($data['negara']) ? $data['negara'] : '-'; ?></td>
                           </tr>
                           <tr>
                             <td>Nama</td>
@@ -115,6 +117,17 @@ include "login/ceksession.php";
                           <tr>
                             <td>Agen Wisata</td>
                             <td><?php echo isset($data['agen_wisata']) ? $data['agen_wisata'] : 'N/A'; ?></td>
+                          </tr>
+                          <tr>
+                            <td>Driver/Agent Guide</td>
+                            <td><?php echo isset($data['driver_agent_guide']) ? $data['driver_agent_guide'] : 'N/A'; ?></td>
+                          </tr>
+                          <tr>
+                            <td>Local Guide</td>
+                            <td><?php echo isset($data['local_guide']) ? $data['local_guide'] : 'N/A'; ?></td>
+                          </tr>
+                          <tr>
+                            
                           </tr>
                         </tbody>
                       </table>

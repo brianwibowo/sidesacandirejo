@@ -121,6 +121,9 @@ include "login/ceksession.php";
                           <th>Nama</th>
                           <th>Pax</th>
                           <th>Agen Wisata</th>
+                          <th>Driver/Agent Guide</th>
+                          <th>Local Guide</th>
+                          <th>Foto</th>
                           <th>Aksi</th>
                         </tr>
                       </thead>
@@ -214,6 +217,9 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['nama']) . '</td>
                                 <td>' . htmlspecialchars($data['pax']) . ' orang</td>
                                 <td>' . htmlspecialchars($data['agen_wisata'] ?? '-') . '</td>
+                                <td>' . htmlspecialchars($data['driver_agent_guide']) . '</td>
+                                <td>' . htmlspecialchars($data['local_guide']) . '</td>
+                                <td>' . (!empty($data['foto']) ? '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($data['foto']) . '" style="max-width:60px;max-height:60px;">' : '-') . '</td>
                                 <td style="text-align:center;">
                                     <a href="detail-datapengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
                                     <a href="editpengunjung.php?id=' . urlencode($data['id'])  . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>

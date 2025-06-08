@@ -79,7 +79,7 @@ include "login/ceksession.php";
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <?php include '../koneksi/koneksi.php';
                             $id			= mysqli_real_escape_string($db,$_GET['id']);
-                            $sql  		= "SELECT * FROM tb_arsip_surat_masuk where id='".$id."'";                        
+                            $sql  		= "SELECT * FROM tb_arsip_surat_masuk where No='".$id."'";                        
                             $query  	= mysqli_query($db, $sql);
                             $data 		= mysqli_fetch_array($query);
                             ?>
@@ -109,8 +109,8 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['id'];?>" type="text" onkeyup="validAngka(this)"
-                          id="nomorurut_suratmasuk" name="id" required="required" maxlength="4"
+                        <input value="<?php echo $data['No'];?>" type="text" onkeyup="validAngka(this)"
+                          id="nomorurut_suratmasuk" name="No" required="required" maxlength="4"
                           placeholder="Masukkan Nomor Urut Surat" class="form-control col-md-7 col-xs-12" readonly>
                       </div>
                     </div>

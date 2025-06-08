@@ -6,7 +6,7 @@ use Dompdf\Dompdf;
 include '../../koneksi/koneksi.php';
 
 // Ambil data surat keluar dari database
-$sql = "SELECT * FROM tb_arsip_surat_keluar ORDER BY nomor_surat ASC";
+$sql = "SELECT * FROM tb_arsip_surat_keluar ORDER BY No ASC";
 $query = mysqli_query($db, $sql);
 
 // Start buffering output
@@ -53,6 +53,7 @@ ob_start();
   <table>
     <thead>
       <tr>
+        <th>No</th>
         <th>Nomor Surat</th>
         <th>Tanggal Keluar</th>
         <th>Penerima</th>
@@ -64,6 +65,7 @@ ob_start();
     <tbody>
       <?php while($data = mysqli_fetch_array($query)) { ?>
       <tr>
+        <td><?php echo $data['No']; ?></td>
         <td><?php echo $data['nomor_surat']; ?></td>
         <td><?php echo $data['tanggal_keluar']; ?></td>
         <td><?php echo $data['penerima']; ?></td>

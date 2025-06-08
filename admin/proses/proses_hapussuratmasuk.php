@@ -1,27 +1,33 @@
 <?php
 include '../../koneksi/koneksi.php';
 
-$id = $_GET['id'];
-
-$query_get_file = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE id='$id'";
-$result_get_file = mysqli_query($db, $query_get_file);
-
-if ($result_get_file) {
-    $data = mysqli_fetch_assoc($result_get_file);
-    $file_path = $data['file_surat'];
-
-    $query_delete = "DELETE FROM tb_arsip_surat_masuk WHERE id='$id'";
-
-    if (mysqli_query($db, $query_delete)) {
-        if (file_exists($file_path)) {
-            unlink($file_path); 
+if(isset($_GET['No'])){
+    $No = $_GET['No'];
+    
+    // Get the file path before deleting
+    $query_get_file = "SELECT file_surat FROM tb_arsip_surat_masuk WHERE No = $No";
+    $result = mysqli_query($db, $query_get_file);
+    $row = mysqli_fetch_assoc($result);
+    $file_path = $row['file_surat'];
+    
+    // Delete the record
+    $query = "DELETE FROM tb_arsip_surat_masuk WHERE No = $No";
+    if(mysqli_query($db, $query)){
+        // Delete the file if it exists
+        if(file_exists($file_path)){
+            unlink($file_path);
         }
-        echo "<script>alert('Data berhasil dihapus'); window.location='../datasuratmasuk.php';</script>";
+        
+        // Reorder the No column
+        $query_reorder = "SET @count = 0; 
+                         UPDATE tb_arsip_surat_masuk SET No = @count:= @count + 1 
+                         ORDER BY No;";
+        mysqli_multi_query($db, $query_reorder);
+        
+        echo "<script>alert('Data berhasil dihapus!'); window.location='../datasuratmasuk.php';</script>";
     } else {
-        echo "Error: " . mysqli_error($db);
+        echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "'); window.location='../datasuratmasuk.php';</script>";
     }
-} else {
-    echo "Error: " . mysqli_error($db);
 }
 
 mysqli_close($db);

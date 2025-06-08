@@ -23,6 +23,7 @@ echo "
     </center>
 <table border='1'>
 <tr>
+    <th>No</th>
     <th>Tanggal Kunjungan</th>
     <th>Pilihan Paket Wisata</th>
     <th>Jenis Wisatawan</th>
@@ -30,6 +31,8 @@ echo "
     <th>Nama</th>
     <th>Pax (Jumlah Wisatawan)</th>
     <th>Agen Wisata</th>
+    <th>Driver Agent Guide</th>
+    <th>Local Guide</th>
 </tr>";
 
 while ($data = mysqli_fetch_array($query)) {
@@ -108,6 +111,7 @@ while ($data = mysqli_fetch_array($query)) {
     }
     
     echo "<tr>
+        <td>" . htmlspecialchars($data['id']) . "</td>
         <td>" . htmlspecialchars($data['tanggal_kunjungan']) . "</td>
         <td>" . $paket_display . "</td>
         <td>" . htmlspecialchars($data['jenis_wisatawan']) . "</td>
@@ -115,6 +119,8 @@ while ($data = mysqli_fetch_array($query)) {
         <td>" . htmlspecialchars($data['nama']) . "</td>
         <td>" . htmlspecialchars($data['pax']) . "</td>
         <td>" . htmlspecialchars($data['agen_wisata']) . "</td>
+        <td>" . htmlspecialchars($data['driver_agent_guide']) . "</td>
+        <td>" . htmlspecialchars($data['local_guide']) . "</td>
     </tr>";
 }
 

@@ -113,14 +113,15 @@ include "login/ceksession.php";
                   <table id="datatable" class="table table-striped table-bordered">
                     <thead>
                       <tr>
-                        <th width="15%">Nama Pemilik</th>
-                        <th width="15%">Nama Usaha</th>
-                        <th width="20%">Alamat</th>
+                        <th width="12%">Nama Pemilik</th>
+                        <th width="12%">Nama Usaha</th>
+                        <th width="12%">Kategori Usaha</th>
+                        <th width="15%">Alamat</th>
                         <th width="10%">Nomor Telepon</th>
-                        <th width="15%">Legalitas Usaha</th>
+                        <th width="12%">Legalitas Usaha</th>
                         <th width="10%">Bukti Legalitas</th>
                         <th width="10%">Foto Kegiatan</th>
-                        <th width="5%">Aksi</th>
+                        <th width="3%">Aksi</th>
                       </tr>
                     </thead>
 
@@ -130,41 +131,23 @@ include "login/ceksession.php";
                           echo '<tr>
                           <td>' . htmlspecialchars($data['nama_pemilik']) . '</td>
                           <td>' . htmlspecialchars($data['nama_usaha']) . '</td>
+                          <td>' . htmlspecialchars($data['kategori_usaha']) . '</td>
                           <td>' . htmlspecialchars($data['alamat']) . '</td>
                           <td>' . htmlspecialchars($data['nomor_telp']) . '</td>
                           <td>' . htmlspecialchars($data['legalitas_usaha']) . '</td>
-                          <td>';
-                            
-                            if (!empty($data['bukti_legalitas'])) {
-                                echo '<a href="uploads/' . basename($data['bukti_legalitas']) . '" target="_blank"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>';
-                            } else {
-                                echo '--';
-                            }
-                            
-                            echo '</td><td>';
-                            
-                            if (!empty($data['foto_kegiatan'])) {
-                                $fotos = explode(',', $data['foto_kegiatan']);
-                                foreach($fotos as $foto) {
-                                    echo '<a href="uploads/foto_kegiatan/' . basename($foto) . '" target="_blank"><button type="button" title="Lihat Foto" class="btn btn-info btn-xs"><i class="fa fa-image"></i></button></a> ';
-                                }
-                            } else {
-                                echo '--';
-                            }
-                  
-                            echo '</td>
-                  
-                      <td style="text-align:center;">
-                        <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail"
-                            class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                        <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit"
-                            class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                        <a onclick="return konfirmasi()"
-                          href="proses/proses_hapusmitra.php?id=' . $data['id'] . '"><button type="button" title="Hapus"
-                            class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
-                      </td>
-                      </tr>';
-                      }
+                          <td>' . (!empty($data['bukti_legalitas']) ? '<a href="../' . htmlspecialchars($data['bukti_legalitas']) . '" target="_blank">Lihat</a>' : '-') . '</td>
+                          <td>' . (!empty($data['foto_kegiatan']) ? '<a href="../' . htmlspecialchars($data['foto_kegiatan']) . '" target="_blank">Lihat</a>' : '-') . '</td>
+                          <td>
+                            <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail"
+                                class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                            <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit"
+                                class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                            <a onclick="return konfirmasi()"
+                              href="proses/proses_hapusmitra.php?id=' . $data['id'] . '"><button type="button" title="Hapus"
+                                class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                          </td>
+                          </tr>';
+                        }
                       ?>
                     </tbody>
                   </table>

@@ -114,6 +114,7 @@ include "login/ceksession.php";
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
+                          <th width="5%">No</th>
                           <th width="15%">Nomor Surat</th>
                           <th width="10%">Tanggal Keluar</th>
                           <th width="11%">Penerima</th>
@@ -124,22 +125,22 @@ include "login/ceksession.php";
                         </tr>
                       </thead>
 
-
                       <tbody>
                         <?php
                             while($data = mysqli_fetch_array($query1)){
                               echo'<tr>
-                              <td>	'. $data['nomor_surat'].'  	</td>
-                              <td>	'. $data['tanggal_keluar'].'		</td>
-                              <td>	'. $data['penerima'].'	</td>
-                              <td>	'. $data['perihal'].'  		</td>
-                              <td>	'. $data['kode'].'  		</td>
-                              <td>	'. $data['keterangan'].'		</td>
+                              <td>'. $data['No'].'</td>
+                              <td>'. $data['nomor_surat'].'</td>
+                              <td>'. $data['tanggal_keluar'].'</td>
+                              <td>'. $data['penerima'].'</td>
+                              <td>'. $data['perihal'].'</td>
+                              <td>'. $data['kode'].'</td>
+                              <td>'. $data['keterangan'].'</td>
                               <td style="text-align:center;">
                               <a href= surat_keluar/'.$data['file_surat'].'><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
-                              <a href=detail-suratkeluar.php?id='.$data['id'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                              <a href=editsuratkeluar.php?id='.$data['id'].'><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                              <a onclick="return konfirmasi()" href=proses/proses_hapussuratkeluar.php?id='.$data['id'].'><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
+                              <a href=detail-suratkeluar.php?id='.$data['No'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                              <a href=editsuratkeluar.php?id='.$data['No'].'><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                              <a onclick="return konfirmasi()" href=proses/proses_hapussuratkeluar.php?id='.$data['No'].'><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
                               </tr>';
                             }
                             ?>

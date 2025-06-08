@@ -92,16 +92,17 @@ include "login/ceksession.php";
                           <option value="studi_banding">Studi Banding</option>
                           <option value="fun_game">Paket Fun Game</option>
                           <option value="pelajar_live_in">Paket Pelajar - Live In Candirejo</option>
-                          <option value="pelajar_field_trip_one_day">Paket Pelajar – Field Trip One Day</option>
-                          <option value="pelajar_field_trip_half_day">Paket Pelajar – Field Trip Half Day</option>
+                          <option value="pelajar_field_trip">Paket Pelajar – Field Trip</option>
                           <option value="cycling_tour">Cycling Village Tour with/without Lunch</option>
                           <option value="traditional_dance">Traditional Dance</option>
                           <option value="walking_tour">Walking Around Village with/without Lunch</option>
                           <option value="homestay">Stay At Local House In Candirejo Village (Homestay)</option>
                           <option value="serenade">Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="cooking_lesson">Cooking lesson with/without Tour</option>
+                          <option value="cooking_lesson">Cooking lesson with/without Tour</option>
                           <option value="village_experience">Village Experience</option>
                           <option value="dokar_tour">Dokar Village Tour with/without Lunch</option>
+                          <option value="inspection">Inspection</option>
+                          <option value="lainnya">Lainnya</option>
                         </select>
                       </div>
                     </div>
@@ -198,6 +199,33 @@ include "login/ceksession.php";
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"
                           placeholder="Masukkan Agen Wisata (Opsional)" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="driver_agent_guide">Driver/Agent Guide
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="driver_agent_guide" name="driver_agent_guide" maxlength="100" required="required"
+                          placeholder="Masukkan Nama Driver/Agent Guide" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="local_guide">Local Guide
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="local_guide" name="local_guide" maxlength="100" required="required"
+                          placeholder="Masukkan Nama Local Guide" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
                       </div>
                     </div>
 

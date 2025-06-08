@@ -54,12 +54,15 @@ ob_start();
     <thead>
       <tr>
         <th>No</th>
+        <th>Tanggal Kunjungan</th>
         <th>Nama</th>
         <th>Pilihan Paket Wisata</th>
         <th>Jenis Wisatawan</th>
         <th>Kota/Negara</th>
         <th>Pax (Jumlah Wisatawan)</th>
         <th>Agen Wisata</th>
+        <th>Driver Agent Guide</th>
+        <th>Local Guide</th>
       </tr>
     </thead>
     <tbody>
@@ -69,6 +72,7 @@ ob_start();
         error_reporting(E_ALL & ~E_NOTICE);
         
         // Set default values for fields that might not exist
+        $tanggal_kunjungan = isset($data['tanggal_kunjungan']) ? $data['tanggal_kunjungan'] : '';
         $jenis_wisatawan = isset($data['jenis_wisatawan']) ? $data['jenis_wisatawan'] : '';
         $kota = isset($data['kota']) ? $data['kota'] : '';
         $negara = isset($data['negara']) ? $data['negara'] : '';
@@ -79,6 +83,9 @@ ob_start();
         $nama = isset($data['nama']) ? $data['nama'] : '';
         $pax = isset($data['pax']) ? $data['pax'] : '';
         $agen_wisata = isset($data['agen_wisata']) ? $data['agen_wisata'] : '';
+        $driver_agent_guide = isset($data['driver_agent_guide']) ? $data['driver_agent_guide'] : '';
+        $local_guide = isset($data['local_guide']) ? $data['local_guide'] : '';
+ 
         
         // Fields that might cause errors if they exist in the database but aren't used in the current page
         $jenis_kelamin = isset($data['jenis_kelamin']) ? $data['jenis_kelamin'] : '';
@@ -160,12 +167,16 @@ ob_start();
         ?>
       <tr>
         <td><?php echo $no++ ?></td>
+        <td><?php echo $tanggal_kunjungan; ?></td>
         <td><?php echo $nama; ?></td>
         <td><?php echo $paket_display; ?></td>
         <td><?php echo $jenis_wisatawan; ?></td>
         <td><?php echo $lokasi ?></td>
         <td><?php echo $pax; ?></td>
         <td><?php echo $agen_wisata; ?></td>
+        <td><?php echo $driver_agent_guide; ?></td>
+        <td><?php echo $local_guide; ?></td>
+
       </tr>
       <?php } ?>
     </tbody>

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggal_kunjungan = $_POST['tanggal_kunjungan'];
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
-    $nama = $_POST['nama'];
+    $nama = trim($_POST['nama']);
     $pax = (int)$_POST['pax'];
     
     // Validasi data wajib
@@ -18,9 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     // Handle optional fields with proper validation
-    $kota = ($_POST['jenis_wisatawan'] == 'Domestik' && isset($_POST['kota']) && !empty($_POST['kota'])) ? $_POST['kota'] : null;
-    $negara = ($_POST['jenis_wisatawan'] == 'Mancanegara' && isset($_POST['negara']) && !empty($_POST['negara'])) ? $_POST['negara'] : null;
-    $agen_wisata = (isset($_POST['agen_wisata']) && !empty($_POST['agen_wisata'])) ? $_POST['agen_wisata'] : null;
+    $kota = ($_POST['jenis_wisatawan'] == 'Domestik' && isset($_POST['kota']) && !empty($_POST['kota'])) ? trim($_POST['kota']) : null;
+    $negara = ($_POST['jenis_wisatawan'] == 'Mancanegara' && isset($_POST['negara']) && !empty($_POST['negara'])) ? trim($_POST['negara']) : null;
+    $agen_wisata = (isset($_POST['agen_wisata']) && !empty($_POST['agen_wisata'])) ? trim($_POST['agen_wisata']) : null;
+    $driver_agent_guide = (isset($_POST['driver_agent_guide']) && !empty($_POST['driver_agent_guide'])) ? trim($_POST['driver_agent_guide']) : null;
+    $local_guide = (isset($_POST['local_guide']) && !empty($_POST['local_guide'])) ? trim($_POST['local_guide']) : null;
 
     // Handle conditional fields based on package type
     $opsi_makan_tour = null;
@@ -63,6 +65,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $cek_stmt->close();
 
+    // Get current foto
+    $current_foto = null;
+    $stmt = $db->prepare("SELECT foto FROM tb_data_pengunjung WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $current_foto = $row['foto'];
+    }
+    $stmt->close();
+
+    // Handle file upload
+    $foto = $current_foto;
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        $allowed = ['jpg', 'jpeg', 'png'];
+        $filename = $_FILES['foto']['name'];
+        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
+        
+        if (in_array(strtolower($filetype), $allowed)) {
+            // Check file size (2MB max)
+            if ($_FILES['foto']['size'] <= 2 * 1024 * 1024) {
+                $new_filename = uniqid() . '.' . $filetype;
+                $upload_path = '../uploads/pengunjung/' . $new_filename;
+                
+                // Debug info
+                error_log("Uploading file: " . $filename);
+                error_log("New filename: " . $new_filename);
+                error_log("Upload path: " . $upload_path);
+                
+                // Create directory if it doesn't exist
+                if (!file_exists('../uploads/pengunjung/')) {
+                    mkdir('../uploads/pengunjung', 0777, true);
+                    error_log("Created upload directory");
+                }
+                
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
+                    error_log("File successfully uploaded to: " . $upload_path);
+                    // Delete old foto if exists
+                    if ($current_foto && file_exists('../uploads/pengunjung/' . $current_foto)) {
+                        unlink('../uploads/pengunjung/' . $current_foto);
+                        error_log("Deleted old file: " . $current_foto);
+                    }
+                    $foto = $new_filename;
+                } else {
+                    error_log("Failed to move uploaded file. Error: " . error_get_last()['message']);
+                }
+            } else {
+                error_log("File too large: " . $_FILES['foto']['size']);
+            }
+        } else {
+            error_log("Invalid file type: " . $filetype);
+        }
+    } else if (isset($_FILES['foto'])) {
+        error_log("File upload error code: " . $_FILES['foto']['error']);
+    }
+
     // Prepare statement untuk UPDATE
     $stmt = $db->prepare("UPDATE tb_data_pengunjung SET 
       tanggal_kunjungan = ?, 
@@ -75,7 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       negara = ?, 
       nama = ?, 
       pax = ?, 
-      agen_wisata = ?
+      agen_wisata = ?,
+      driver_agent_guide = ?,
+      local_guide = ?,
+      foto = ?
       WHERE id = ?");
 
     if (!$stmt) {
@@ -83,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->bind_param("sssssssssisi", 
+    $stmt->bind_param("sssssssssissssi", 
       $tanggal_kunjungan, 
       $pilihan_paket_wisata, 
       $opsi_makan_tour, 
@@ -95,6 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $nama, 
       $pax, 
       $agen_wisata,
+      $driver_agent_guide,
+      $local_guide,
+      $foto,
       $id
     );
 

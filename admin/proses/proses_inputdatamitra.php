@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $nama_pemilik = $_POST['nama_pemilik'];
     $nama_usaha = $_POST['nama_usaha'];
+    $kategori_usaha = $_POST['kategori_usaha'];
     $alamat = $_POST['alamat'];
     $nomor_telp = $_POST['nomor_telp'];
     $legalitas = $_POST['legalitas_usaha'];
@@ -78,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Prepare SQL query
     $foto_kegiatan = !empty($foto_paths) ? implode(',', $foto_paths) : null;
     
-    $query = "INSERT INTO tb_data_mitra (nama_pemilik, nama_usaha, alamat, nomor_telp, legalitas_usaha" .
+    $query = "INSERT INTO tb_data_mitra (nama_pemilik, nama_usaha, kategori_usaha, alamat, nomor_telp, legalitas_usaha" .
         (isset($bukti_legalitas) ? ", bukti_legalitas" : "") . 
         ($foto_kegiatan ? ", foto_kegiatan" : "") . 
-        ") VALUES ('$nama_pemilik', '$nama_usaha', '$alamat', '$nomor_telp', '$legalitas'" . 
+        ") VALUES ('$nama_pemilik', '$nama_usaha', '$kategori_usaha', '$alamat', '$nomor_telp', '$legalitas'" . 
         (isset($bukti_legalitas) ? ", '$bukti_legalitas'" : "") . 
         ($foto_kegiatan ? ", '$foto_kegiatan'" : "") . 
         ")";

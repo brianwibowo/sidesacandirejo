@@ -78,7 +78,7 @@ include "login/ceksession.php";
                 </div>
                 <?php include '../koneksi/koneksi.php';
                      $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_arsip_surat_keluar where id='".$id."'";                        
+                     $sql  		= "SELECT * FROM tb_arsip_surat_keluar where No='".$id."'";                        
                      $query  	= mysqli_query($db, $sql);
                      $data 		= mysqli_fetch_array($query);?>
                 <div class="x_content">
@@ -92,6 +92,10 @@ include "login/ceksession.php";
                     </div>
                     <table class="table table-striped">
                       <tbody>
+                        <tr>
+                          <td width="40%">No</td>
+                          <td><?php echo $data['No']?></td>
+                        </tr>
                         <tr>
                           <td width="40%">Tanggal Keluar</td>
                           <td><?php echo $data['tanggal_keluar']?></td>

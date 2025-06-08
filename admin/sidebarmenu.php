@@ -45,6 +45,7 @@ $data = mysqli_fetch_array($query);
               <li><a href="datamitra.php"><i class="fa fa-inbox"></i> Data Mitra</a></li>
               <li><a href="datapengunjung.php"><i class="fa fa-inbox"></i> Data Pengunjung</a></li>
               <li><a href="datapenjualanusaha.php"><i class="fa fa-inbox"></i> Data Penjualan Usaha</a></li>
+              <li><a href="datapengurus.php"><i class="fa fa-users"></i> Data Pengurus</a></li>
             </ul>
           </li>
         </ul>

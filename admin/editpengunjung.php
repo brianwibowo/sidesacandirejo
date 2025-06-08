@@ -23,6 +23,7 @@ if (!$data_pengunjung) {
   echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
   exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +65,7 @@ if (!$data_pengunjung) {
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_editdatapengunjung.php" name="formeditdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
                     <!-- Hidden input untuk ID -->
                     <input type="hidden" name="id"
@@ -217,11 +218,45 @@ if (!$data_pengunjung) {
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata
+                      </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"
                           placeholder="Masukkan Agen Wisata (Opsional)" class="form-control col-md-7 col-xs-12"
                           value="<?php echo htmlspecialchars($data_pengunjung['agen_wisata'] ?? ''); ?>">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="driver_agent_guide">Driver/Agent Guide
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="driver_agent_guide" name="driver_agent_guide" maxlength="100"
+                          placeholder="Masukkan Nama Driver/Agent Guide (Opsional)" class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['driver_agent_guide'] ?? ''); ?>">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="local_guide">Local Guide
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="local_guide" name="local_guide" maxlength="100"
+                          placeholder="Masukkan Nama Local Guide (Opsional)" class="form-control col-md-7 col-xs-12"
+                          value="<?php echo htmlspecialchars($data_pengunjung['local_guide'] ?? ''); ?>">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <?php if (!empty($data_pengunjung['foto'])): ?>
+                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data_pengunjung['foto']); ?>" 
+                               alt="Foto Pengunjung" style="max-width: 200px; margin-bottom: 10px;"><br>
+                        <?php endif; ?>
+                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
                       </div>
                     </div>
 

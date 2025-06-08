@@ -4,7 +4,7 @@ session_start();
 include '../../koneksi/koneksi.php'; // Ganti dengan koneksi database Anda
 
 // Ambil data dari database
-$sql = "SELECT * FROM tb_arsip_surat_keluar ORDER BY id ASC";
+$sql = "SELECT * FROM tb_arsip_surat_keluar ORDER BY No ASC";
 $query = mysqli_query($db, $sql);
 
 
@@ -23,6 +23,7 @@ echo "
     </center>
 <table border='1'>
 <tr>
+    <th>No</th>
     <th>Nomor Surat</th>
     <th>Tanggal Keluar</th>
     <th>Penerima</th>
@@ -33,6 +34,7 @@ echo "
 
 while ($data = mysqli_fetch_array($query)) {
     echo "<tr>
+        <td>{$data['No']}</td>
         <td>{$data['nomor_surat']}</td>
         <td>{$data['tanggal_keluar']}</td>
         <td>{$data['penerima']}</td>

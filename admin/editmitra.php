@@ -104,13 +104,30 @@ $kategori = [
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nama Usaha<span
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nama Usaha <span
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input value="<?php echo $data['nama_usaha'];?>" type="text" id="nama_usaha"
-                          name="nama_usaha" required="required" placeholder="Masukkan Nama Usaha"
+                          name="nama_usaha" required="required" maxlength="100" placeholder="Masukkan Nama Usaha"
                           class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kategori_usaha">Kategori Usaha<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="kategori_usaha" name="kategori_usaha" required="required" class="form-control col-md-7 col-xs-12">
+                          <option value="">Pilih Kategori Usaha</option>
+                          <option value="UMKM" <?php echo ($data['kategori_usaha'] == 'UMKM') ? 'selected' : ''; ?>>UMKM</option>
+                          <option value="Local Guide" <?php echo ($data['kategori_usaha'] == 'Local Guide') ? 'selected' : ''; ?>>Local Guide</option>
+                          <option value="Catering" <?php echo ($data['kategori_usaha'] == 'Catering') ? 'selected' : ''; ?>>Catering</option>
+                          <option value="Dokar" <?php echo ($data['kategori_usaha'] == 'Dokar') ? 'selected' : ''; ?>>Dokar</option>
+                          <option value="Homestay" <?php echo ($data['kategori_usaha'] == 'Homestay') ? 'selected' : ''; ?>>Homestay</option>
+                          <option value="Kerajinan" <?php echo ($data['kategori_usaha'] == 'Kerajinan') ? 'selected' : ''; ?>>Kerajinan</option>
+                        </select>
                       </div>
                     </div>
 

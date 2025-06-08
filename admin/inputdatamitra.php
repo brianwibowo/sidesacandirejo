@@ -86,6 +86,23 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kategori_usaha">Kategori Usaha<span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="kategori_usaha" name="kategori_usaha" required="required" class="form-control col-md-7 col-xs-12">
+                          <option value="">Pilih Kategori Usaha</option>
+                          <option value="UMKM">UMKM</option>
+                          <option value="Local Guide">Local Guide</option>
+                          <option value="Catering">Catering</option>
+                          <option value="Dokar">Dokar</option>
+                          <option value="Homestay">Homestay</option>
+                          <option value="Kerajinan">Kerajinan</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="alamat">Alamat<span
                           class="required">*</span>
                       </label>

@@ -42,6 +42,7 @@ echo '<!DOCTYPE html>
     </center>
     <table border="1">
         <tr>
+            <th>No</th>
             <th>Nomor Surat</th>
             <th>Tanggal Terima</th>
             <th>Tanggal Surat</th>
@@ -54,13 +55,14 @@ echo '<!DOCTYPE html>
         </tr>';
 
 // Ambil data dari tabel
-$sql = "SELECT * FROM tb_arsip_surat_masuk";
+$sql = "SELECT * FROM tb_arsip_surat_masuk ORDER BY No ASC";
 $result = mysqli_query($db, $sql);
 
 // Tampilkan data
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>
+                <td>' . htmlspecialchars($row['No']) . '</td>
                 <td>' . htmlspecialchars($row['nomor_surat']) . '</td>
                 <td>' . htmlspecialchars($row['tanggal_terima']) . '</td>
                 <td>' . htmlspecialchars($row['tanggal_surat']) . '</td>
