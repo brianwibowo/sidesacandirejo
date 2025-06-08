@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Waktu pembuatan: 30 Bulan Mei 2025 pada 23.37
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Host: localhost
+-- Waktu pembuatan: 08 Jun 2025 pada 21.17
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -66,17 +66,28 @@ CREATE TABLE `tb_arsip_surat_keluar` (
 --
 
 INSERT INTO `tb_arsip_surat_keluar` (`No`, `nomor_surat`, `tanggal_keluar`, `penerima`, `perihal`, `kode`, `keterangan`, `file_surat`) VALUES
-(9, '045/KDWC/X/2024', '2024-10-16', 'Pengeelola KOperasi Desa WIsata Candirejo', 'Undangan Sosialisasi SIDESA ', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_045/KDWC/X/2024.pdf'),
-(10, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan Kepala Departemen Pertanian Institut Teknologi Pertanian ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
-(13, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
-(15, '123', '2025-05-08', 'test', 'test', 'test123', 'testing', '../uploads/test_2025-05-08_16-54-33.pdf'),
-(17, '034/V/KDWC/2025', '2025-05-19', 'Pemandu Lokal', 'UNDANGAN', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_034/V/KDWC/2025.pdf'),
-(18, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(19, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(20, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(21, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(22, '12', '2025-05-16', '12', '12', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(23, '12', '2025-05-16', '12', '12', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf');
+(1, '045/KDWC/X/2024', '2024-10-16', 'Pengeelola KOperasi Desa WIsata Candirejo', 'Undangan Sosialisasi SIDESA ', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_045/KDWC/X/2024.pdf'),
+(2, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan Kepala Departemen Pertanian Institut Teknologi Pertanian ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
+(3, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
+(4, '123', '2025-05-08', 'test', 'test', 'test123', 'testing', '../uploads/test_2025-05-08_16-54-33.pdf'),
+(5, '034/V/KDWC/2025', '2025-05-19', 'Pemandu Lokal', 'UNDANGAN', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_034/V/KDWC/2025.pdf'),
+(6, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(7, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(8, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(9, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(10, '12', '2025-05-16', '12', '12', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(11, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(12, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(13, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(14, 'a', '2025-06-07', 'c', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
+(15, 'a', '2025-06-07', 'c', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
+(16, '907999', '2025-06-07', 'cz', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
+(17, '907999', '2025-06-07', 'cz', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
+(18, 'x', '2025-06-11', 'z', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf'),
+(19, 's', '2025-06-08', 's', '', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
+(20, 's', '2025-06-08', 's', '', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
+(21, 'z', '2025-06-11', 'x', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_z.pdf'),
+(22, 'x', '2025-06-08', 'c', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf');
 
 -- --------------------------------------------------------
 
@@ -104,10 +115,10 @@ CREATE TABLE `tb_arsip_surat_masuk` (
 --
 
 INSERT INTO `tb_arsip_surat_masuk` (`No`, `nomor_surat`, `tanggal_terima`, `tanggal_surat`, `pengirim`, `penerima_surat`, `disposisi`, `perihal`, `kode`, `keterangan`, `file_surat`, `lampiran_foto`) VALUES
-(10, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', NULL, NULL, 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', NULL),
-(11, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', NULL, NULL, 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', NULL),
-(12, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', NULL, NULL, 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', NULL),
-(13, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', NULL, NULL, 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', NULL);
+(1, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', NULL, NULL, 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', NULL),
+(2, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', NULL, NULL, 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', NULL),
+(3, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', NULL, NULL, 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', NULL),
+(4, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', NULL, NULL, 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', NULL);
 
 -- --------------------------------------------------------
 
@@ -143,16 +154,17 @@ CREATE TABLE `tb_data_mitra` (
   `nomor_telp` varchar(20) NOT NULL,
   `legalitas_usaha` text NOT NULL,
   `bukti_legalitas` varchar(255) DEFAULT NULL,
-  `foto_kegiatan` text DEFAULT NULL
+  `foto_kegiatan` text DEFAULT NULL,
+  `kategori_usaha` enum('UMKM','Local Guide','Catering','Dokar','Homestay','Kerajinan') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `tb_data_mitra`
 --
 
-INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomor_telp`, `legalitas_usaha`, `bukti_legalitas`, `foto_kegiatan`) VALUES
-(8, 'Agus Santoso', 'Food', '', '', 'PIRT', '../uploads/food_12-00-22.pdf', NULL),
-(10, 'Apriansyah Wibowo', 'Pembuatan Website', '', '', 'NIB', '../uploads/pembuatan_website_18-06-16.pdf', NULL);
+INSERT INTO `tb_data_mitra` (`id`, `nama_pemilik`, `nama_usaha`, `alamat`, `nomor_telp`, `legalitas_usaha`, `bukti_legalitas`, `foto_kegiatan`, `kategori_usaha`) VALUES
+(1, 'Agus Santoso', 'Food', '', '', 'PIRT', '../uploads/food_12-00-22.pdf', NULL, NULL),
+(2, 'Apriansyah Wibowo', 'Pembuatan Website', '', '', 'NIB', '../uploads/pembuatan_website_18-06-16.pdf', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -172,19 +184,70 @@ CREATE TABLE `tb_data_pengunjung` (
   `negara` varchar(100) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `agen_wisata` varchar(100) DEFAULT NULL,
-  `driver_agent_guide` varchar(100) DEFAULT NULL COMMENT 'Driver atau Agent Guide',
-  `local_guide` varchar(100) DEFAULT NULL COMMENT 'Local Guide',
-  `foto` varchar(255) DEFAULT NULL COMMENT 'Foto pengunjung (opsional)',
-  `pax` int(11) DEFAULT 1
+  `pax` int(11) DEFAULT 1,
+  `driver_agent_guide` varchar(100) NOT NULL COMMENT 'Driver atau Agent Guide',
+  `local_guide` varchar(100) NOT NULL COMMENT 'Local Guide',
+  `foto` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `tb_data_pengunjung`
 --
 
-INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `opsi_makan_tour`, `jenis_makanan_paket`, `opsi_cooking_lesson`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `agen_wisata`, `driver_agent_guide`, `local_guide`, `foto`, `pax`) VALUES
-(23, '2025-05-29', 'walking_tour', 'with_lunch', NULL, NULL, 'Domestik', 'semarang', NULL, 'arham', 'arhamcorp', 'John Doe', 'Jane Smith', NULL, 2),
-(25, '2025-06-02', 'traditional_dance', NULL, NULL, NULL, 'Domestik', 'semarang', NULL, 'Nizar Arhamni', 'arhamcorp', NULL, NULL, NULL, 3);
+INSERT INTO `tb_data_pengunjung` (`id`, `tanggal_kunjungan`, `pilihan_paket_wisata`, `opsi_makan_tour`, `jenis_makanan_paket`, `opsi_cooking_lesson`, `jenis_wisatawan`, `kota`, `negara`, `nama`, `agen_wisata`, `pax`, `driver_agent_guide`, `local_guide`, `foto`) VALUES
+(1, '2020-05-20', 'cooking_lesson', NULL, NULL, 'lesson_with_tour', 'Domestik', 'semarang', NULL, 'Nizar Arhamni', 'arhamcorp', 2, 'Belum Ada', 'Belum Ada', '6845bfd96ff86.jpeg'),
+(2, '2020-06-20', 'traditional_dance', NULL, NULL, NULL, 'Domestik', 'semarang', NULL, 'Nizar', 'arhamcorp', 3, 'Belum Ada', 'Belum Ada', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_data_pengurus`
+--
+
+CREATE TABLE `tb_data_pengurus` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `no_ktp` varchar(20) NOT NULL,
+  `jabatan` varchar(100) NOT NULL,
+  `periode` varchar(20) NOT NULL,
+  `alamat` text NOT NULL,
+  `no_telp` varchar(20) NOT NULL,
+  `foto_ktp` varchar(255) DEFAULT NULL,
+  `pas_foto` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tb_data_pengurus`
+--
+
+INSERT INTO `tb_data_pengurus` (`id`, `nama`, `no_ktp`, `jabatan`, `periode`, `alamat`, `no_telp`, `foto_ktp`, `pas_foto`) VALUES
+(1, 'nizar chuy', '90920', 'CEO', '2022-2025', 'gang berekor', '028032803', '1749408894_—Pngtree—graphic default avatar_5938131.png', '1749408894_—Pngtree—graphic default avatar_5938131.png');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_data_penjualan_usaha`
+--
+
+CREATE TABLE `tb_data_penjualan_usaha` (
+  `id` int(11) NOT NULL,
+  `produk` enum('Paket wisata','Listrik','Pulsa') NOT NULL,
+  `paket_wisata` varchar(255) DEFAULT NULL,
+  `jumlah` int(11) NOT NULL,
+  `harga` decimal(10,2) NOT NULL,
+  `total` decimal(10,2) GENERATED ALWAYS AS (`jumlah` * `harga`) STORED
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tb_data_penjualan_usaha`
+--
+
+INSERT INTO `tb_data_penjualan_usaha` (`id`, `produk`, `paket_wisata`, `jumlah`, `harga`) VALUES
+(1, 'Pulsa', 'Paket Pelajar - Live In Candirejo', 2, 22000.00),
+(2, 'Pulsa', '', 123, 2000.00),
+(3, 'Listrik', '', 2, 50000.00),
+(4, 'Paket wisata', 'Paket Pelajar - Live In Candirejo', 3, 350000.00),
+(5, 'Listrik', '', 2, 20000.00);
 
 --
 -- Indexes for dumped tables
@@ -228,6 +291,12 @@ ALTER TABLE `tb_data_pengunjung`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
+-- Indeks untuk tabel `tb_data_pengurus`
+--
+ALTER TABLE `tb_data_pengurus`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
@@ -247,7 +316,7 @@ ALTER TABLE `tb_admin`
 -- AUTO_INCREMENT untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
-  MODIFY `No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_arsip_surat_masuk`
@@ -265,7 +334,7 @@ ALTER TABLE `tb_buat_surat`
 -- AUTO_INCREMENT untuk tabel `tb_data_mitra`
 --
 ALTER TABLE `tb_data_mitra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_data_pengunjung`
@@ -274,33 +343,18 @@ ALTER TABLE `tb_data_pengunjung`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
+-- AUTO_INCREMENT untuk tabel `tb_data_pengurus`
+--
+ALTER TABLE `tb_data_pengurus`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT untuk tabel `tb_data_penjualan_usaha`
 --
 ALTER TABLE `tb_data_penjualan_usaha`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
--- Modify tb_data_pengunjung table
-ALTER TABLE `tb_data_pengunjung` 
-ADD COLUMN `driver_agent_guide` varchar(100) DEFAULT NULL COMMENT 'Driver atau Agent Guide' AFTER `agen_wisata`,
-ADD COLUMN `local_guide` varchar(100) DEFAULT NULL COMMENT 'Local Guide' AFTER `driver_agent_guide`,
-ADD COLUMN `foto` varchar(255) DEFAULT NULL COMMENT 'Foto pengunjung (opsional)' AFTER `local_guide`;
-
--- Update existing records to handle new fields
-UPDATE `tb_data_pengunjung` SET 
-`driver_agent_guide` = NULL,
-`local_guide` = NULL,
-`foto` = NULL;
-
--- Modify enum values for pilihan_paket_wisata
-ALTER TABLE `tb_data_pengunjung` 
-MODIFY COLUMN `pilihan_paket_wisata` varchar(50) NOT NULL COMMENT 'Kode paket utama, misal: cycling_tour, meal_only, dll.';
-
--- Update existing records to use new paket values
-UPDATE `tb_data_pengunjung` 
-SET `pilihan_paket_wisata` = 'pelajar_field_trip' 
-WHERE `pilihan_paket_wisata` IN ('pelajar_field_trip_one_day', 'pelajar_field_trip_half_day');
