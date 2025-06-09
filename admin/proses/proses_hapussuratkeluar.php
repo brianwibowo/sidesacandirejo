@@ -2,8 +2,8 @@
 session_start();
 include '../../koneksi/koneksi.php';
 
-if (isset($_GET['No'])) {
-    $No = mysqli_real_escape_string($db, $_GET['No']);
+if (isset($_GET['id'])) {
+    $No = mysqli_real_escape_string($db, $_GET['id']);
     
     // Get file name before deleting
     $query = "SELECT file_surat FROM tb_arsip_surat_keluar WHERE No = '$No'";
@@ -30,12 +30,12 @@ if (isset($_GET['No'])) {
         $query = "ALTER TABLE tb_arsip_surat_keluar AUTO_INCREMENT = 1";
         mysqli_query($db, $query);
         
-        echo "<script>alert('Data berhasil dihapus!'); window.location='../arsipsuratkeluar.php';</script>";
+        echo "<script>alert('Data berhasil dihapus!'); window.location='../datasuratkeluar.php';</script>";
     } else {
-        echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../arsipsuratkeluar.php';</script>";
+        echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../datasuratkeluar.php';</script>";
     }
 } else {
-    echo "<script>alert('Nomor tidak valid!'); window.location='../arsipsuratkeluar.php';</script>";
+    echo "<script>alert('Nomor tidak valid!'); window.location='../datasuratkeluar.php';</script>";
 }
 
 mysqli_close($db);
