@@ -117,11 +117,11 @@ include "login/ceksession.php";
                           <th width="5%">No</th>
                           <th width="15%">Nomor Surat</th>
                           <th width="10%">Tanggal Keluar</th>
-                          <th width="11%">Penerima</th>
+                          <th width="15%">Penerima</th>
                           <th width="12%">Perihal</th>
                           <th width="13%">Kode</th>
                           <th width="20%">Keterangan</th>
-                          <th width="19%">Aksi</th>
+                          <th width="5%">Aksi</th>
                         </tr>
                       </thead>
 
@@ -136,11 +136,12 @@ include "login/ceksession.php";
                               <td>'. $data['perihal'].'</td>
                               <td>'. $data['kode'].'</td>
                               <td>'. $data['keterangan'].'</td>
-                              <td style="text-align:center;">
-                              <a href= surat_keluar/'.$data['file_surat'].'><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a>
-                              <a href=detail-suratkeluar.php?id='.$data['No'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                              <a href=editsuratkeluar.php?id='.$data['No'].'><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                              <a onclick="return konfirmasi()" href=proses/proses_hapussuratkeluar.php?id='.$data['No'].'><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
+                              <td style="text-align:center; white-space: nowrap;">
+                                <a href="surat_keluar/'.$data['file_surat'].'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
+                                <a href="detail-suratkeluar.php?id='.$data['No'].'" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
+                                <a href="editsuratkeluar.php?id='.$data['No'].'" class="btn btn-default btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
+                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratkeluar.php?id='.$data['No'].'" class="btn btn-danger btn-xs" title="Hapus"><i class="fa fa-trash-o"></i></a>
+                              </td>
                               </tr>';
                             }
                             ?>
