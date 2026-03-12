@@ -179,8 +179,7 @@ include "login/ceksession.php";
           </div>
         </div>
       </div>
-    </div>
-    <!-- /page content -->
+      <!-- /page content -->
 
     <!-- footer content -->
     <footer>
@@ -190,7 +189,6 @@ include "login/ceksession.php";
       <div class="clearfix"></div>
     </footer>
     <!-- /footer content -->
-  </div>
   </div>
 
   <!-- jQuery -->
