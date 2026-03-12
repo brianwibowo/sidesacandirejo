@@ -89,9 +89,9 @@ HEADER
 ************************************
 ***********************************/
 .header{
-    background: url('../img/balaikota.jpg') no-repeat fixed;
+    background: url('../img/cover.jpg') no-repeat fixed;
     background-size: cover;
-    min-height: 650px;
+    min-height: 500px;
     position: relative;
 }
 .bg-color
@@ -99,9 +99,9 @@ HEADER
     background-color: rgba(0, 0, 0, 0.5);
     min-height: 650px;
 }
-#main-header
-{
-}
+/* #main-header */
+/* { */
+/* } */
 .navbar-default {
     background-color: transparent;
     border:0px;

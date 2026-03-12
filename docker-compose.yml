@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      # <-- ini penting
+      MYSQL_DATABASE: u655368359_db_surat
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./u655368359_db_surat.sql:/docker-entrypoint-initdb.d/u655368359_db_surat.sql
+    
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"           # port host bisa diakses lewat browser
+    environment:
+      PMA_HOST: db          # hubungkan ke service MySQL
+      PMA_USER: root        # user login
+      PMA_PASSWORD: ""      # password kosong sesuai koneksi.php
+    depends_on:
+      - db

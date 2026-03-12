@@ -1,8 +1,10 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+
+<!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -128,5 +130,24 @@ include "login/ceksession.php";
     <script src="../assets/vendors/nprogress/nprogress.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="../assets/build/js/custom.min.js"></script>
+    <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
+    <script>
+    function updateOnlineStatus(){
+        $.ajax({
+            url: "update_status.php",
+            type: "GET"
+        });
+    }
+    setInterval(updateOnlineStatus, 30000);
+    </script>
+    <script>
+    function updateOnlineStatus(){
+        fetch("update_status.php")
+        .then(response => console.log("status updated"))
+        .catch(error => console.log(error));
+    }
+
+    setInterval(updateOnlineStatus, 30000);
+</script>
   </body>
 </html>

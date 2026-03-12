@@ -2,7 +2,7 @@
 include '../koneksi/koneksi.php';
 $sql = "SELECT * FROM tb_admin WHERE id_admin='".$_SESSION['id']."'";                        
 $query = mysqli_query($db, $sql);
-$data = mysqli_fetch_array($query);
+$admin_login = mysqli_fetch_array($query);
 ?>
 <div class="col-md-3 left_col">
   <div class="left_col scroll-view">
@@ -15,7 +15,7 @@ $data = mysqli_fetch_array($query);
     <!-- menu profile quick info -->
     <div class="profile clearfix">
       <div class="profile_pic">
-        <img src="images/<?php echo htmlspecialchars($data['gambar']); ?>" height="70" width="85" alt="" class="img-circle profile_img">
+        <img src="images/<?php echo htmlspecialchars($admin_login['gambar']); ?>" height="70" width="85" alt="" class="img-circle profile_img">
       </div>
       <div class="profile_info">
         <span>Selamat Datang,</span>
@@ -48,6 +48,13 @@ $data = mysqli_fetch_array($query);
               <li><a href="datapengurus.php"><i class="fa fa-users"></i> Data Pengurus</a></li>
             </ul>
           </li>
+          <?php if($_SESSION['role'] == 'superadmin'){ ?>
+          <li>
+            <a href="manajemen_admin.php">
+              <i class="fa fa-user"></i> Manajemen Admin
+            </a>
+          </li>
+          <?php } ?>
         </ul>
       </div>
     </div>

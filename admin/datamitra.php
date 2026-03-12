@@ -1,8 +1,10 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+
+<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -10,8 +12,8 @@ include "login/ceksession.php";
   <!-- Meta, title, CSS, favicons, etc. -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, -scale=1">
+initial
   <title>Data Mitra Desa Candirejo Borobudur</title>
 
   <!-- Bootstrap -->
@@ -128,26 +130,22 @@ include "login/ceksession.php";
                     <tbody>
                       <?php
                         while ($data = mysqli_fetch_array($query1)) {
-                          echo '<tr>
-                          <td>' . htmlspecialchars($data['nama_pemilik']) . '</td>
-                          <td>' . htmlspecialchars($data['nama_usaha']) . '</td>
-                          <td>' . htmlspecialchars($data['kategori_usaha']) . '</td>
-                          <td>' . htmlspecialchars($data['alamat']) . '</td>
-                          <td>' . htmlspecialchars($data['nomor_telp']) . '</td>
-                          <td>' . htmlspecialchars($data['legalitas_usaha']) . '</td>
-                          <td>' . (!empty($data['bukti_legalitas']) ? '<a href="../' . htmlspecialchars($data['bukti_legalitas']) . '" target="_blank">Lihat</a>' : '-') . '</td>
-                          <td>' . (!empty($data['foto_kegiatan']) ? '<a href="../' . htmlspecialchars($data['foto_kegiatan']) . '" target="_blank">Lihat</a>' : '-') . '</td>
-                          <td>
-                            <a href="detail-mitra.php?id=' . $data['id'] . '"><button type="button" title="Detail"
-                                class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                            <a href="editmitra.php?id=' . $data['id'] . '"><button type="button" title="Edit"
-                                class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                            <a onclick="return konfirmasi()"
-                              href="proses/proses_hapusmitra.php?id=' . $data['id'] . '"><button type="button" title="Hapus"
-                                class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
-                          </td>
-                          </tr>';
-                        }
+                            echo '<tr>
+                                <td>' . htmlspecialchars($data['nama_pemilik'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['nama_usaha'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['kategori_usaha'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['alamat'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['nomor_telp'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['legalitas_usaha'] ?? '') . '</td>
+                                <td>' . (!empty($data['bukti_legalitas']) ? '<a href="../' . htmlspecialchars($data['bukti_legalitas'] ?? '') . '" target="_blank">Lihat</a>' : '-') . '</td>
+                                <td>' . (!empty($data['foto_kegiatan']) ? '<a href="../' . htmlspecialchars($data['foto_kegiatan'] ?? '') . '" target="_blank">Lihat</a>' : '-') . '</td>
+                                <td>
+                                    <a href="detail-mitra.php?id=' . ($data['id'] ?? '') . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                                    <a href="editmitra.php?id=' . ($data['id'] ?? '') . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
+                                    <a onclick="return konfirmasi()" href="proses/proses_hapusmitra.php?id=' . ($data['id'] ?? '') . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                </td>
+                            </tr>';
+                         }
                       ?>
                     </tbody>
                   </table>

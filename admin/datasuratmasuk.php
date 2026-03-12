@@ -1,8 +1,9 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -130,26 +131,26 @@ include "login/ceksession.php";
                         <?php
                           $query1 = mysqli_query($db, "SELECT * FROM tb_arsip_surat_masuk");
                           while ($data = mysqli_fetch_array($query1)) {
-                            echo '<tr>
-                                <td>' . htmlspecialchars($data['No']) . '</td>
-                                <td>' . htmlspecialchars($data['nomor_surat']) . '</td>
-                                <td>' . htmlspecialchars($data['tanggal_terima']) . '</td>
-                                <td>' . htmlspecialchars($data['tanggal_surat']) . '</td>
-                                <td>' . htmlspecialchars($data['pengirim']) . '</td>
-                                <td>' . htmlspecialchars($data['penerima_surat']) . '</td>
-                                <td>' . htmlspecialchars($data['disposisi']) . '</td>
-                                <td>' . htmlspecialchars($data['perihal']) . '</td>
-                                <td>' . htmlspecialchars($data['kode']) . '</td>
-                                <td>' . htmlspecialchars($data['keterangan']) . '</td>
-                                <td style="text-align:center; white-space: nowrap;">
-                                <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a><br>
-                                ' . ($data['lampiran_foto'] ? '<a href="surat_masuk/' . htmlspecialchars($data['lampiran_foto']) . '"><button type="button" title="Lihat Foto" class="btn btn-info btn-xs"><i class="fa fa-image"></i></button></a><br>' : '') . '
-                                <a href="detail-suratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
-                                <a href="editsuratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
-                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
-                                </td>
-                            </tr>';
-                          }
+                          echo '<tr>
+                              <td>' . htmlspecialchars($data['No'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['nomor_surat'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['tanggal_terima'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['tanggal_surat'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['pengirim'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['penerima_surat'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['disposisi'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['perihal'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['kode'] ?? '') . '</td>
+                              <td>' . htmlspecialchars($data['keterangan'] ?? '') . '</td>
+                              <td style="text-align:center; white-space: nowrap;">
+                              <a href="surat_masuk/' . htmlspecialchars($data['file_surat'] ?? '') . '"><button type="button" title="Unduh File" class="btn btn-success btn-xs"><i class="fa fa-download"></i></button></a><br>
+                              ' . ($data['lampiran_foto'] ? '<a href="surat_masuk/' . htmlspecialchars($data['lampiran_foto'] ?? '') . '"><button type="button" title="Lihat Foto" class="btn btn-info btn-xs"><i class="fa fa-image"></i></button></a><br>' : '') . '
+                              <a href="detail-suratmasuk.php?id=' . ($data['No'] ?? '') . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
+                              <a href="editsuratmasuk.php?id=' . ($data['No'] ?? '') . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
+                              <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . ($data['No'] ?? '') . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                              </td>
+                          </tr>';
+                      }
                         ?>
                       </tbody>
                     </table>
