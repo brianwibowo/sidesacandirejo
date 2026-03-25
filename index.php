@@ -4,124 +4,63 @@ include "koneksi/ceksession.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arsip Surat Desa Candirejo Borobudur</title>
-    <meta name="description" content="Free Bootstrap Theme by BootstrapMade.com">
-    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
-    
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,300|Raleway:300,400,900,700italic,700,300,600">
-    <link rel="stylesheet" type="text/css" href="css/jquery.bxslider.css">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/animate.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="shortcut icon" href="img/icon.ico">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="shortcut icon" href="./img/samarinda.png" type="image/x-icon"/>
+    <!-- --------- UNICONS ---------- -->
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
+</head>
 
-  </head>
-  <body>
-
-    <div class="loader"></div>
-    <div id="myDiv">
-    <!--HEADER-->
-    <div class="header">
-      <div class="bg-color">
-        <header id="main-header">
-        <nav class="navbar navbar-default navbar-fixed-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">SIDESA <span class="logo-dec">Candirejo</span></a>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="./img/samarinda.png" alt="logo">
+                </a>
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-              <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#main-header">Beranda</a></li>
-                <li class=""><a href="#feature">Tentang</a></li>
-                <ul class="nav navbar-nav navbar-right">
-                <li class="">
-                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="" alt="">Masuk
-                    <span class=" fa fa-angle-down"></span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="admin/login"><i class="fa fa-sign-out pull-right"></i> Admin</a></li> 
-                  </ul>
-                </li>
-              </ul>
-              </ul>
-            </div>
-          </div>
+            <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a>
         </nav>
-        </header>
-        <div class="wrapper">
-        <div class="container">
-          <div class="row">
-            <div class="banner-info text-center wow fadeIn delay-05s">
-              <h2 class="bnr-sub-title"></h2>
-              <div class="logo">
-		            <img src="img/samarinda.png" alt="" />
-	            </div>
-              <h3 class="bnr-sub-title">SISTEM INFORMASI PENGARSIPAN SURAT</h3>
-                <h3 class="bnr-sub-title"><span class="logo-dec">DESA WISATA CANDIREJO BOROBUDUR</span></h3>
+
+        <!-- -maincontent -->
+        <main class="wrapper">
+            <div class="home" id="home">
+                <div class="before-copyright">
+                    <div class="hero-section-main-header">
+                        <div class="hero-section-teks1">
+                            <div class="hero-chip">
+                                <div class="chip1"><i class="hgi hgi-stroke hgi-inbox-download"></i> Surat Masuk</div>
+                                <div class="chip2"><i class="hgi hgi-stroke hgi-inbox-upload"></i> Surat Keluar</div>
+                            </div>
+                            <div class="hero-heading">
+                                <span class="heading1">Sistem Informasi Pengarsipan Surat</span>
+                                <span class="heading2">Desa Wisata Candirejo Borobudur</span>
+                            </div>
+                        </div>
+                        <div class="hero-section-teks2">
+                            <p>Website ini berguna untuk pengarsipan Surat Masuk dan Surat Keluar dari Desa Wisata Candirejo Borobudur</p>
+                        </div>
+                    </div>
+                    <div class="hero-img">
+                        <img src="./img/60c0b394da969.jpg.jpeg" alt="">
+                    </div>
+                </div>
+                <div class="copyright">
+                    <div class="left-copyright">
+                        <p>Didanai oleh DRTPM KEMDIKBUDRISTEK 2024 - FEB UNNES</p>
+                    </div>
+                    <div class="right-copyright">
+                        <p>© 2026 - Developed by</p><a href="https://www.instagram.com/vuriko.studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Vuriko Studio</a>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        </div>
-      </div>
+        </main>
+
     </div>
-    <!--/ HEADER-->
-    <!---->
-    <section id="feature" class="section-padding wow fadeIn delay-05s">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <h2 class="service-title pad-bt15">Tentang</h2>
-            <p class="sub-title pad-bt15">Website ini berguna untuk pengarsipan Surat Masuk dan Surat Keluar dari Desa Wisata Candirejo Borobudur</p><p>Surat diarsipkan dalam format PDF lalu disesuaikan nomor urutnya.</p>
-            <hr class="bottom-line">
-            <p class="sub-title pad-bt15">Pengarsipan Surat itu<strong> PENTING</strong></p>
-            <hr class="bottom-line">
-          </div>
-        <div class="col-md-4">
-        </div>
-          <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="wrap-item text-center">
-              <div class="item-img">
-                <img src="img/inbox.png">
-              </div>
-              <h3 class="pad-bt15">Surat Masuk</h3>
-            </div>
-          </div>
-          <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="wrap-item text-center">
-              <div class="item-img">
-                <img src="img/outbox.png">
-              </div>
-              <h3 class="pad-bt15">Surat Keluar</h3>
-            </div>
-          </div>
-        <div class="col-md-4">
-        </div>
-        </div>
-      </div>
-    </section>
-    <footer id="footer">
-      <div class="container">
-        <div class="row text-center">
-          <p>&copy; Tim Pengabdian DRTPM UNNES. All Rights Reserved.</p>
-          <div class="credits">
-  </div>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.easing.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/wow.js"></script>
-    <script src="js/jquery.bxslider.min.js"></script>
-    <script src="js/custom.js"></script>
-    <script src="contactform/contactform.js"></script>
-    
-  </body>
+</body>
+
 </html>
