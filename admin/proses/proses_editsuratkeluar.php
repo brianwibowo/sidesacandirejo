@@ -16,7 +16,7 @@ $row = mysqli_fetch_assoc($result);
 $file_lama = $row['file_surat'];
 
 // Cek apakah file baru di-upload
-if (isset($_FILES['file_surat'])&&$_FILES["file_surat"]["error"] === UPLOAD_ERR_OK) {
+if (isset($_FILES['file_surat']) && $_FILES["file_surat"]["error"] === UPLOAD_ERR_OK) {
     $tanggal = date('Y-m-d', strtotime($tanggal_surat));
     $jam = date('H-i-s');
     $nama_file = strtolower(str_replace(' ', '_', $pengirim)) . "_{$tanggal}_{$jam}.pdf";
@@ -49,9 +49,45 @@ if (isset($_FILES['file_surat'])&&$_FILES["file_surat"]["error"] === UPLOAD_ERR_
 }
 
 if (mysqli_query($db, $query)) {
-    echo "<script>alert('Data berhasil diedit');; window.location='../datasuratkeluar.php';</script>";
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil diedit'
+        }).then(() => {
+            window.location = '../datasuratkeluar.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
 } else {
-    echo "Error: " . mysqli_error($db);
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: " . json_encode(mysqli_error($db)) . "
+    }).then(() => {
+        window.history.back();
+    });
+    </script>
+    </body>
+    </html>
+    ";
 }
 
 // Tutup koneksi

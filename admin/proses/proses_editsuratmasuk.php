@@ -94,7 +94,7 @@ if (isset($_FILES['lampiran_foto']) && $_FILES['lampiran_foto']['error'] == UPLO
     $jam = date('H-i-s');
     $foto_name = strtolower(str_replace(' ', '_', $pengirim)) . "_foto_{$tanggal}_{$jam}." . pathinfo($_FILES['lampiran_foto']['name'], PATHINFO_EXTENSION);
     $foto_destination = $target_dir . $foto_name;
-    
+
     if (move_uploaded_file($_FILES['lampiran_foto']['tmp_name'], $foto_destination)) {
         // Hapus foto lama jika ada
         if (!empty($foto_lama) && file_exists($foto_lama)) {
@@ -120,9 +120,46 @@ if (isset($_FILES['lampiran_foto']) && $_FILES['lampiran_foto']['error'] == UPLO
 
 // Eksekusi query
 if (mysqli_query($db, $query)) {
-    echo "<script>alert('Data berhasil diedit'); window.location='../datasuratmasuk.php';</script>";
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil diedit'
+        }).then(() => {
+            window.location = '../datasuratmasuk.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
 } else {
     die("<script>alert('Error: " . mysqli_error($db) . "'); window.location='../datasuratmasuk.php';</script>");
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: " . json_encode(mysqli_error($db)) . "
+    }).then(() => {
+        window.location = '../datasuratmasuk.php';
+    });
+    </script>
+    </body>
+    </html>
+    ";
 }
 
 // Tutup koneksi

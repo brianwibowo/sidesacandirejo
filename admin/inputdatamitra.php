@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -61,6 +61,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputdatamitra.php" name="forminputdatapengunjung" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"
                     enctype="multipart/form-data">
@@ -200,20 +208,20 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
-    $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
+    $(document).ready(function() {
+      $('#jenis_wisatawan').change(function() {
+        if ($(this).val() == 'Domestik') {
+          $('#kota-group').show();
+          $('#negara-group').hide();
+        } else if ($(this).val() == 'Mancanegara') {
+          $('#kota-group').hide();
+          $('#negara-group').show();
+        } else {
+          $('#kota-group').hide();
+          $('#negara-group').hide();
+        }
+      });
     });
-  });
   </script>
 </body>
 

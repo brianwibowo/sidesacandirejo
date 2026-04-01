@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,14 +38,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -61,6 +61,14 @@ include "login/ceksession.php";
                   <h2>Data Surat Keluar</h2>
                   <div class="clearfix"></div>
                 </div>
+                <?php if (isset($_SESSION['error'])): ?>
+                  <div class="alert alert-error" role="alert">
+                    <?php
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                    ?>
+                  </div>
+                <?php endif; ?>
                 <form action="downloadlaporan_suratkeluar.php" name="download_suratkeluar" method="post"
                   enctype="multipart/form-data" id="demo-form2" data-parsley-validate
                   class="form-horizontal form-label-left">
@@ -85,11 +93,10 @@ include "login/ceksession.php";
                     <select name="tahun" class="select2_single form-control" tabindex="-1">
                       <option>Pilih Tahun</option>
                       <?php
-                                for ($tahun=2017;$tahun<=2022;$tahun++)
-                                      {
-                                       echo  '<option value="'.$tahun.'">'.$tahun.'</option>';
-                                      }
-                            ?>
+                      for ($tahun = 2017; $tahun <= 2022; $tahun++) {
+                        echo  '<option value="' . $tahun . '">' . $tahun . '</option>';
+                      }
+                      ?>
                     </select>
                   </div>
                   <a href="export/export_surat_keluar.php" class=" btn btn-danger"><i class="fa fa-download"></i> Unduh
@@ -103,50 +110,57 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <div class="x_content">
                     <?php
-                              include '../koneksi/koneksi.php';
-                              $sql1  		= "SELECT * FROM tb_arsip_surat_keluar order by nomor_surat asc";                        
-                              $query1  	= mysqli_query($db, $sql1);
-                              $total		= mysqli_num_rows($query1);
-                              if ($total == 0) {
-                                echo"<center><h2>Belum Ada Data Surat Keluar</h2></center>";
-                              }
-                              else{?>
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th width="5%">No</th>
-                          <th width="15%">Nomor Surat</th>
-                          <th width="10%">Tanggal Keluar</th>
-                          <th width="15%">Penerima</th>
-                          <th width="12%">Perihal</th>
-                          <th width="13%">Kode</th>
-                          <th width="20%">Keterangan</th>
-                          <th width="5%">Aksi</th>
-                        </tr>
-                      </thead>
+                    include '../koneksi/koneksi.php';
+                    $sql1      = "SELECT * FROM tb_arsip_surat_keluar order by nomor_surat asc";
+                    $query1    = mysqli_query($db, $sql1);
+                    $total    = mysqli_num_rows($query1);
+                    if ($total == 0) {
+                      echo "<center><h2>Belum Ada Data Surat Keluar</h2></center>";
+                    } else { ?>
+                      <table id="datatable" class="table table-striped table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="5%">No</th>
+                            <th width="15%">Nomor Surat</th>
+                            <th width="10%">Tanggal Keluar</th>
+                            <th width="15%">Penerima</th>
+                            <th width="12%">Perihal</th>
+                            <th width="13%">Kode</th>
+                            <th width="20%">Keterangan</th>
+                            <th width="5%">Aksi</th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        <?php
-                            while($data = mysqli_fetch_array($query1)){
-                              echo'<tr>
-                              <td>'. $data['No'].'</td>
-                              <td>'. $data['nomor_surat'].'</td>
-                              <td>'. $data['tanggal_keluar'].'</td>
-                              <td>'. $data['penerima'].'</td>
-                              <td>'. $data['perihal'].'</td>
-                              <td>'. $data['kode'].'</td>
-                              <td>'. $data['keterangan'].'</td>
+                        <tbody>
+                          <?php
+                          while ($data = mysqli_fetch_array($query1)) {
+                            echo '<tr>
+                              <td>' . $data['No'] . '</td>
+                              <td>' . $data['nomor_surat'] . '</td>
+                              <td>' . $data['tanggal_keluar'] . '</td>
+                              <td>' . $data['penerima'] . '</td>
+                              <td>' . $data['perihal'] . '</td>
+                              <td>' . $data['kode'] . '</td>
+                              <td>' . $data['keterangan'] . '</td>
                               <td style="text-align:center; white-space: nowrap;">
-                                <a href="surat_keluar/'.$data['file_surat'].'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
-                                <a href="detail-suratkeluar.php?id='.$data['No'].'" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
-                                <a href="editsuratkeluar.php?id='.$data['No'].'" class="btn btn-default btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
-                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratkeluar.php?id='.$data['No'].'" class="btn btn-danger btn-xs" title="Hapus"><i class="fa fa-trash-o"></i></a>
+                                <a href="surat_keluar/' . $data['file_surat'] . '" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
+                                <a href="detail-suratkeluar.php?id=' . $data['No'] . '" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
+                                <a href="editsuratkeluar.php?id=' . $data['No'] . '" class="btn btn-default btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
+                                <a href="#" 
+                                  data-toggle="modal" 
+                                  data-target="#modalHapus" 
+                                  data-id="' . $data['No'] . '"
+                                  class="btn-hapus">
+                                  <button type="button" title="Hapus" class="btn btn-danger btn-xs">
+                                      <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </a>
                               </td>
                               </tr>';
-                            }
-                            ?>
-                      </tbody>
-                    </table>
+                          }
+                          ?>
+                        </tbody>
+                      </table>
                     <?php } ?>
                   </div>
                 </div>
@@ -197,14 +211,42 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
-  <script type="text/javascript" language="JavaScript">
-  function konfirmasi() {
-    tanya = confirm("Anda Yakin Akan Menghapus Data ?");
-    if (tanya == true) return true;
-    else return false;
-  }
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+      const tombolHapus = document.querySelectorAll(".btn-hapus");
+      const tombolKonfirmasi = document.getElementById("btn-hapus");
+
+      tombolHapus.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+
+          let id = this.getAttribute("data-id");
+
+          tombolKonfirmasi.href = "proses/proses_hapussuratkeluar.php?id=" + id;
+
+        });
+      });
+
+    });
   </script>
 
+  <!--Modal Hapus-->
+  <div class="modal fade" id="modalHapus" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><b>Konfirmasi Hapus</b></h4>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menghapus data surat ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Tidak</button>
+          <a href="" class="btn btn-danger" id="btn-hapus">Ya</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

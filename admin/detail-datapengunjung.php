@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -53,24 +53,24 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
                 <?php
-                  include '../koneksi/koneksi.php';
-                  $id = mysqli_real_escape_string($db, $_GET['id']);
-                  $sql = "SELECT * FROM tb_data_pengunjung WHERE id='$id'";
-                  $query = mysqli_query($db, $sql);
-                  $data = mysqli_fetch_array($query);
-                  
-      
-                  ?>
+                include '../koneksi/koneksi.php';
+                $id = mysqli_real_escape_string($db, $_GET['id']);
+                $sql = "SELECT * FROM tb_data_pengunjung WHERE id='$id'";
+                $query = mysqli_query($db, $sql);
+                $data = mysqli_fetch_array($query);
+
+
+                ?>
                 <div class="x_content">
                   <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                     <div class="profile_img">
                       <div id="crop-avatar">
                         <!-- Current avatar -->
                         <?php if (!empty($data['foto'])): ?>
-                        <img class="img-responsive avatar-view"
-                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data['foto']); ?>" alt="Avatar">
+                          <img class="img-responsive avatar-view"
+                            src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data['foto']); ?>" alt="Avatar">
                         <?php else: ?>
-                        <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
+                          <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
                         <?php endif; ?>
                       </div>
                     </div>
@@ -127,7 +127,7 @@ include "login/ceksession.php";
                             <td><?php echo isset($data['local_guide']) ? $data['local_guide'] : 'N/A'; ?></td>
                           </tr>
                           <tr>
-                            
+
                           </tr>
                         </tbody>
                       </table>

@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -66,6 +66,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputsuratkeluar.php" name="formsuratkeluar" method="post"
                     enctype="multipart/form-data" id="demo-form2" data-parsley-validate
                     class="form-horizontal form-label-left">
@@ -205,13 +213,13 @@ include "login/ceksession.php";
   <!-- Moment.js -->
   <script src="../assets/vendors/moment/min/moment.min.js"></script>
   <script>
-  $(document).ready(function() {
-    $('#myDatepicker4').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+    $(document).ready(function() {
+      $('#myDatepicker4').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY/MM/DD'
+      });
     });
-  });
   </script>
 </body>
 

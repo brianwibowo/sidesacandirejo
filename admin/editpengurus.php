@@ -7,7 +7,8 @@ ob_start();
 // Ambil ID dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 if (empty($id)) {
-  echo "<script>alert('ID tidak valid!'); window.location='datapengurus.php';</script>";
+  $_SESSION['error'] = "ID tidak valid!";
+  header("Location: datapengurus.php");
   exit;
 }
 
@@ -20,7 +21,8 @@ $result = mysqli_stmt_get_result($stmt);
 $data_pengurus = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
 if (!$data_pengurus) {
-  echo "<script>alert('Data tidak ditemukan!'); window.location='datapengurus.php';</script>";
+  $_SESSION['error'] = "Data tidak ditemukan!";
+  header("Location: datapengurus.php");
   exit;
 }
 ?>
@@ -70,6 +72,14 @@ if (!$data_pengurus) {
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_editpengurus.php" name="formeditpengurus" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
@@ -135,13 +145,13 @@ if (!$data_pengurus) {
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto_ktp">Foto KTP</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php if (!empty($data_pengurus['foto_ktp'])): ?>
-                          <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data_pengurus['foto_ktp']); ?>" 
-                               alt="Foto KTP" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"><br>
+                          <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data_pengurus['foto_ktp']); ?>"
+                            alt="Foto KTP" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"><br>
                         <?php endif; ?>
                         <input type="file" id="foto_ktp" name="foto_ktp" accept="image/*" class="form-control col-md-7 col-xs-12">
                         <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
                         <?php if (!empty($data_pengurus['foto_ktp'])): ?>
-                      
+
                         <?php endif; ?>
                       </div>
                     </div>
@@ -150,13 +160,13 @@ if (!$data_pengurus) {
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pas_foto">Pas Foto</label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php if (!empty($data_pengurus['pas_foto'])): ?>
-                          <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data_pengurus['pas_foto']); ?>" 
-                               alt="Pas Foto" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"><br>
+                          <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data_pengurus['pas_foto']); ?>"
+                            alt="Pas Foto" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"><br>
                         <?php endif; ?>
                         <input type="file" id="pas_foto" name="pas_foto" accept="image/*" class="form-control col-md-7 col-xs-12">
                         <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
                         <?php if (!empty($data_pengurus['pas_foto'])): ?>
-                       
+
                         <?php endif; ?>
                       </div>
                     </div>

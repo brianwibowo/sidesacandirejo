@@ -7,7 +7,8 @@ ob_start();
 // Ambil ID dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 if (empty($id)) {
-  echo "<script>alert('ID tidak valid!'); window.location='datapengunjung.php';</script>";
+  $_SESSION['error'] = "ID tidak ditemukan!";
+  header("Location: datapengunjung.php");
   exit;
 }
 
@@ -20,7 +21,8 @@ $result = mysqli_stmt_get_result($stmt);
 $data_pengunjung = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
 if (!$data_pengunjung) {
-  echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
+  $_SESSION['error'] = "Data tidak ditemukan!";
+  header("Location: datapengunjung.php");
   exit;
 }
 
@@ -64,6 +66,14 @@ if (!$data_pengunjung) {
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_editdatapengunjung.php" name="formeditdatapengunjung" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
@@ -252,8 +262,8 @@ if (!$data_pengunjung) {
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php if (!empty($data_pengunjung['foto'])): ?>
-                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data_pengunjung['foto']); ?>" 
-                               alt="Foto Pengunjung" style="max-width: 200px; margin-bottom: 10px;"><br>
+                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data_pengunjung['foto']); ?>"
+                            alt="Foto Pengunjung" style="max-width: 200px; margin-bottom: 10px;"><br>
                         <?php endif; ?>
                         <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
                         <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
@@ -289,80 +299,81 @@ if (!$data_pengunjung) {
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function () {
-    $('#myDatepicker6').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY-MM-DD'
-    });
-  
-    function showHideFields() {
-      let paket = $('#pilihan_paket_wisata').val();
-  
-      // Hide semua optional fields terlebih dahulu
-      $('#opsi_makan_tour_group').hide();
-      $('#jenis_makanan_paket_group').hide();
-      $('#opsi_cooking_lesson_group').hide();
-  
-      // Show relevant fields based on selected package
-      if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
-        $('#opsi_makan_tour_group').show();
+    $(document).ready(function() {
+      $('#myDatepicker6').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY-MM-DD'
+      });
+
+      function showHideFields() {
+        let paket = $('#pilihan_paket_wisata').val();
+
+        // Hide semua optional fields terlebih dahulu
+        $('#opsi_makan_tour_group').hide();
+        $('#jenis_makanan_paket_group').hide();
+        $('#opsi_cooking_lesson_group').hide();
+
+        // Show relevant fields based on selected package
+        if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
+          $('#opsi_makan_tour_group').show();
+        }
+        if (paket === 'meal_only') {
+          $('#jenis_makanan_paket_group').show();
+        }
+        if (paket === 'cooking_lesson') {
+          $('#opsi_cooking_lesson_group').show();
+        }
       }
-      if (paket === 'meal_only') {
-        $('#jenis_makanan_paket_group').show();
-      }
-      if (paket === 'cooking_lesson') {
-        $('#opsi_cooking_lesson_group').show();
-      }
-    }
-  
-    $('#pilihan_paket_wisata').change(function () {
-      let paket = $(this).val();
-  
-      // Reset values HANYA jika user mengubah pilihan (bukan saat load)
-      if ($(this).data('user-changed')) {
-        $('#opsi_makan_tour').val('');
-        $('#jenis_makanan_paket').val('');
-        $('#opsi_cooking_lesson').val('');
-      }
-  
+
+      $('#pilihan_paket_wisata').change(function() {
+        let paket = $(this).val();
+
+        // Reset values HANYA jika user mengubah pilihan (bukan saat load)
+        if ($(this).data('user-changed')) {
+          $('#opsi_makan_tour').val('');
+          $('#jenis_makanan_paket').val('');
+          $('#opsi_cooking_lesson').val('');
+        }
+
+        showHideFields();
+
+        // Set flag bahwa user sudah mengubah pilihan
+        $(this).data('user-changed', true);
+      });
+
+      $('#jenis_wisatawan').change(function() {
+        const jenis = $(this).val();
+
+        if (jenis == 'Domestik') {
+          $('#kota-group').show();
+          $('#negara-group').hide();
+          $('#kota').attr('required', true);
+          $('#negara').removeAttr('required').val('');
+        } else if (jenis == 'Mancanegara') {
+          $('#kota-group').hide();
+          $('#negara-group').show();
+          $('#negara').attr('required', true);
+          $('#kota').removeAttr('required').val('');
+        } else {
+          $('#kota-group').hide();
+          $('#negara-group').hide();
+          $('#kota').removeAttr('required').val('');
+          $('#negara').removeAttr('required').val('');
+        }
+      });
+
+      // Initialize pada saat load pertama kali TANPA mereset values
       showHideFields();
-      
-      // Set flag bahwa user sudah mengubah pilihan
-      $(this).data('user-changed', true);
-    });
-  
-    $('#jenis_wisatawan').change(function () {
-      const jenis = $(this).val();
-  
-      if (jenis == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-        $('#kota').attr('required', true);
-        $('#negara').removeAttr('required').val('');
-      } else if (jenis == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-        $('#negara').attr('required', true);
-        $('#kota').removeAttr('required').val('');
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-        $('#kota').removeAttr('required').val('');
-        $('#negara').removeAttr('required').val('');
+
+      const initialJenis = $('#jenis_wisatawan').val();
+      if (initialJenis) {
+        $('#jenis_wisatawan').trigger('change');
       }
     });
-  
-    // Initialize pada saat load pertama kali TANPA mereset values
-    showHideFields();
-    
-    const initialJenis = $('#jenis_wisatawan').val();
-    if (initialJenis) {
-      $('#jenis_wisatawan').trigger('change');
-    }
-  });
   </script>
 </body>
 
 </html>
-<?php ob_end_flush(); // Tambahkan ini ?>
+<?php ob_end_flush(); // Tambahkan ini 
+?>

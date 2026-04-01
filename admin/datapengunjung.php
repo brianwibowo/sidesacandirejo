@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -60,6 +60,14 @@ include "login/ceksession.php";
                 <div class="x_title">
                   <h2>Data Pengunjung Wisata</h2>
                   <div class="clearfix"></div>
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                 </div>
                 <form action="downloadlaporan_pengunjung.php" name="download_pengunjung" method="post"
                   enctype="multipart/form-data" class="form-horizontal form-label-left">
@@ -110,30 +118,30 @@ include "login/ceksession.php";
                     if ($total == 0) {
                       echo "<center><h2>Belum Ada Data Pengunjung</h2></center>";
                     } else { ?>
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th>Tanggal Kunjungan</th>
-                          <th>Pilihan Paket Wisata</th>
-                          <th>Detail Paket</th>
-                          <th>Jenis Wisatawan</th>
-                          <th>Kota/Negara</th>
-                          <th>Nama</th>
-                          <th>Pax</th>
-                          <th>Agen Wisata</th>
-                          <th>Driver/Agent Guide</th>
-                          <th>Local Guide</th>
-                          <th>Foto</th>
-                          <th>Aksi</th>
-                        </tr>
-                      </thead>
+                      <table id="datatable" class="table table-striped table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Tanggal Kunjungan</th>
+                            <th>Pilihan Paket Wisata</th>
+                            <th>Detail Paket</th>
+                            <th>Jenis Wisatawan</th>
+                            <th>Kota/Negara</th>
+                            <th>Nama</th>
+                            <th>Pax</th>
+                            <th>Agen Wisata</th>
+                            <th>Driver/Agent Guide</th>
+                            <th>Local Guide</th>
+                            <th>Foto</th>
+                            <th>Aksi</th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        <?php
+                        <tbody>
+                          <?php
                           while ($data = mysqli_fetch_array($query1)) {
                             // Format nama paket wisata untuk ditampilkan
                             $paket_display = '';
-                            switch($data['pilihan_paket_wisata']) {
+                            switch ($data['pilihan_paket_wisata']) {
                               case 'meal_only':
                                 $paket_display = 'Breakfast/Lunch/Dinner Only';
                                 break;
@@ -183,7 +191,7 @@ include "login/ceksession.php";
                             // Format detail paket berdasarkan opsi tambahan yang sesuai dengan paket utama
                             $detail_paket = '';
                             $paket_utama = $data['pilihan_paket_wisata'];
-                            
+
                             // Untuk paket cycling_tour, dokar_tour, walking_tour - tampilkan opsi makan
                             if (in_array($paket_utama, ['cycling_tour', 'dokar_tour', 'walking_tour']) && !empty($data['opsi_makan_tour'])) {
                               $detail_paket = ($data['opsi_makan_tour'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
@@ -192,7 +200,7 @@ include "login/ceksession.php";
                             elseif ($paket_utama == 'meal_only' && !empty($data['jenis_makanan_paket'])) {
                               $makanan_map = [
                                 'breakfast' => 'Breakfast',
-                                'lunch' => 'Lunch', 
+                                'lunch' => 'Lunch',
                                 'dinner' => 'Dinner'
                               ];
                               $detail_paket = $makanan_map[$data['jenis_makanan_paket']] ?? $data['jenis_makanan_paket'];
@@ -201,13 +209,13 @@ include "login/ceksession.php";
                             elseif ($paket_utama == 'cooking_lesson' && !empty($data['opsi_cooking_lesson'])) {
                               $detail_paket = ($data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'Cooking Lesson + Tour' : 'Cooking Lesson Saja';
                             }
-                            
+
                             if (empty($detail_paket)) {
                               $detail_paket = '-';
                             }
 
                             $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
-                            
+
                             echo '<tr>
                                 <td>' . htmlspecialchars($data['tanggal_kunjungan']) . '</td>
                                 <td>' . $paket_display . '</td>
@@ -223,13 +231,21 @@ include "login/ceksession.php";
                                 <td style="text-align:center;">
                                     <a href="detail-datapengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
                                     <a href="editpengunjung.php?id=' . urlencode($data['id'])  . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
-                                    <a onclick="return konfirmasi()" href="proses/proses_hapusdatapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                    <a href="#" 
+                                      data-toggle="modal" 
+                                      data-target="#modalHapus" 
+                                      data-id="' . $data['id'] . '"
+                                      class="btn-hapus">
+                                      <button type="button" title="Hapus" class="btn btn-danger btn-xs">
+                                          <i class="fa fa-trash-o"></i>
+                                      </button>
+                                    </a>
                                 </td>
                             </tr>';
                           }
                           ?>
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
 
                     <?php } ?>
                   </div>
@@ -281,12 +297,67 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
+  <!-- Field Paket Menu -->
+  <script>
+    function handlePaketChange(paket) {
+      const opsiMakan = document.querySelector('[name="opsi_makan_tour"]');
+      const jenisMakan = document.querySelector('[name="jenis_makanan_paket"]');
+      const cooking = document.querySelector('[name="opsi_cooking_lesson"]');
 
-  <script type="text/javascript" language="JavaScript">
-  function konfirmasi() {
-    return confirm("Apakah Anda yakin akan menghapus data ini?");
-  }
+      // RESET SEMUA
+      opsiMakan.disabled = true;
+      jenisMakan.disabled = true;
+      cooking.disabled = true;
+
+      opsiMakan.value = "";
+      jenisMakan.value = "";
+      cooking.value = "";
+
+      // AKTIFKAN SESUAI PAKET
+      if (['cycling_tour', 'dokar_tour', 'walking_tour'].includes(paket)) {
+        opsiMakan.disabled = false;
+      } else if (paket === 'meal_only') {
+        jenisMakan.disabled = false;
+      } else if (paket === 'cooking_lesson') {
+        cooking.disabled = false;
+      }
+    }
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const tombolHapus = document.querySelectorAll(".btn-hapus");
+      const tombolKonfirmasi = document.getElementById("btn-hapus");
+
+      tombolHapus.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+
+          let id = this.getAttribute("data-id");
+
+          tombolKonfirmasi.href = "proses/proses_hapusdatapengunjung.php?id=" + id;
+
+        });
+      });
+
+    });
+  </script>
+
+  <!--Modal Hapus-->
+  <div class="modal fade" id="modalHapus" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><b>Konfirmasi Hapus</b></h4>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menghapus data pengunjung ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Tidak</button>
+          <a href="" class="btn btn-danger" id="btn-hapus">Ya</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

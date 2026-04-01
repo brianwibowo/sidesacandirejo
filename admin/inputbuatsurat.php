@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -67,7 +67,7 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
-                  
+
                   <!-- Dropdown Pemilihan Jenis Surat -->
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_surat">Jenis Surat <span class="required">*</span></label>
@@ -79,7 +79,7 @@ include "login/ceksession.php";
                       </select>
                     </div>
                   </div>
-                  
+
                   <div class="clearfix"></div>
                   <br />
 
@@ -206,7 +206,7 @@ include "login/ceksession.php";
                     <form action="proses/proses_buatsurat_keterangan.php" name="formbuatketerangan" method="post" target="_blank"
                       enctype="multipart/form-data" id="demo-form3" data-parsley-validate
                       class="form-horizontal form-label-left">
-                      
+
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nomor_surat_keterangan">Nomor Surat <span
                             class="required">*</span>
@@ -331,11 +331,11 @@ include "login/ceksession.php";
       var jenisSurat = document.getElementById('jenis_surat').value;
       var formUndangan = document.getElementById('form_undangan');
       var formKeterangan = document.getElementById('form_keterangan');
-      
+
       // Sembunyikan semua form
       formUndangan.style.display = 'none';
       formKeterangan.style.display = 'none';
-      
+
       // Tampilkan form sesuai pilihan
       if (jenisSurat === 'undangan') {
         formUndangan.style.display = 'block';

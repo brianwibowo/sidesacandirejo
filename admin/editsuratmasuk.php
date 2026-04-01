@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -47,14 +47,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -78,13 +78,13 @@ include "login/ceksession.php";
                   <form action="proses/proses_editsuratmasuk.php" method="post" enctype="multipart/form-data"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <?php include '../koneksi/koneksi.php';
-                            $id			= mysqli_real_escape_string($db,$_GET['id']);
-                            $sql  		= "SELECT * FROM tb_arsip_surat_masuk where No='".$id."'";                        
-                            $query  	= mysqli_query($db, $sql);
-                            $data 		= mysqli_fetch_array($query);
-                            ?>
+                    $id      = mysqli_real_escape_string($db, $_GET['id']);
+                    $sql      = "SELECT * FROM tb_arsip_surat_masuk where No='" . $id . "'";
+                    $query    = mysqli_query($db, $sql);
+                    $data     = mysqli_fetch_array($query);
+                    ?>
 
-                    <input type=hidden name="id_suratmasuk" value="<?php echo $id;?>">
+                    <input type=hidden name="id_suratmasuk" value="<?php echo $id; ?>">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Masuk <span
                           class="required">*</span>
@@ -99,7 +99,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['kode'];?>" type="text" "
+                        <input value="<?php echo $data['kode']; ?>" type="text" "
                           id=" kode_suratmasuk" name="kode" required="required" maxlength="7"
                           placeholder="Masukkan Kode Surat" class="form-control col-md-7 col-xs-12">
                       </div>
@@ -109,7 +109,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['No'];?>" type="text" onkeyup="validAngka(this)"
+                        <input value="<?php echo $data['No']; ?>" type="text" onkeyup="validAngka(this)"
                           id="nomorurut_suratmasuk" name="No" required="required" maxlength="4"
                           placeholder="Masukkan Nomor Urut Surat" class="form-control col-md-7 col-xs-12" readonly>
                       </div>
@@ -119,7 +119,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nomor_surat'];?>" type="text" id="nomor_suratmasuk"
+                        <input value="<?php echo $data['nomor_surat']; ?>" type="text" id="nomor_suratmasuk"
                           name="nomor_suratmasuk" required="required" maxlength="35" placeholder="Masukkan Nomor Surat"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -138,7 +138,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['pengirim'];?>" type="text" id="pengirim" name="pengirim"
+                        <input value="<?php echo $data['pengirim']; ?>" type="text" id="pengirim" name="pengirim"
                           required="required" placeholder="Masukkan Asal/Pengirim Surat"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -148,7 +148,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['penerima_surat'];?>" type="text" id="penerima_surat" name="penerima_surat"
+                        <input value="<?php echo $data['penerima_surat']; ?>" type="text" id="penerima_surat" name="penerima_surat"
                           required="required" placeholder="Masukkan Nama Penerima"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -159,7 +159,7 @@ include "login/ceksession.php";
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="disposisi" name="disposisi" required="required" class="form-control"
-                          rows="3" placeholder='Masukkan Disposisi Surat'><?php echo $data['disposisi'];?></textarea>
+                          rows="3" placeholder='Masukkan Disposisi Surat'><?php echo $data['disposisi']; ?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -167,7 +167,7 @@ include "login/ceksession.php";
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="perihal_suratmasuk" name="perihal" required="required" class="form-control"
-                          rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal'];?></textarea>
+                          rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal']; ?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -175,7 +175,7 @@ include "login/ceksession.php";
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="keterangan" name="keterangan" required="required" class="form-control"
-                          rows="3" placeholder='Masukkan Keterangan Surat'><?php echo $data['keterangan'];?></textarea>
+                          rows="3" placeholder='Masukkan Keterangan Surat'><?php echo $data['keterangan']; ?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -184,7 +184,7 @@ include "login/ceksession.php";
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input name="file_surat" accept="application/pdf" type="file" id="file_suratmasuk"
                           class="form-control" autocomplete="off" /><a
-                          href="<?php echo 'uploads/'.$data['file_surat'].''?>"><b>Lihat File
+                          href="<?php echo 'uploads/' . $data['file_surat'] . '' ?>"><b>Lihat File
                             Sebelumnya</b></a></input> (Maksimal 10 MB )
                       </div>
                     </div>
@@ -194,9 +194,9 @@ include "login/ceksession.php";
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input name="lampiran_foto" accept="image/*" type="file" id="lampiran_foto"
                           class="form-control" autocomplete="off" />
-                        <?php if($data['lampiran_foto']) { ?>
-                          <a href="<?php echo 'uploads/'.$data['lampiran_foto'].''?>"><b>Lihat Foto
-                            Sebelumnya</b></a>
+                        <?php if ($data['lampiran_foto']) { ?>
+                          <a href="<?php echo 'uploads/' . $data['lampiran_foto'] . '' ?>"><b>Lihat Foto
+                              Sebelumnya</b></a>
                         <?php } ?>
                         (Maksimal 2 MB )
                       </div>
@@ -204,7 +204,7 @@ include "login/ceksession.php";
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Operator </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $_SESSION['nama'];?>" type="text" id="operator" name="operator"
+                        <input value="<?php echo $_SESSION['nama']; ?>" type="text" id="operator" name="operator"
                           readonly="readonly" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
@@ -233,7 +233,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-  
+
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -281,51 +281,51 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
   <!-- Initialize datetimepicker -->
   <script>
-  $('#myDatepicker').datetimepicker();
+    $('#myDatepicker').datetimepicker();
 
-  $('#myDatepicker2').datetimepicker({
-    format: 'DD.MM.YYYY'
-  });
+    $('#myDatepicker2').datetimepicker({
+      format: 'DD.MM.YYYY'
+    });
 
-  $('#myDatepicker3').datetimepicker({
-    format: 'hh:mm A'
-  });
+    $('#myDatepicker3').datetimepicker({
+      format: 'hh:mm A'
+    });
 
-  $('#myDatepicker4').datetimepicker({
-    ignoreReadonly: true,
-    allowInputToggle: true
-  });
+    $('#myDatepicker4').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true
+    });
 
-  $('#datetimepicker6').datetimepicker();
+    $('#datetimepicker6').datetimepicker();
 
-  $('#datetimepicker7').datetimepicker({
-    useCurrent: false
-  });
+    $('#datetimepicker7').datetimepicker({
+      useCurrent: false
+    });
 
-  $("#datetimepicker6").on("dp.change", function(e) {
-    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-  });
+    $("#datetimepicker6").on("dp.change", function(e) {
+      $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    });
 
-  $("#datetimepicker7").on("dp.change", function(e) {
-    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-  });
+    $("#datetimepicker7").on("dp.change", function(e) {
+      $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    });
   </script>
   <script language='javascript'>
-  function validAngka(a) {
-    if (!/^[0-9.]+$/.test(a.value)) {
-      a.value = a.value.substring(0, a.value.length - 1000);
+    function validAngka(a) {
+      if (!/^[0-9.]+$/.test(a.value)) {
+        a.value = a.value.substring(0, a.value.length - 1000);
+      }
     }
-  }
   </script>
   <script>
     function resetForm() {
       // Reset all form fields
       document.forms['demo-form2'].reset();
-      
+
       // Reset file inputs
       document.getElementById('file_suratmasuk').value = '';
       document.getElementById('lampiran_foto').value = '';
-  }
+    }
   </script>
 </body>
 

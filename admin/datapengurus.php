@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -66,6 +66,14 @@ include "login/ceksession.php";
                   <h2>Data Pengurus</h2>
                   <div class="clearfix"></div>
                 </div>
+                <?php if (isset($_SESSION['error'])): ?>
+                  <div class="alert alert-error" role="alert">
+                    <?php
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                    ?>
+                  </div>
+                <?php endif; ?>
                 <form action="downloadlaporan_pengurus.php" name="download_pengurus" method="post"
                   enctype="multipart/form-data" id="demo-form2" data-parsley-validate
                   class="form-horizontal form-label-left">
@@ -115,23 +123,23 @@ include "login/ceksession.php";
                   if ($total == 0) {
                     echo "<center><h2>Belum Ada Data Pengurus</h2></center>";
                   } else { ?>
-                  <table id="datatable" class="table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th width="15%">Nama</th>
-                        <th width="12%">No. KTP</th>
-                        <th width="12%">Jabatan</th>
-                        <th width="10%">Periode</th>
-                        <th width="15%">Alamat</th>
-                        <th width="10%">No. Telp</th>
-                        <th width="10%">Foto KTP</th>
-                        <th width="10%">Pas Foto</th>
-                        <th width="3%">Aksi</th>
-                      </tr>
-                    </thead>
+                    <table id="datatable" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th width="15%">Nama</th>
+                          <th width="12%">No. KTP</th>
+                          <th width="12%">Jabatan</th>
+                          <th width="10%">Periode</th>
+                          <th width="15%">Alamat</th>
+                          <th width="10%">No. Telp</th>
+                          <th width="10%">Foto KTP</th>
+                          <th width="10%">Pas Foto</th>
+                          <th width="3%">Aksi</th>
+                        </tr>
+                      </thead>
 
-                    <tbody>
-                      <?php
+                      <tbody>
+                        <?php
                         while ($data = mysqli_fetch_array($query1)) {
                           echo '<tr>
                           <td>' . htmlspecialchars($data['nama']) . '</td>
@@ -147,15 +155,21 @@ include "login/ceksession.php";
                                 class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
                             <a href="editpengurus.php?id=' . $data['id'] . '"><button type="button" title="Edit"
                                 class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a>
-                            <a onclick="return konfirmasi()"
-                              href="proses/proses_hapuspengurus.php?id=' . $data['id'] . '"><button type="button" title="Hapus"
-                                class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                            <a href="#" 
+                                      data-toggle="modal" 
+                                      data-target="#modalHapus" 
+                                      data-id="' . $data['id'] . '"
+                                      class="btn-hapus">
+                                      <button type="button" title="Hapus" class="btn btn-danger btn-xs">
+                                          <i class="fa fa-trash-o"></i>
+                                      </button>
+                                    </a>
                           </td>
                           </tr>';
                         }
-                      ?>
-                    </tbody>
-                  </table>
+                        ?>
+                      </tbody>
+                    </table>
 
                   <?php } ?>
                 </div>
@@ -207,11 +221,40 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
   <script>
-    function konfirmasi() {
-      return confirm("Apakah Anda yakin ingin menghapus data ini?");
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+      const tombolHapus = document.querySelectorAll(".btn-hapus");
+      const tombolKonfirmasi = document.getElementById("btn-hapus");
+
+      tombolHapus.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+
+          let id = this.getAttribute("data-id");
+
+          tombolKonfirmasi.href = "proses/proses_hapuspengurus.php?id=" + id;
+
+        });
+      });
+
+    });
   </script>
 
+  <!--Modal Hapus-->
+  <div class="modal fade" id="modalHapus" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><b>Konfirmasi Hapus</b></h4>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menghapus data pengurus ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Tidak</button>
+          <a href="" class="btn btn-danger" id="btn-hapus">Ya</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
-</html> 
+</html>

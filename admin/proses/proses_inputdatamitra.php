@@ -20,18 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $jam = date('H-i-s');
         $nama_file = strtolower(str_replace(' ', '_', $nama_usaha)) . "_{$jam}.pdf";
         $target_dir = '../uploads/';
-        
+
         // Buat direktori jika belum ada
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
-        
+
         $destination = $target_dir . $nama_file;
 
         if (move_uploaded_file($_FILES['bukti_legalitas']['tmp_name'], $destination)) {
             $bukti_legalitas = 'uploads/' . $nama_file;
         } else {
-            echo "<script>alert('File bukti legalitas gagal diupload!'); window.location='../datamitra.php';</script>";
+            $_SESSION['error'] = "File bukti legalitas gagal diupload!";
+            header("Location: ../inputdatamitra.php");
             exit;
         }
     }
@@ -39,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle foto kegiatan upload
     if (isset($_FILES['foto_kegiatan'])) {
         $target_dir = '../uploads/foto_kegiatan/';
-        
+
         // Buat direktori jika belum ada
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
@@ -55,13 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Validasi tipe file
                 $allowed_types = array('image/jpeg', 'image/png', 'image/jpg');
                 if (!in_array($file_type, $allowed_types)) {
-                    echo "<script>alert('Tipe file tidak didukung! Hanya JPG, JPEG, dan PNG yang diperbolehkan.'); window.location='../datamitra.php';</script>";
+                    $_SESSION['error'] = "Tipe file tidak didukung! Hanya JPG, JPEG, dan PNG yang diperbolehkan.";
+                    header("Location: ../inputdatamitra.php");
                     exit;
                 }
 
                 // Validasi ukuran file (2MB)
-                if ($file_size > 2097152) {
-                    echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB per foto.'); window.location='../datamitra.php';</script>";
+                if ($file_size > 2000000) {
+                    $_SESSION['error'] = "Ukuran file terlalu besar! Maksimal 2MB per foto.";
+                    header("Location: ../inputdatamitra.php");
                     exit;
                 }
 
@@ -78,20 +81,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare SQL query
     $foto_kegiatan = !empty($foto_paths) ? implode(',', $foto_paths) : null;
-    
+
     $query = "INSERT INTO tb_data_mitra (nama_pemilik, nama_usaha, kategori_usaha, alamat, nomor_telp, legalitas_usaha" .
-        (isset($bukti_legalitas) ? ", bukti_legalitas" : "") . 
-        ($foto_kegiatan ? ", foto_kegiatan" : "") . 
-        ") VALUES ('$nama_pemilik', '$nama_usaha', '$kategori_usaha', '$alamat', '$nomor_telp', '$legalitas'" . 
-        (isset($bukti_legalitas) ? ", '$bukti_legalitas'" : "") . 
-        ($foto_kegiatan ? ", '$foto_kegiatan'" : "") . 
+        (isset($bukti_legalitas) ? ", bukti_legalitas" : "") .
+        ($foto_kegiatan ? ", foto_kegiatan" : "") .
+        ") VALUES ('$nama_pemilik', '$nama_usaha', '$kategori_usaha', '$alamat', '$nomor_telp', '$legalitas'" .
+        (isset($bukti_legalitas) ? ", '$bukti_legalitas'" : "") .
+        ($foto_kegiatan ? ", '$foto_kegiatan'" : "") .
         ")";
 
     if (mysqli_query($db, $query)) {
-        echo "<script>alert('Data berhasil ditambahkan'); window.location='../datamitra.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil ditambahkan'
+        }).then(() => {
+            window.location = '../datamitra.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
     } else {
-        echo "Error: " . mysqli_error($db);
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></>
+        </head>
+        <body>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: " . json_encode("Gagal menghapus data! Error: " . mysqli_error($db)) . "
+            }).then(() => {
+                window.location = '../datamitra.php';
+            });
+        </>
+        </body>
+        </html>
+        ";
     }
 } else {
-    echo "<script>alert('Invalid request method.'); window.location='../datamitra.php';</script>";
+    $_SESSION['error'] = "Invalid request method.";
+    header("Location: ../datamitra.php");
 }

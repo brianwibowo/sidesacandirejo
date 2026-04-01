@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -70,6 +70,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post" enctype="multipart/form-data" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <?php
                     include '../koneksi/koneksi.php';
@@ -94,7 +102,7 @@ include "login/ceksession.php";
                         <input type="text" id="tanggal_terima" name="tanggal_terima" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
                       </div>
                     </div>
-                    
+
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Surat <span class="required">*</span>
                       </label>

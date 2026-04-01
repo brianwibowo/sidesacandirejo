@@ -6,9 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $tanggal_kunjungan = $_POST['tanggal_kunjungan'];
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
-    $opsi_makan_tour = isset($_POST['opsi_makan_tour']) ? $_POST['opsi_makan_tour'] : null;
-    $jenis_makanan_paket = isset($_POST['jenis_makanan_paket']) ? $_POST['jenis_makanan_paket'] : null;
-    $opsi_cooking_lesson = isset($_POST['opsi_cooking_lesson']) ? $_POST['opsi_cooking_lesson'] : null;
+    $opsi_makan_tour = !empty($_POST['opsi_makan_tour']) ? $_POST['opsi_makan_tour'] : null;
+    $jenis_makanan_paket = !empty($_POST['jenis_makanan_paket']) ? $_POST['jenis_makanan_paket'] : null;
+    $opsi_cooking_lesson = !empty($_POST['opsi_cooking_lesson']) ? $_POST['opsi_cooking_lesson'] : null;
+
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $kota = isset($_POST['kota']) ? $_POST['kota'] : null;
     $negara = isset($_POST['negara']) ? $_POST['negara'] : null;
@@ -24,18 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $allowed = ['jpg', 'jpeg', 'png'];
         $filename = $_FILES['foto']['name'];
         $filetype = pathinfo($filename, PATHINFO_EXTENSION);
-        
+
         if (in_array(strtolower($filetype), $allowed)) {
             // Check file size (2MB max)
             if ($_FILES['foto']['size'] <= 2 * 1024 * 1024) {
                 $new_filename = uniqid() . '.' . $filetype;
                 $upload_path = '../uploads/pengunjung/' . $new_filename;
-                
+
                 // Create directory if it doesn't exist
                 if (!file_exists('../uploads/pengunjung')) {
                     mkdir('../uploads/pengunjung', 0777, true);
                 }
-                
+
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
                     $foto = $new_filename;
                 }
@@ -45,12 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validation
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
-        echo "<script>alert('Kota harus diisi untuk wisatawan domestik!'); window.history.back();</script>";
+        $_SESSION['error_kota'] = "Kota harus diisi untuk wisatawan domestik!";
+        header("Location: form.php");
         exit;
     }
-    
+
     if ($jenis_wisatawan == 'Mancanegara' && empty($negara)) {
-        echo "<script>alert('Negara harus diisi untuk wisatawan mancanegara!'); window.history.back();</script>";
+        $_SESSION['error_negara'] = "Negara harus diisi untuk wisatawan mancanegara!";
+        header("Location: form.php");
         exit;
     }
 
@@ -61,37 +64,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
-        echo "<script>alert('Error preparing statement: " . htmlspecialchars($db->error) . "'); window.location='../datapengunjung.php';</script>";
+        $_SESSION['error'] = "Error preparing statement: " . $db->error;
+        header("Location: ../datapengunjung.php");
         exit;
     }
 
-    $stmt->bind_param("sssssssssissss", 
-        $tanggal_kunjungan, 
-        $pilihan_paket_wisata, 
-        $opsi_makan_tour, 
-        $jenis_makanan_paket, 
-        $opsi_cooking_lesson, 
-        $jenis_wisatawan, 
-        $kota, 
-        $negara, 
-        $nama, 
-        $pax, 
+    $stmt->bind_param(
+        "sssssssssissss",
+        $tanggal_kunjungan,
+        $pilihan_paket_wisata,
+        $opsi_makan_tour,
+        $jenis_makanan_paket,
+        $opsi_cooking_lesson,
+        $jenis_wisatawan,
+        $kota,
+        $negara,
+        $nama,
+        $pax,
         $agen_wisata,
         $driver_agent_guide,
         $local_guide,
         $foto
     );
 
+
     if ($stmt->execute()) {
-        echo "<script>alert('Data pengunjung berhasil disimpan!'); window.location='../datapengunjung.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data pengunjung berhasil ditambahkan'
+        }).then(() => {
+            window.location = '../datapengunjung.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
     } else {
-        echo "<script>alert('Terjadi kesalahan: " . htmlspecialchars($stmt->error) . "'); window.location='../datapengunjung.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: " . json_encode("Terjadi kesalahan, gagal input data: " . $stmt->error) . "
+            }).then(() => {
+                window.location = '../datapengunjung.php';
+            });
+        </script>
+        </body>
+        </html>
+        ";
     }
-    
+
     $stmt->close();
 } else {
-    echo "<script>alert('Permintaan tidak valid.'); window.location='../datapengunjung.php';</script>";
+    $_SESSION['error'] = "Permintaan tidak valid. " . $db->error;
+    header("Location: ../datapengunjung.php");
+    exit;
 }
 
 $db->close();
-?>

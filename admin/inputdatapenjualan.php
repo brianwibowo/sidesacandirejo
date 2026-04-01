@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -61,6 +61,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputdatapenjualan.php" name="forminputdatapenjualan" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
@@ -104,15 +112,15 @@ include "login/ceksession.php";
                     </div>
 
                     <script>
-                    document.getElementById('jenis_produk').addEventListener('change', function() {
-                      var pilihanPaketWisata = document.getElementById('pilihan_paket_wisata');
+                      document.getElementById('jenis_produk').addEventListener('change', function() {
+                        var pilihanPaketWisata = document.getElementById('pilihan_paket_wisata');
 
-                      if (this.value === 'Paket Wisata') {
-                        pilihanPaketWisata.style.display = 'block';
-                      } else {
-                        pilihanPaketWisata.style.display = 'none';
-                      }
-                    });
+                        if (this.value === 'Paket Wisata') {
+                          pilihanPaketWisata.style.display = 'block';
+                        } else {
+                          pilihanPaketWisata.style.display = 'none';
+                        }
+                      });
                     </script>
 
                     <div class="form-group">
@@ -185,20 +193,20 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
-    $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
+    $(document).ready(function() {
+      $('#jenis_wisatawan').change(function() {
+        if ($(this).val() == 'Domestik') {
+          $('#kota-group').show();
+          $('#negara-group').hide();
+        } else if ($(this).val() == 'Mancanegara') {
+          $('#kota-group').hide();
+          $('#negara-group').show();
+        } else {
+          $('#kota-group').hide();
+          $('#negara-group').hide();
+        }
+      });
     });
-  });
   </script>
 </body>
 

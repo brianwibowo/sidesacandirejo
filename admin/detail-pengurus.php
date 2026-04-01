@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -54,14 +54,14 @@ include "login/ceksession.php";
 
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -83,10 +83,10 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
                 <?php include '../koneksi/koneksi.php';
-                     $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_data_pengurus where id='".$id."'";                        
-                     $query  	= mysqli_query($db, $sql);
-                     $data 		= mysqli_fetch_array($query);?>
+                $id      = mysqli_real_escape_string($db, $_GET['id']);
+                $sql      = "SELECT * FROM tb_data_pengurus where id='" . $id . "'";
+                $query    = mysqli_query($db, $sql);
+                $data     = mysqli_fetch_array($query); ?>
                 <div class="x_content">
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="profile_title">
@@ -132,18 +132,18 @@ include "login/ceksession.php";
                           <td>Foto KTP</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['foto_ktp'])): ?>
-                                <div class="col-md-6">
-                                    <div class="card mb-3">
-                                     
-                                        <div class="card-body text-center">
-                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['foto_ktp']); ?>" 
-                                                 alt="Foto KTP" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
-                                        </div>
-                                    </div>
+                            <?php if (!empty($data['foto_ktp'])): ?>
+                              <div class="col-md-6">
+                                <div class="card mb-3">
+
+                                  <div class="card-body text-center">
+                                    <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['foto_ktp']); ?>"
+                                      alt="Foto KTP" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
+                                  </div>
                                 </div>
+                              </div>
                             <?php else: ?>
-                                <span class="text-muted">Tidak ada foto</span>
+                              <span class="text-muted">Tidak ada foto</span>
                             <?php endif; ?>
                           </td>
                         </tr>
@@ -151,18 +151,18 @@ include "login/ceksession.php";
                           <td>Pas Foto</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['pas_foto'])): ?>
-                                <div class="col-md-6">
-                                    <div class="card mb-3">
-                                     
-                                        <div class="card-body text-center">
-                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['pas_foto']); ?>" 
-                                                 alt="Pas Foto" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
-                                        </div>
-                                    </div>
+                            <?php if (!empty($data['pas_foto'])): ?>
+                              <div class="col-md-6">
+                                <div class="card mb-3">
+
+                                  <div class="card-body text-center">
+                                    <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['pas_foto']); ?>"
+                                      alt="Pas Foto" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
+                                  </div>
                                 </div>
+                              </div>
                             <?php else: ?>
-                                <span class="text-muted">Tidak ada foto</span>
+                              <span class="text-muted">Tidak ada foto</span>
                             <?php endif; ?>
                           </td>
                         </tr>

@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,14 +38,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -61,6 +61,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputdatapengunjung.php" name="forminputdatapengunjung" method="post"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
@@ -278,59 +286,59 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
-    $('#myDatepicker6').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY-MM-DD'
-    });
+    $(document).ready(function() {
+      $('#myDatepicker6').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY-MM-DD'
+      });
 
-    $('#pilihan_paket_wisata').change(function() {
+      $('#pilihan_paket_wisata').change(function() {
         let paket = $(this).val();
-        
+
         // Reset dan hide semua optional fields
         $('#opsi_makan_tour_group').hide();
         $('#jenis_makanan_paket_group').hide();
         $('#opsi_cooking_lesson_group').hide();
-        
+
         // Reset values
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
-        
+
         // Show relevant fields based on selected package
         if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
-            $('#opsi_makan_tour_group').show();
+          $('#opsi_makan_tour_group').show();
         }
         if (paket === 'meal_only') {
-            $('#jenis_makanan_paket_group').show();
+          $('#jenis_makanan_paket_group').show();
         }
         if (paket === 'cooking_lesson') {
-            $('#opsi_cooking_lesson_group').show();
+          $('#opsi_cooking_lesson_group').show();
         }
-    });
+      });
 
-    $('#jenis_wisatawan').change(function() {
+      $('#jenis_wisatawan').change(function() {
         const jenis = $(this).val();
-        
+
         if (jenis == 'Domestik') {
-            $('#kota-group').show();
-            $('#negara-group').hide();
-            $('#kota').attr('required', true);
-            $('#negara').removeAttr('required').val(''); // Clear negara field
+          $('#kota-group').show();
+          $('#negara-group').hide();
+          $('#kota').attr('required', true);
+          $('#negara').removeAttr('required').val(''); // Clear negara field
         } else if (jenis == 'Mancanegara') {
-            $('#kota-group').hide();
-            $('#negara-group').show();
-            $('#negara').attr('required', true);
-            $('#kota').removeAttr('required').val(''); // Clear kota field
+          $('#kota-group').hide();
+          $('#negara-group').show();
+          $('#negara').attr('required', true);
+          $('#kota').removeAttr('required').val(''); // Clear kota field
         } else {
-            $('#kota-group').hide();
-            $('#negara-group').hide();
-            $('#kota').removeAttr('required').val('');
-            $('#negara').removeAttr('required').val('');
+          $('#kota-group').hide();
+          $('#negara-group').hide();
+          $('#kota').removeAttr('required').val('');
+          $('#negara').removeAttr('required').val('');
         }
+      });
     });
-  });
   </script>
 </body>
 

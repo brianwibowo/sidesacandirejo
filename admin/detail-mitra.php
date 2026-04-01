@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,14 +48,14 @@ include "login/ceksession.php";
 
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -77,10 +77,10 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
                 <?php include '../koneksi/koneksi.php';
-                     $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_data_mitra where id='".$id."'";                        
-                     $query  	= mysqli_query($db, $sql);
-                     $data 		= mysqli_fetch_array($query);?>
+                $id      = mysqli_real_escape_string($db, $_GET['id']);
+                $sql      = "SELECT * FROM tb_data_mitra where id='" . $id . "'";
+                $query    = mysqli_query($db, $sql);
+                $data     = mysqli_fetch_array($query); ?>
                 <div class="x_content">
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="profile_title">
@@ -100,43 +100,43 @@ include "login/ceksession.php";
                         <tr>
                           <td>Nama Pemilik</td>
                           <td>:</td>
-                          <td><?php echo $data['nama_pemilik']?></td>
+                          <td><?php echo $data['nama_pemilik'] ?></td>
                         </tr>
                         <tr>
                           <td>Nama Usaha</td>
                           <td>:</td>
-                          <td><?php echo $data['nama_usaha']?></td>
+                          <td><?php echo $data['nama_usaha'] ?></td>
                         </tr>
                         <tr>
                           <td>Kategori Usaha</td>
                           <td>:</td>
-                          <td><?php echo $data['kategori_usaha']?></td>
+                          <td><?php echo $data['kategori_usaha'] ?></td>
                         </tr>
                         <tr>
                           <td>Alamat</td>
                           <td>:</td>
-                          <td><?php echo $data['alamat']?></td>
+                          <td><?php echo $data['alamat'] ?></td>
                         </tr>
                         <tr>
                           <td>Nomor Telepon</td>
                           <td>:</td>
-                          <td><?php echo $data['nomor_telp']?></td>
+                          <td><?php echo $data['nomor_telp'] ?></td>
                         </tr>
                         <tr>
                           <td>Legalitas Usaha</td>
                           <td>:</td>
-                          <td><?php echo $data['legalitas_usaha']?></td>
+                          <td><?php echo $data['legalitas_usaha'] ?></td>
                         </tr>
                         <tr>
                           <td>Bukti Legalitas</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['bukti_legalitas'])): ?>
-                                <a href="uploads/<?php echo basename($data['bukti_legalitas']); ?>" target="_blank" class="btn btn-sm btn-info">
-                                    <i class="fa fa-download"></i> Download File
-                                </a>
+                            <?php if (!empty($data['bukti_legalitas'])): ?>
+                              <a href="uploads/<?php echo basename($data['bukti_legalitas']); ?>" target="_blank" class="btn btn-sm btn-info">
+                                <i class="fa fa-download"></i> Download File
+                              </a>
                             <?php else: ?>
-                                <span class="text-muted">Tidak ada file</span>
+                              <span class="text-muted">Tidak ada file</span>
                             <?php endif; ?>
                           </td>
                         </tr>
@@ -144,21 +144,21 @@ include "login/ceksession.php";
                           <td>Foto Kegiatan</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['foto_kegiatan'])): ?>
-                                <div class="row">
-                                    <?php 
-                                    $fotos = explode(',', $data['foto_kegiatan']);
-                                    foreach($fotos as $foto): 
-                                    ?>
-                                    <div class="col-md-4 mb-2">
-                                        <a href="uploads/foto_kegiatan/<?php echo basename($foto); ?>" target="_blank">
-                                            <img src="uploads/foto_kegiatan/<?php echo basename($foto); ?>" class="img-thumbnail" style="max-height: 150px; width: 100%; object-fit: cover;">
-                                        </a>
-                                    </div>
-                                    <?php endforeach; ?>
-                                </div>
+                            <?php if (!empty($data['foto_kegiatan'])): ?>
+                              <div class="row">
+                                <?php
+                                $fotos = explode(',', $data['foto_kegiatan']);
+                                foreach ($fotos as $foto):
+                                ?>
+                                  <div class="col-md-4 mb-2">
+                                    <a href="uploads/foto_kegiatan/<?php echo basename($foto); ?>" target="_blank">
+                                      <img src="uploads/foto_kegiatan/<?php echo basename($foto); ?>" class="img-thumbnail" style="max-height: 150px; width: 100%; object-fit: cover;">
+                                    </a>
+                                  </div>
+                                <?php endforeach; ?>
+                              </div>
                             <?php else: ?>
-                                <span class="text-muted">Tidak ada foto</span>
+                              <span class="text-muted">Tidak ada foto</span>
                             <?php endif; ?>
                           </td>
                         </tr>
@@ -183,7 +183,7 @@ include "login/ceksession.php";
     <!-- footer content -->
     <footer>
       <div class="pull-right">
-       
+
       </div>
       <div class="clearfix"></div>
     </footer>

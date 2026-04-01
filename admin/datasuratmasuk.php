@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -61,6 +61,14 @@ include "login/ceksession.php";
                   <h2>Data Surat Masuk</h2>
                   <div class="clearfix"></div>
                 </div>
+                <?php if (isset($_SESSION['error'])): ?>
+                  <div class="alert alert-error" role="alert">
+                    <?php
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                    ?>
+                  </div>
+                <?php endif; ?>
                 <form action="downloadlaporan_suratmasuk.php" name="download_suratmasuk" method="post"
                   enctype="multipart/form-data" id="demo-form2" data-parsley-validate
                   class="form-horizontal form-label-left">
@@ -109,25 +117,25 @@ include "login/ceksession.php";
                     if ($total == 0) {
                       echo "<center><h2>Belum Ada Data Surat Masuk</h2></center>";
                     } else { ?>
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th width="5%">No</th>
-                          <th width="8%">Nomor Surat</th>
-                          <th width="8%">Tanggal Terima</th>
-                          <th width="8%">Tanggal Surat</th>
-                          <th width="10%">Pengirim</th>
-                          <th width="10%">Penerima</th>
-                          <th width="10%">Disposisi</th>
-                          <th width="12%">Perihal</th>
-                          <th width="8%">Kode</th>
-                          <th width="10%">Keterangan</th>
-                          <th width="3%">Aksi</th>
-                        </tr>
-                      </thead>
+                      <table id="datatable" class="table table-striped table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="5%">No</th>
+                            <th width="8%">Nomor Surat</th>
+                            <th width="8%">Tanggal Terima</th>
+                            <th width="8%">Tanggal Surat</th>
+                            <th width="10%">Pengirim</th>
+                            <th width="10%">Penerima</th>
+                            <th width="10%">Disposisi</th>
+                            <th width="12%">Perihal</th>
+                            <th width="8%">Kode</th>
+                            <th width="10%">Keterangan</th>
+                            <th width="3%">Aksi</th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        <?php
+                        <tbody>
+                          <?php
                           $query1 = mysqli_query($db, "SELECT * FROM tb_arsip_surat_masuk");
                           while ($data = mysqli_fetch_array($query1)) {
                             echo '<tr>
@@ -136,8 +144,8 @@ include "login/ceksession.php";
                                 <td>' . htmlspecialchars($data['tanggal_terima']) . '</td>
                                 <td>' . htmlspecialchars($data['tanggal_surat']) . '</td>
                                 <td>' . htmlspecialchars($data['pengirim']) . '</td>
-                                <td>' . htmlspecialchars($data['penerima_surat']) . '</td>
-                                <td>' . htmlspecialchars($data['disposisi']) . '</td>
+                                <td>' . htmlspecialchars($data['penerima_surat'] ?? '') . '</td>
+                                <td>' . htmlspecialchars($data['disposisi'] ?? '') . '</td>
                                 <td>' . htmlspecialchars($data['perihal']) . '</td>
                                 <td>' . htmlspecialchars($data['kode']) . '</td>
                                 <td>' . htmlspecialchars($data['keterangan']) . '</td>
@@ -146,13 +154,21 @@ include "login/ceksession.php";
                                 ' . ($data['lampiran_foto'] ? '<a href="surat_masuk/' . htmlspecialchars($data['lampiran_foto']) . '"><button type="button" title="Lihat Foto" class="btn btn-info btn-xs"><i class="fa fa-image"></i></button></a><br>' : '') . '
                                 <a href="detail-suratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
                                 <a href="editsuratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
-                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratmasuk.php?id=' . $data['No'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                <a href="#" 
+                                  data-toggle="modal" 
+                                  data-target="#modalHapus" 
+                                  data-id="' . $data['No'] . '"
+                                  class="btn-hapus">
+                                  <button type="button" title="Hapus" class="btn btn-danger btn-xs">
+                                      <i class="fa fa-trash-o"></i>
+                                  </button>
+                                </a>
                                 </td>
                             </tr>';
                           }
-                        ?>
-                      </tbody>
-                    </table>
+                          ?>
+                        </tbody>
+                      </table>
 
                     <?php } ?>
                   </div>
@@ -204,14 +220,43 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
-  <script type="text/javascript" language="JavaScript">
-  function konfirmasi() {
-    tanya = confirm("Anda Yakin Akan Menghapus Data ?");
-    if (tanya == true) return true;
-    else return false;
-  }
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+      const tombolHapus = document.querySelectorAll(".btn-hapus");
+      const tombolKonfirmasi = document.getElementById("btn-hapus");
+
+      tombolHapus.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+
+          let id = this.getAttribute("data-id");
+
+          tombolKonfirmasi.href = "proses/proses_hapussuratmasuk.php?id=" + id;
+
+        });
+      });
+
+    });
   </script>
 
+  <!--Modal Hapus-->
+  <div class="modal fade" id="modalHapus" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><b>Konfirmasi Hapus</b></h4>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menghapus data surat ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Tidak</button>
+          <a href="" class="btn btn-danger" id="btn-hapus">Ya</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

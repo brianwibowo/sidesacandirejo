@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,14 +48,14 @@ include "login/ceksession.php";
 
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -77,10 +77,10 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
                 <?php include '../koneksi/koneksi.php';
-                     $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_arsip_surat_keluar where No='".$id."'";                        
-                     $query  	= mysqli_query($db, $sql);
-                     $data 		= mysqli_fetch_array($query);?>
+                $id      = mysqli_real_escape_string($db, $_GET['id']);
+                $sql      = "SELECT * FROM tb_arsip_surat_keluar where No='" . $id . "'";
+                $query    = mysqli_query($db, $sql);
+                $data     = mysqli_fetch_array($query); ?>
                 <div class="x_content">
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="profile_title">
@@ -94,31 +94,31 @@ include "login/ceksession.php";
                       <tbody>
                         <tr>
                           <td width="40%">No</td>
-                          <td><?php echo $data['No']?></td>
+                          <td><?php echo $data['No'] ?></td>
                         </tr>
                         <tr>
                           <td width="40%">Tanggal Keluar</td>
-                          <td><?php echo $data['tanggal_keluar']?></td>
+                          <td><?php echo $data['tanggal_keluar'] ?></td>
                         </tr>
                         <tr>
                           <td>Kode Surat</td>
-                          <td><?php echo $data['kode']?></td>
+                          <td><?php echo $data['kode'] ?></td>
                         </tr>
                         <tr>
                           <td>Nomor Surat</td>
-                          <td><?php echo $data['nomor_surat']?></td>
+                          <td><?php echo $data['nomor_surat'] ?></td>
                         </tr>
                         <tr>
                           <td>Penerima</td>
-                          <td><?php echo $data['penerima']?></td>
+                          <td><?php echo $data['penerima'] ?></td>
                         </tr>
                         <tr>
                           <td>Perihal</td>
-                          <td><?php echo $data['perihal']?></td>
+                          <td><?php echo $data['perihal'] ?></td>
                         </tr>
                         <tr>
                           <td>File</td>
-                          <td><a href="<?php echo 'uploads/'.$data['file_surat'].''?>"><b>Unduh File</b></a>
+                          <td><a href="<?php echo 'uploads/' . $data['file_surat'] . '' ?>"><b>Unduh File</b></a>
                           </td>
                         </tr>
                       </tbody>
@@ -142,7 +142,7 @@ include "login/ceksession.php";
     <!-- footer content -->
     <footer>
       <div class="pull-right">
-    
+
       </div>
       <div class="clearfix"></div>
     </footer>

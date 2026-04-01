@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -74,6 +74,14 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_inputpengurus.php" method="post" enctype="multipart/form-data" id="demo-form2"
                     data-parsley-validate class="form-horizontal form-label-left">
 
@@ -177,7 +185,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-       
+
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -223,4 +231,4 @@ include "login/ceksession.php";
 
 </body>
 
-</html> 
+</html>

@@ -4,7 +4,8 @@ include '../../koneksi/koneksi.php';
 
 if (isset($_GET['id'])) {
     $id = mysqli_real_escape_string($db, $_GET['id']);
-    
+
+    /*
     // Get file name before deleting
     $query = "SELECT logo FROM tb_data_mitra WHERE id = '$id'";
     $result = mysqli_query($db, $query);
@@ -15,27 +16,67 @@ if (isset($_GET['id'])) {
     if (!empty($data['logo']) && file_exists($upload_dir . $data['logo'])) {
         @unlink($upload_dir . $data['logo']);
     }
-    
+    */
+
     // Delete from database
     $query = "DELETE FROM tb_data_mitra WHERE id = '$id'";
-    
+
     if (mysqli_query($db, $query)) {
         // Reorder IDs
         $query = "SET @count = 0";
         mysqli_query($db, $query);
-        
+
         $query = "UPDATE tb_data_mitra SET id = @count:= @count + 1";
         mysqli_query($db, $query);
-        
+
         $query = "ALTER TABLE tb_data_mitra AUTO_INCREMENT = 1";
         mysqli_query($db, $query);
-        
-        echo "<script>alert('Data berhasil dihapus!'); window.location='../datamitra.php';</script>";
+
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil dihapus',
+            showConfirmButton: false,
+            timer: 3000
+        }).then(() => {
+            window.location.href = '../datamitra.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
     } else {
-        echo "<script>alert('Gagal menghapus data! Error: " . mysqli_error($db) . "'); window.location='../datamitra.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: " . json_encode("Gagal menghapus data! Error: " . mysqli_error($db)) . "
+            }).then(() => {
+                window.location = '../datamitra.php';
+            });
+        </script>
+        </body>
+        </html>
+        ";
     }
 } else {
-    echo "<script>alert('ID tidak valid!'); window.location='../datamitra.php';</script>";
+    $_SESSION['error'] = "ID tidak valid!";
+    header("Location: ../datamitra.php");
 }
 
 mysqli_close($db);

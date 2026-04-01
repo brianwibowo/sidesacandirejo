@@ -24,8 +24,9 @@ $pas_foto = $data['pas_foto'];
 $upload_dir = '../admin/uploads/pengurus/';
 if (!file_exists($upload_dir)) {
     if (!mkdir($upload_dir, 0777, true)) {
-        echo "<script>alert('Gagal membuat direktori upload!'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Gagal membuat direktori upload!";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
 }
 
@@ -35,29 +36,32 @@ if (isset($_FILES['foto_ktp']) && $_FILES['foto_ktp']['error'] == 0) {
     if (!empty($foto_ktp) && file_exists($upload_dir . $foto_ktp)) {
         unlink($upload_dir . $foto_ktp);
     }
-    
+
     // Generate new filename
     $foto_ktp = time() . '_' . basename($_FILES['foto_ktp']['name']);
     $target_file = $upload_dir . $foto_ktp;
-    
+
     // Check file type
     $allowed_types = array('jpg', 'jpeg', 'png');
     $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     if (!in_array($file_type, $allowed_types)) {
-        echo "<script>alert('Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
-    
+
     // Check file size (2MB max)
     if ($_FILES['foto_ktp']['size'] > 2000000) {
-        echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Ukuran file terlalu besar! Maksimal 2MB.";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
-    
+
     // Move uploaded file
     if (!move_uploaded_file($_FILES['foto_ktp']['tmp_name'], $target_file)) {
-        echo "<script>alert('Gagal mengupload Foto KTP! Error: " . error_get_last()['message'] . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Gagal mengupload Pas Foto! Terjadi kesalahan saat upload";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
 }
 
@@ -67,29 +71,32 @@ if (isset($_FILES['pas_foto']) && $_FILES['pas_foto']['error'] == 0) {
     if (!empty($pas_foto) && file_exists($upload_dir . $pas_foto)) {
         unlink($upload_dir . $pas_foto);
     }
-    
+
     // Generate new filename
     $pas_foto = time() . '_' . basename($_FILES['pas_foto']['name']);
     $target_file = $upload_dir . $pas_foto;
-    
+
     // Check file type
     $allowed_types = array('jpg', 'jpeg', 'png');
     $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     if (!in_array($file_type, $allowed_types)) {
-        echo "<script>alert('Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
-    
+
     // Check file size (2MB max)
     if ($_FILES['pas_foto']['size'] > 2000000) {
-        echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Ukuran file terlalu besar! Maksimal 2MB.";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
-    
+
     // Move uploaded file
     if (!move_uploaded_file($_FILES['pas_foto']['tmp_name'], $target_file)) {
-        echo "<script>alert('Gagal mengupload Pas Foto! Error: " . error_get_last()['message'] . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+        $_SESSION['error'] = "Gagal mengupload Pas Foto! Terjadi kesalahan saat upload";
+        header("Location: ../editpengurus.php?id=" . $id);
+        exit;
     }
 }
 
@@ -106,8 +113,45 @@ $query = "UPDATE tb_data_pengurus SET
           WHERE id = '$id'";
 
 if (mysqli_query($db, $query)) {
-    echo "<script>alert('Data berhasil diupdate!'); window.location='../datapengurus.php';</script>";
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil diupdate'
+        }).then(() => {
+            window.location = '../datapengurus.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
 } else {
-    echo "<script>alert('Gagal mengupdate data! Error: " . mysqli_error($db) . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
+    $error = mysqli_error($db);
+
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: " . json_encode("Gagal mengupdate data! Error: " . $error) . "
+    }).then(() => {
+        window.location = '../editpengurus.php?id=" . $id . "';
+    });
+    </script>
+    </body>
+    </html>
+    ";
 }
-?> 

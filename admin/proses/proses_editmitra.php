@@ -1,4 +1,5 @@
-<?php 
+<?php
+session_start();
 include '../../koneksi/koneksi.php';
 
 $id = $_POST['id'];
@@ -18,29 +19,30 @@ $foto_lama = $row['foto_kegiatan'];
 
 // Handle bukti legalitas upload
 if (isset($_FILES['bukti_legalitas']) && $_FILES['bukti_legalitas']['error'] == UPLOAD_ERR_OK) {
-  $jam = date('H-i-s');
-  $nama_file = strtolower(str_replace(' ', '_', $nama_usaha)) . "_{$jam}.pdf";
+    $jam = date('H-i-s');
+    $nama_file = strtolower(str_replace(' ', '_', $nama_usaha)) . "_{$jam}.pdf";
     $target_dir = '../uploads/';
-    
+
     // Buat direktori jika belum ada
     if (!file_exists($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
-    
+
     $destination = $target_dir . $nama_file;
 
     if (move_uploaded_file($_FILES['bukti_legalitas']['tmp_name'], $destination)) {
-        if(!empty($file_lama)) {
+        if (!empty($file_lama)) {
             $old_file = str_replace('../', '', $file_lama);
-            if(file_exists("../" . $old_file)) {
+            if (file_exists("../" . $old_file)) {
                 unlink("../" . $old_file);
             }
         }
         $bukti_legalitas_update = ", bukti_legalitas='uploads/" . $nama_file . "'";
-  } else {
-        echo "<script>alert('File bukti legalitas gagal diupload!'); window.location='../datamitra.php';</script>";
-    exit;
-  }
+    } else {
+        $_SESSION['error'] = "File bukti legalitas gagal diupload!";
+        header("Location: ../editmitra.php?id=" . $id);
+        exit;
+    }
 } else {
     $bukti_legalitas_update = "";
 }
@@ -49,7 +51,7 @@ if (isset($_FILES['bukti_legalitas']) && $_FILES['bukti_legalitas']['error'] == 
 $foto_paths = array();
 if (isset($_FILES['foto_kegiatan'])) {
     $target_dir = '../uploads/foto_kegiatan/';
-    
+
     // Buat direktori jika belum ada
     if (!file_exists($target_dir)) {
         mkdir($target_dir, 0777, true);
@@ -65,13 +67,15 @@ if (isset($_FILES['foto_kegiatan'])) {
             // Validasi tipe file
             $allowed_types = array('image/jpeg', 'image/png', 'image/jpg');
             if (!in_array($file_type, $allowed_types)) {
-                echo "<script>alert('Tipe file tidak didukung! Hanya JPG, JPEG, dan PNG yang diperbolehkan.'); window.location='../datamitra.php';</script>";
+                $_SESSION['error'] = "Tipe file tidak didukung! Hanya JPG, JPEG, dan PNG yang diperbolehkan.";
+                header("Location: ../editmitra.php?id=" . $id);
                 exit;
             }
 
             // Validasi ukuran file (2MB)
-            if ($file_size > 2097152) {
-                echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB per foto.'); window.location='../datamitra.php';</script>";
+            if ($file_size > 2000000) {
+                $_SESSION['error'] = "Ukuran file terlalu besar! Maksimal 2MB per foto.";
+                header("Location: ../editmitra.php?id=" . $id);
                 exit;
             }
 
@@ -116,7 +120,44 @@ $query = "UPDATE tb_data_mitra SET
     WHERE id = '$id'";
 
 if (mysqli_query($db, $query)) {
-  echo "<script>alert('Data berhasil diedit'); window.location='../datamitra.php';</script>";
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    </head>
+    <body>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil diedit'
+        }).then(() => {
+            window.location = '../datamitra.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
 } else {
-  echo "Error: " . mysqli_error($db);
+    $error_message = mysqli_error($db);
+    echo "
+    <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: " . json_encode('Error: ' . $error_message) . "
+        }).then(() => {
+            window.location = '../datamitra.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
 }

@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -52,14 +52,14 @@ include "login/ceksession.php";
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -83,13 +83,13 @@ include "login/ceksession.php";
                   <form action="proses/proses_editsuratkeluar.php" method="post" enctype="multipart/form-data"
                     id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <?php include '../koneksi/koneksi.php';
-                            $id			= mysqli_real_escape_string($db,$_GET['id']);
-                            $sql  		= "SELECT * FROM tb_arsip_surat_keluar where No='".$id."'";                        
-                            $query  	= mysqli_query($db, $sql);
-                            $data 		= mysqli_fetch_array($query);
-                          ?>
+                    $id      = mysqli_real_escape_string($db, $_GET['id']);
+                    $sql      = "SELECT * FROM tb_arsip_surat_keluar where No='" . $id . "'";
+                    $query    = mysqli_query($db, $sql);
+                    $data     = mysqli_fetch_array($query);
+                    ?>
 
-                    <input type=hidden name="id_suratkeluar" value="<?php echo $id;?>">
+                    <input type=hidden name="id_suratkeluar" value="<?php echo $id; ?>">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Keluar <span
                           class="required">*</span>
@@ -98,7 +98,7 @@ include "login/ceksession.php";
                         <input value="<?php echo $data['tanggal_keluar'] ?>" type="text" id="tanggal_keluar"
                           name="tanggal_keluar" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
                       </div>
-                     
+
                     </div>
 
                     <div class="form-group">
@@ -114,7 +114,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['kode'];?>" type="text" onkeyup="validAngka(this)"
+                        <input value="<?php echo $data['kode']; ?>" type="text" onkeyup="validAngka(this)"
                           id="kode_suratkeluar" name="kode" required="required" maxlength="7"
                           placeholder="Masukkan Kode Surat" class="form-control col-md-7 col-xs-12">
                         <br><a href="file/kode_klasifikasi_surat.xlsx"><b>Lihat Kode Klasifikasi Surat</b></a></br>
@@ -125,7 +125,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nomor_surat'];?>" type="text" id="nomor_suratkeluar"
+                        <input value="<?php echo $data['nomor_surat']; ?>" type="text" id="nomor_suratkeluar"
                           name="nomor_surat" required="required" maxlength="35" placeholder="Masukkan Nomor Surat"
                           class="form-control col-md-7 col-xs-12">
                         <br>4 Digit Awal merupakan Nomor Surat (Pastikan Lihat Nomor Sebelumnya)</br>
@@ -137,7 +137,7 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['penerima'];?>" type="text" id="kepada_suratkeluar"
+                        <input value="<?php echo $data['penerima']; ?>" type="text" id="kepada_suratkeluar"
                           name="penerima" required="required" placeholder="Masukkan Tujuan Surat"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -147,7 +147,7 @@ include "login/ceksession.php";
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="perihal_suratkeluar" name="perihal" required="required" class="form-control"
-                          rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal'];?></textarea>
+                          rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal']; ?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -156,7 +156,7 @@ include "login/ceksession.php";
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <input name="file_surat" accept="application/pdf" type="file" id="file_suratkeluar"
                           class="form-control" autocomplete="off" /><a
-                          href="<?php echo 'surat_keluar/'.$data['file_surat'].''?>"><b>Lihat File
+                          href="<?php echo 'surat_keluar/' . $data['file_surat'] . '' ?>"><b>Lihat File
                             Sebelumnya</b></a></input> (Maksimal 10 MB )
                       </div>
                     </div>
@@ -165,12 +165,12 @@ include "login/ceksession.php";
                           class="required"></span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $_SESSION['nama'];?>" type="text" id="operator" name="operator"
+                        <input value="<?php echo $_SESSION['nama']; ?>" type="text" id="operator" name="operator"
                           required="required" readonly="readonly" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                 
-                    <input type="hidden" value="<?= $data['No']?>" name="id">
+
+                    <input type="hidden" value="<?= $data['No'] ?>" name="id">
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -195,7 +195,7 @@ include "login/ceksession.php";
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-       
+
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -243,44 +243,44 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
   <!-- Initialize datetimepicker -->
   <script>
-  $('#myDatepicker').datetimepicker();
+    $('#myDatepicker').datetimepicker();
 
-  $('#myDatepicker2').datetimepicker({
-    format: 'DD.MM.YYYY'
-  });
-
-  $('#myDatepicker3').datetimepicker({
-    format: 'hh:mm A'
-  });
-
-  $(document).ready(function() {
-    $('#myDatepicker4').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+    $('#myDatepicker2').datetimepicker({
+      format: 'DD.MM.YYYY'
     });
-  });
 
-  $('#datetimepicker6').datetimepicker();
+    $('#myDatepicker3').datetimepicker({
+      format: 'hh:mm A'
+    });
 
-  $('#datetimepicker7').datetimepicker({
-    useCurrent: false
-  });
+    $(document).ready(function() {
+      $('#myDatepicker4').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY/MM/DD'
+      });
+    });
 
-  $("#datetimepicker6").on("dp.change", function(e) {
-    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-  });
+    $('#datetimepicker6').datetimepicker();
 
-  $("#datetimepicker7").on("dp.change", function(e) {
-    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-  });
+    $('#datetimepicker7').datetimepicker({
+      useCurrent: false
+    });
+
+    $("#datetimepicker6").on("dp.change", function(e) {
+      $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    });
+
+    $("#datetimepicker7").on("dp.change", function(e) {
+      $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    });
   </script>
   <script language='javascript'>
-  function validAngka(a) {
-    if (!/^[0-9.]+$/.test(a.value)) {
-      a.value = a.value.substring(0, a.value.length - 1000);
+    function validAngka(a) {
+      if (!/^[0-9.]+$/.test(a.value)) {
+        a.value = a.value.substring(0, a.value.length - 1000);
+      }
     }
-  }
   </script>
 </body>
 

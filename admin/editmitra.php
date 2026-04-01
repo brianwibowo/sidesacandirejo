@@ -1,12 +1,38 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
+include '../koneksi/koneksi.php';
+
+// CEK ID
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+  $_SESSION['error'] = "ID tidak ditemukan!";
+  header("Location: datamitra.php");
+  exit;
+}
+
+$id = $_GET['id'];
+
+// AMBIL DATA
+$stmt = $db->prepare("SELECT * FROM tb_data_mitra WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
+
+// CEK DATA
+if (!$data) {
+  $_SESSION['error'] = "Data tidak ditemukan!";
+  header("Location: datamitra.php");
+  exit;
+}
 ?>
+
+<!DOCTYPE html>
 <html lang="en">
 <?php
 $kategori = [
-  "NIB", "PIRT"
+  "NIB",
+  "PIRT"
 ];
 
 ?>
@@ -53,51 +79,54 @@ $kategori = [
     <div class="main_container">
       <!-- Profile and Sidebarmenu -->
       <?php
-        include("sidebarmenu.php");
-        ?>
+      include("sidebarmenu.php");
+      ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
       <?php
-        include("header.php");
-        ?>
+      include("header.php");
+      ?>
       <!-- /top navigation -->
 
       <!-- page content -->
       <div class="right_col" role="main">
         <div class="">
-          <div class="page-title">
-            <div class="title_left">
-              <h3>Data Mitra</h3>
-            </div>
-          </div>
           <div class="clearfix"></div>
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Data Mitra<small>Edit Data Mitra</small></h2>
+                  <h2>Edit Data Mitra</h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
                   <br />
+                  <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error" role="alert">
+                      <?php
+                      echo $_SESSION['error'];
+                      unset($_SESSION['error']);
+                      ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="proses/proses_editmitra.php" method="post" enctype="multipart/form-data" id="demo-form2"
                     data-parsley-validate class="form-horizontal form-label-left">
                     <?php include '../koneksi/koneksi.php';
-                            $id			= mysqli_real_escape_string($db,$_GET['id']);
-                            $sql  		= "SELECT * FROM tb_data_mitra where id='".$id."'";                        
-                            $query  	= mysqli_query($db, $sql);
-                            $data 		= mysqli_fetch_array($query);
-                            $selected_value = $data['legalitas_usaha'];
-                          ?>
+                    $id      = mysqli_real_escape_string($db, $_GET['id']);
+                    $sql      = "SELECT * FROM tb_data_mitra where id='" . $id . "'";
+                    $query    = mysqli_query($db, $sql);
+                    $data     = mysqli_fetch_array($query);
+                    $selected_value = $data['legalitas_usaha'];
+                    ?>
 
-                    <input type=hidden name="id_suratkeluar" value="<?php echo $id;?>">
+                    <input type=hidden name="id_suratkeluar" value="<?php echo $id; ?>">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nama Pemilik <span
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nama_pemilik'];?>" type="text" id="nama_pemilikkeluar"
+                        <input value="<?php echo $data['nama_pemilik']; ?>" type="text" id="nama_pemilikkeluar"
                           name="nama_pemilik" required="required" maxlength="35" placeholder="Masukkan Nomor Surat"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -108,7 +137,7 @@ $kategori = [
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nama_usaha'];?>" type="text" id="nama_usaha"
+                        <input value="<?php echo $data['nama_usaha']; ?>" type="text" id="nama_usaha"
                           name="nama_usaha" required="required" maxlength="100" placeholder="Masukkan Nama Usaha"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -136,7 +165,7 @@ $kategori = [
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder="Masukkan Alamat Lengkap"><?php echo $data['alamat'];?></textarea>
+                        <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder="Masukkan Alamat Lengkap"><?php echo $data['alamat']; ?></textarea>
                       </div>
                     </div>
 
@@ -145,7 +174,7 @@ $kategori = [
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['nomor_telp'];?>" type="text" id="nomor_telp" name="nomor_telp" required="required" maxlength="20"
+                        <input value="<?php echo $data['nomor_telp']; ?>" type="text" id="nomor_telp" name="nomor_telp" required="required" maxlength="20"
                           placeholder="Masukkan Nomor Telepon" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
@@ -155,7 +184,7 @@ $kategori = [
                         Usaha<span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['legalitas_usaha'];?>" type="text" id="legalitas_usaha"
+                        <input value="<?php echo $data['legalitas_usaha']; ?>" type="text" id="legalitas_usaha"
                           name="legalitas_usaha" required="required" placeholder="Masukkan Legalitas Usaha"
                           class="form-control col-md-7 col-xs-12">
                       </div>
@@ -168,14 +197,14 @@ $kategori = [
                         <input name="bukti_legalitas" accept="application/pdf" type="file" id="bukti_legalitas"
                           class="form-control" autocomplete="off" />
                         <?php if (!empty($data['bukti_legalitas'])): ?>
-                        <?php 
-                        $bukti_legalitas = str_replace('../', '', $data['bukti_legalitas']);
-                        ?>
-                        <a href="<?php echo $bukti_legalitas; ?>" target="_blank"><b>Lihat File Sebelumnya</b></a>
+                          <?php
+                          $bukti_legalitas = str_replace('../', '', $data['bukti_legalitas']);
+                          ?>
+                          <a href="<?php echo $bukti_legalitas; ?>" target="_blank"><b>Lihat File Sebelumnya</b></a>
                         <?php endif; ?>
                         (Maksimal 10 MB)
                       </div>
-                      </div>
+                    </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto Kegiatan Usaha
@@ -184,24 +213,24 @@ $kategori = [
                         <input name="foto_kegiatan[]" accept="image/*" type="file" id="foto_kegiatan"
                           class="form-control" multiple />
                         <?php if (!empty($data['foto_kegiatan'])): ?>
-                        <div class="mt-2">
-                          <b>Foto Sebelumnya:</b><br>
-                          <?php 
-                          $fotos = explode(',', $data['foto_kegiatan']);
-                          foreach($fotos as $foto): 
-                            $foto = str_replace('../', '', $foto);
-                          ?>
-                            <a href="<?php echo $foto; ?>" target="_blank">
-                              <img src="<?php echo $foto; ?>" alt="Foto Kegiatan" style="max-width: 100px; margin: 5px;">
-                            </a>
-                          <?php endforeach; ?>
-                        </div>
+                          <div class="mt-2">
+                            <b>Foto Sebelumnya:</b><br>
+                            <?php
+                            $fotos = explode(',', $data['foto_kegiatan']);
+                            foreach ($fotos as $foto):
+                              $foto = str_replace('../', '', $foto);
+                            ?>
+                              <a href="<?php echo $foto; ?>" target="_blank">
+                                <img src="<?php echo $foto; ?>" alt="Foto Kegiatan" style="max-width: 100px; margin: 5px;">
+                              </a>
+                            <?php endforeach; ?>
+                          </div>
                         <?php endif; ?>
                         <small class="text-muted">Pilih satu atau lebih foto (Maksimal 2MB per foto)</small>
                       </div>
                     </div>
 
-                    <input type="hidden" value="<?= $data['id']?>" name="id">
+                    <input type="hidden" value="<?= $data['id'] ?>" name="id">
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -226,7 +255,7 @@ $kategori = [
       <!-- footer content -->
       <footer>
         <div class="pull-right">
-     
+
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -274,44 +303,44 @@ $kategori = [
   <script src="../assets/build/js/custom.min.js"></script>
   <!-- Initialize datetimepicker -->
   <script>
-  $('#myDatepicker').datetimepicker();
+    $('#myDatepicker').datetimepicker();
 
-  $('#myDatepicker2').datetimepicker({
-    format: 'DD.MM.YYYY'
-  });
-
-  $('#myDatepicker3').datetimepicker({
-    format: 'hh:mm A'
-  });
-
-  $(document).ready(function() {
-    $('#myDatepicker4').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+    $('#myDatepicker2').datetimepicker({
+      format: 'DD.MM.YYYY'
     });
-  });
 
-  $('#datetimepicker6').datetimepicker();
+    $('#myDatepicker3').datetimepicker({
+      format: 'hh:mm A'
+    });
 
-  $('#datetimepicker7').datetimepicker({
-    useCurrent: false
-  });
+    $(document).ready(function() {
+      $('#myDatepicker4').datetimepicker({
+        ignoreReadonly: true,
+        allowInputToggle: true,
+        format: 'YYYY/MM/DD'
+      });
+    });
 
-  $("#datetimepicker6").on("dp.change", function(e) {
-    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-  });
+    $('#datetimepicker6').datetimepicker();
 
-  $("#datetimepicker7").on("dp.change", function(e) {
-    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-  });
+    $('#datetimepicker7').datetimepicker({
+      useCurrent: false
+    });
+
+    $("#datetimepicker6").on("dp.change", function(e) {
+      $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    });
+
+    $("#datetimepicker7").on("dp.change", function(e) {
+      $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    });
   </script>
   <script language='javascript'>
-  function validAngka(a) {
-    if (!/^[0-9.]+$/.test(a.value)) {
-      a.value = a.value.substring(0, a.value.length - 1000);
+    function validAngka(a) {
+      if (!/^[0-9.]+$/.test(a.value)) {
+        a.value = a.value.substring(0, a.value.length - 1000);
+      }
     }
-  }
   </script>
 </body>
 

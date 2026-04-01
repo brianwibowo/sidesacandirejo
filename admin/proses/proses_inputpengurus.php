@@ -36,10 +36,46 @@ if (isset($_POST['submit'])) {
 
     if (mysqli_query($db, $sql)) {
         echo "<script>alert('Data berhasil ditambahkan!'); window.location.href='../datapengurus.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data berhasil ditambahkan'
+        }).then(() => {
+            window.location = '../datapengurus.php';
+        });
+        </script>
+        </body>
+        </html>
+        ";
     } else {
-        echo "<script>alert('Error: " . mysqli_error($db) . "'); window.location.href='../inputdatapengurus.php';</script>";
+        echo "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></>
+        </head>
+        <body>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: " . json_encode("Terjadi kesalahan, gagal input data: " . mysqli_error($db)) . "
+            }).then(() => {
+                window.location = '../datapengurus.php';
+            });
+        </>
+        </body>
+        </html>
+        ";
     }
 } else {
     header("Location: ../inputdatapengurus.php");
 }
-?> 
