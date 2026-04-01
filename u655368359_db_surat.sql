@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 08 Jun 2025 pada 21.17
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 12 Mar 2026 pada 04.35
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,18 +31,21 @@ CREATE TABLE `tb_admin` (
   `id_admin` int(11) NOT NULL,
   `nama_admin` varchar(255) NOT NULL,
   `username_admin` varchar(255) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `gambar` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `gambar` varchar(255) NOT NULL,
+  `role` enum('superadmin','admin') DEFAULT 'admin',
+  `last_active` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `tb_admin`
 --
 
-INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, `gambar`) VALUES
-(1, 'pengelola', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'admin.jpg'),
-(2, 'admin2', 'admin2', '315f166c5aca63a157f7d41007675cb44a948b33', 'admin2.png'),
-(3, 'Desa Wisata Candirejo', 'admin123', 'f865b53623b121fd34ee5426c792e5c33af8c227', 'admin123.png');
+INSERT INTO `tb_admin` (`id_admin`, `nama_admin`, `username_admin`, `password`, `gambar`, `role`, `last_active`) VALUES
+(1, 'pengelola', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'admin.jpg', 'superadmin', '2026-03-11 12:58:06'),
+(2, 'admin2', 'admin2', '315f166c5aca63a157f7d41007675cb44a948b33', 'admin2.png', 'admin', NULL),
+(3, 'Desa Wisata Candirejo', 'admin123', 'f865b53623b121fd34ee5426c792e5c33af8c227', 'admin123.png', 'admin', NULL),
+(4, 'Kirom', 'Kirom123', 'd38080aa37fc78572d7bb81cf5422f0e23ec6d0c', 'admin2.png', 'superadmin', '2026-03-12 09:35:59');
 
 -- --------------------------------------------------------
 
@@ -107,7 +110,7 @@ CREATE TABLE `tb_arsip_surat_masuk` (
   `kode` varchar(20) NOT NULL,
   `keterangan` text DEFAULT NULL,
   `file_surat` varchar(255) NOT NULL,
-  `lampiran_foto` varchar(255) DEFAULT NULL
+  `lampiran_foto` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -118,7 +121,8 @@ INSERT INTO `tb_arsip_surat_masuk` (`No`, `nomor_surat`, `tanggal_terima`, `tang
 (1, '05/514/19/2025', '2025-05-19', '2025-05-16', 'Disparpora Kab.Magelang', NULL, NULL, 'UNDANGAN', 'UND', 'Sosialisasi Inovasi Daerah', '../uploads/disparpora_kab.magelang_2025-05-16_13-13-15.pdf', NULL),
 (2, 'B/UND/135/PM.01.00/D.4.3/2025', '2025-05-19', '2025-05-19', 'Kemenpar - Deputi Bidang Pemasaran', NULL, NULL, 'Undangan Rapat', 'UND', 'Promosi Edu Trip', '../uploads/kemenpar_-_deputi_bidang_pemasaran_2025-05-19_13-23-00.pdf', NULL),
 (3, '500.13.2.3/912/2025', '2025-05-21', '2025-05-07', 'Dinas Kepemudaan, Olahraga, dan Pariwisata - Prov.Jateng', NULL, NULL, 'Permintaan Peserta Kegiatan Usaha Pondok Wisata/Homestay Kabupaten Magelang', 'UND', 'Permohonan peserta homestay 2 orang dari Desa Wisata Candirejo.', '../uploads/dinas_kepemudaan,_olahraga,_dan_pariwisata_-_prov.jateng_2025-05-07_06-07-57.pdf', NULL),
-(4, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', NULL, NULL, 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', NULL);
+(4, '4446/UN1/FSP.1/AKD/TA/2025', '2025-05-22', '2025-05-22', 'UNIVERSITAS GADJAH MADA - FAKULTAS ILMU SOSIAL DAN ILMU POLITIK', NULL, NULL, 'Izin Penelitian', 'IZP', 'a.n Andrianto Setiawan', '../uploads/universitas_gadjah_mada_-_fakultas_ilmu_sosial_dan_ilmu_politik_2025-05-22_06-09-39.pdf', NULL),
+(5, '09999/AB/2026', '2026-03-11', '2026-03-11', 'UNNES', 'Desa Candirejo', 'Kepala Bagian', 'Masukann', '00909', 'Mengubah', '../uploads/unnes_2026-03-11_04-29-41.pdf', '[\"unnes_foto0_2026-03-11_04-29-41.webp\",\"unnes_foto1_2026-03-11_04-29-41.webp\"]');
 
 -- --------------------------------------------------------
 
@@ -310,7 +314,7 @@ ALTER TABLE `tb_data_penjualan_usaha`
 -- AUTO_INCREMENT untuk tabel `tb_admin`
 --
 ALTER TABLE `tb_admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_arsip_surat_keluar`
