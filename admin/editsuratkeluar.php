@@ -95,8 +95,13 @@ include "login/ceksession.php";
                           class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo $data['tanggal_keluar'] ?>" type="text" id="tanggal_keluar"
-                          name="tanggal_keluar" required="required" class="form-control" placeholder="Contoh: 22/05/2025" />
+                        <div class='input-group date' id='myDatepicker4'>
+                          <input value="<?php echo $data['tanggal_keluar'] ?>" type='text' id="tanggal_keluar"
+                            name="tanggal_keluar" required="required" class="form-control" readonly="readonly" />
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
                       </div>
                      
                     </div>
@@ -143,11 +148,41 @@ include "login/ceksession.php";
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tempat_acara">Tempat Acara
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input value="<?php echo $data['tempat_acara'];?>" type="text" id="tempat_acara"
+                          name="tempat_acara" maxlength="150" placeholder="Masukkan Tempat Acara"
+                          class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kegiatan">Tanggal Kegiatan
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <div class='input-group date' id='myDatepicker5'>
+                          <input value="<?php echo $data['tanggal_kegiatan'];?>" type='text' id="tanggal_kegiatan"
+                            name="tanggal_kegiatan" class="form-control" />
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Perihal <span class="required">*</span>
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <textarea id="perihal_suratkeluar" name="perihal" required="required" class="form-control"
                           rows="3" placeholder='Masukkan Perihal Surat'><?php echo $data['perihal'];?></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea id="keterangan_suratkeluar" name="keterangan" class="form-control"
+                          rows="3" placeholder='Masukkan Keterangan Surat'><?php echo $data['keterangan'];?></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -257,7 +292,13 @@ include "login/ceksession.php";
     $('#myDatepicker4').datetimepicker({
       ignoreReadonly: true,
       allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+      format: 'YYYY-MM-DD'
+    });
+
+    $('#myDatepicker5').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true,
+      format: 'YYYY-MM-DD'
     });
   });
 

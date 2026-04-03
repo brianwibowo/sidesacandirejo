@@ -111,6 +111,26 @@ include "login/ceksession.php";
                                 echo"<center><h2>Belum Ada Data Surat Keluar</h2></center>";
                               }
                               else{?>
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-3 col-sm-4 col-xs-12">
+                        <label for="sort_column" style="margin-bottom: 4px;">Urutkan Berdasarkan</label>
+                        <select id="sort_column" class="form-control">
+                          <option value="0">No</option>
+                          <option value="2">Tanggal Keluar</option>
+                          <option value="6">Tanggal Kegiatan</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12">
+                        <label for="sort_direction" style="margin-bottom: 4px;">Arah</label>
+                        <select id="sort_direction" class="form-control">
+                          <option value="asc" selected>Asc</option>
+                          <option value="desc">Desc</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12" style="padding-top: 24px;">
+                        <button type="button" id="btn_sort" class="btn btn-info">Terapkan Urutan</button>
+                      </div>
+                    </div>
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
@@ -119,6 +139,8 @@ include "login/ceksession.php";
                           <th width="10%">Tanggal Keluar</th>
                           <th width="15%">Penerima</th>
                           <th width="12%">Perihal</th>
+                          <th width="12%">Tempat Acara</th>
+                          <th width="10%">Tanggal Kegiatan</th>
                           <th width="13%">Kode</th>
                           <th width="20%">Keterangan</th>
                           <th width="5%">Aksi</th>
@@ -134,6 +156,8 @@ include "login/ceksession.php";
                               <td>'. $data['tanggal_keluar'].'</td>
                               <td>'. $data['penerima'].'</td>
                               <td>'. $data['perihal'].'</td>
+                              <td>'. (!empty($data['tempat_acara']) ? $data['tempat_acara'] : '-') .'</td>
+                              <td>'. (!empty($data['tanggal_kegiatan']) ? $data['tanggal_kegiatan'] : '-') .'</td>
                               <td>'. $data['kode'].'</td>
                               <td>'. $data['keterangan'].'</td>
                               <td style="text-align:center; white-space: nowrap;">
@@ -203,6 +227,21 @@ include "login/ceksession.php";
     if (tanya == true) return true;
     else return false;
   }
+
+  $(document).ready(function() {
+    if ($.fn.DataTable.isDataTable('#datatable')) {
+      var table = $('#datatable').DataTable();
+
+      // Default sesuai tampilan lama: Nomor Surat ascending.
+      table.order([1, 'asc']).draw();
+
+      $('#btn_sort').on('click', function() {
+        var selectedColumn = parseInt($('#sort_column').val(), 10);
+        var selectedDirection = $('#sort_direction').val();
+        table.order([selectedColumn, selectedDirection]).draw();
+      });
+    }
+  });
   </script>
 
 </body>

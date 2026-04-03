@@ -59,6 +59,8 @@ CREATE TABLE `tb_arsip_surat_keluar` (
   `tanggal_keluar` date NOT NULL,
   `penerima` varchar(100) NOT NULL,
   `perihal` varchar(200) NOT NULL,
+  `tempat_acara` varchar(150) DEFAULT NULL,
+  `tanggal_kegiatan` date DEFAULT NULL,
   `kode` varchar(20) NOT NULL,
   `keterangan` text DEFAULT NULL,
   `file_surat` varchar(255) NOT NULL

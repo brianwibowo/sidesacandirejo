@@ -115,6 +115,27 @@ include "login/ceksession.php";
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tempat_acara">Tempat Acara <span
+                          class="required"></span></label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="text" id="tempat_acara" name="tempat_acara" maxlength="150"
+                          placeholder="Masukkan Tempat Acara" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kegiatan">Tanggal Kegiatan <span
+                          class="required"></span></label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <div class='input-group date' id='myDatepicker5'>
+                          <input type='text' id="tanggal_kegiatan" name="tanggal_kegiatan"
+                            class="form-control" />
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="perihal">Perihal <span
                           class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -209,7 +230,13 @@ include "login/ceksession.php";
     $('#myDatepicker4').datetimepicker({
       ignoreReadonly: true,
       allowInputToggle: true,
-      format: 'YYYY/MM/DD'
+      format: 'YYYY-MM-DD'
+    });
+
+    $('#myDatepicker5').datetimepicker({
+      ignoreReadonly: true,
+      allowInputToggle: true,
+      format: 'YYYY-MM-DD'
     });
   });
   </script>
