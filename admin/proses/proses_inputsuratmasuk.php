@@ -55,7 +55,6 @@ $pengirim       = mysqli_real_escape_string($db, $_POST['pengirim']);
 $penerima_surat = mysqli_real_escape_string($db, $_POST['penerima_surat']);
 $disposisi      = mysqli_real_escape_string($db, $_POST['disposisi']);
 $perihal        = mysqli_real_escape_string($db, $_POST['perihal']);
-$kode           = mysqli_real_escape_string($db, $_POST['kode']);
 $keterangan     = mysqli_real_escape_string($db, $_POST['keterangan'] ?? '');
 
 // ── Direktori upload ───────────────────────────────────────────────────────
@@ -130,10 +129,10 @@ $foto_val = ($lampiran_foto_db !== null) ? "'$lampiran_foto_db'" : "NULL";
 
 $query = "INSERT INTO tb_arsip_surat_masuk
             (No, tanggal_terima, tanggal_surat, nomor_surat, pengirim, penerima_surat,
-             disposisi, perihal, kode, keterangan, file_surat, lampiran_foto)
+             disposisi, perihal, keterangan, file_surat, lampiran_foto)
           VALUES
             ('$next_no', '$tanggal_terima', '$tanggal_surat', '$nomor_surat',
-             '$pengirim', '$penerima_surat', '$disposisi', '$perihal', '$kode',
+             '$pengirim', '$penerima_surat', '$disposisi', '$perihal',
              '$keterangan', '$destination', $foto_val)";
 
 if (mysqli_query($db, $query)) {

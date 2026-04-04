@@ -106,10 +106,6 @@ include "login/ceksession.php";
                           <td><?php echo htmlspecialchars($data['tanggal_terima']); ?></td>
                         </tr>
                         <tr>
-                          <td>Kode Surat</td>
-                          <td><?php echo htmlspecialchars($data['kode']); ?></td>
-                        </tr>
-                        <tr>
                           <td>Nomor Urut</td>
                           <td><?php echo htmlspecialchars($data['No']); ?></td>
                         </tr>

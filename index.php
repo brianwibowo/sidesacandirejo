@@ -10,7 +10,7 @@ include "koneksi/ceksession.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arsip Surat Desa Candirejo Borobudur</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="shortcut icon" href="./img/samarinda.png" type="image/x-icon"/>
+    <link rel="shortcut icon" href="img/icon.ico">
     <!-- --------- UNICONS ---------- -->
     <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
 </head>

@@ -147,7 +147,6 @@ include "login/ceksession.php";
                           <th width="10%">Penerima</th>
                           <th width="10%">Disposisi</th>
                           <th width="12%">Perihal</th>
-                          <th width="8%">Kode</th>
                           <th width="10%">Keterangan</th>
                           <th width="3%">Aksi</th>
                         </tr>
@@ -173,7 +172,6 @@ include "login/ceksession.php";
                             <td>' . htmlspecialchars($data['penerima_surat']) . '</td>
                             <td>' . htmlspecialchars($data['disposisi']) . '</td>
                             <td>' . htmlspecialchars($data['perihal']) . '</td>
-                            <td>' . htmlspecialchars($data['kode']) . '</td>
                             <td>' . htmlspecialchars($data['keterangan']) . '</td>
                             <td style="text-align:center; white-space:nowrap;">
                               <a href="surat_masuk/' . htmlspecialchars($data['file_surat']) . '" title="Unduh File">

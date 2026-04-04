@@ -165,16 +165,6 @@ include "login/ceksession.php";
                       </div>
                     </div>
 
-                    <!-- Kode Surat -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Kode Surat <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input value="<?php echo htmlspecialchars($data['kode']); ?>" type="text"
-                          id="kode_suratmasuk" name="kode" required maxlength="20"
-                          placeholder="Masukkan Kode Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
                     <!-- Nomor Urut -->
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Nomor Urut <span class="required">*</span></label>

@@ -194,15 +194,6 @@ include "login/ceksession.php";
                       </div>
                     </div>
 
-                    <!-- Kode -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Kode <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kode" name="kode" required
-                          placeholder="Masukkan Kode Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
                     <!-- Keterangan -->
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan <span class="required">*</span></label>

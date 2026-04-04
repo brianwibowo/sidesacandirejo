@@ -58,7 +58,6 @@ $pengirim       = mysqli_real_escape_string($db, $_POST['pengirim']);
 $penerima_surat = mysqli_real_escape_string($db, $_POST['penerima_surat']);
 $disposisi      = mysqli_real_escape_string($db, $_POST['disposisi']);
 $perihal        = mysqli_real_escape_string($db, $_POST['perihal']);
-$kode           = mysqli_real_escape_string($db, $_POST['kode']);
 $keterangan     = mysqli_real_escape_string($db, $_POST['keterangan'] ?? '');
 
 // ── Ambil data lama dari DB ────────────────────────────────────────────────
@@ -166,7 +165,6 @@ $query = "UPDATE tb_arsip_surat_masuk SET
             penerima_surat   = '$penerima_surat',
             disposisi        = '$disposisi',
             perihal          = '$perihal',
-            kode             = '$kode',
             keterangan       = '$keterangan',
             file_surat       = '$file_surat_esc',
             lampiran_foto    = $foto_val
