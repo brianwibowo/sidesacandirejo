@@ -13,11 +13,14 @@ $jumlah = mysqli_num_rows($query);
 if ($jumlah > 0) {
     // Jika username dan password cocok
     $data = mysqli_fetch_array($query);
-    echo "Login berhasil!";
+    // echo "Login berhasil!";
     $_SESSION['r3su'] = 'dmn';
     $_SESSION['id'] = $data['id_admin'];
     $_SESSION['username'] = $data['username_admin'];
     $_SESSION['nama'] = $data['nama_admin'];
+    $_SESSION['role'] = $data['role'];
+    // update last active
+    mysqli_query($db, "UPDATE tb_admin SET last_active = NOW() WHERE id_admin='".$data['id_admin']."'");
     header('Location: ../'); // Arahkan ke halaman dashboard atau halaman utama
     exit();
 } else {
