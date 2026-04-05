@@ -201,8 +201,8 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     file_put_contents($pdf_path, $dompdf->output());
 
     // Insert record into the database
-    $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, tempat_acara, tanggal_kegiatan, perihal, kode, keterangan, file_surat) 
-                  VALUES ('$tanggal', '$nomor_surat', '$kepada', '$tempat_acara', '$tanggal_kegiatan', '$perihal', '-', 'Dibuat dari fitur Buat surat' , '$pdf_path')";
+    $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, tempat_acara, tanggal_kegiatan, perihal, keterangan, file_surat) 
+                  VALUES ('$tanggal', '$nomor_surat', '$kepada', '$tempat_acara', '$tanggal_kegiatan', '$perihal', 'Dibuat dari fitur Buat surat' , '$pdf_path')";
 
     if (mysqli_query($db, $query)) {
         // Header for downloading PDF

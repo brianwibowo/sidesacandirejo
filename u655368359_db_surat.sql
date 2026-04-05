@@ -61,38 +61,40 @@ CREATE TABLE `tb_arsip_surat_keluar` (
   `perihal` varchar(200) NOT NULL,
   `tempat_acara` varchar(150) DEFAULT NULL,
   `tanggal_kegiatan` date DEFAULT NULL,
-  `kode` varchar(20) NOT NULL,
   `keterangan` text DEFAULT NULL,
-  `file_surat` varchar(255) NOT NULL
+  `file_surat` varchar(255) NOT NULL,
+  `lampiran_absensi` text DEFAULT NULL,
+  `lampiran_notulen` text DEFAULT NULL,
+  `dokumentasi_foto` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `tb_arsip_surat_keluar`
 --
 
-INSERT INTO `tb_arsip_surat_keluar` (`No`, `nomor_surat`, `tanggal_keluar`, `penerima`, `perihal`, `kode`, `keterangan`, `file_surat`) VALUES
-(1, '045/KDWC/X/2024', '2024-10-16', 'Pengeelola KOperasi Desa WIsata Candirejo', 'Undangan Sosialisasi SIDESA ', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_045/KDWC/X/2024.pdf'),
-(2, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan Kepala Departemen Pertanian Institut Teknologi Pertanian ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
-(3, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan ', ' Permohonan Kerjasama Penelitian Smart Farming', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
-(4, '123', '2025-05-08', 'test', 'test', 'test123', 'testing', '../uploads/test_2025-05-08_16-54-33.pdf'),
-(5, '034/V/KDWC/2025', '2025-05-19', 'Pemandu Lokal', 'UNDANGAN', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_034/V/KDWC/2025.pdf'),
-(6, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(7, '12', '2025-05-29', '12', '123', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(8, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(9, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(10, '12', '2025-05-16', '12', '12', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
-(11, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
-(12, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
-(13, 'x', '2025-06-07', 'z', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
-(14, 'a', '2025-06-07', 'c', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
-(15, 'a', '2025-06-07', 'c', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
-(16, '907999', '2025-06-07', 'cz', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
-(17, '907999', '2025-06-07', 'cz', 'x', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
-(18, 'x', '2025-06-11', 'z', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf'),
-(19, 's', '2025-06-08', 's', '', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
-(20, 's', '2025-06-08', 's', '', '-', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
-(21, 'z', '2025-06-11', 'x', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_z.pdf'),
-(22, 'x', '2025-06-08', 'c', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf');
+INSERT INTO `tb_arsip_surat_keluar` (`No`, `nomor_surat`, `tanggal_keluar`, `penerima`, `perihal`, `keterangan`, `file_surat`) VALUES
+(1, '045/KDWC/X/2024', '2024-10-16', 'Pengeelola KOperasi Desa WIsata Candirejo', 'Undangan Sosialisasi SIDESA ', 'Dibuat dari fitur Buat surat', '../uploads/Surat_045/KDWC/X/2024.pdf'),
+(2, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan Kepala Departemen Pertanian Institut Teknologi Pertanian ', ' Permohonan Kerjasama Penelitian Smart Farming', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
+(3, '005/SK-SF/ECO/2024', '2024-10-10', 'Yth., Dr. Ir. Rahmat Darmawan ', ' Permohonan Kerjasama Penelitian Smart Farming', 'Dibuat dari fitur Buat surat', '../uploads/Surat_005/SK-SF/ECO/2024.pdf'),
+(4, '123', '2025-05-08', 'test', 'test', 'testing', '../uploads/test_2025-05-08_16-54-33.pdf'),
+(5, '034/V/KDWC/2025', '2025-05-19', 'Pemandu Lokal', 'UNDANGAN', 'Dibuat dari fitur Buat surat', '../uploads/Surat_034/V/KDWC/2025.pdf'),
+(6, '12', '2025-05-29', '12', '123', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(7, '12', '2025-05-29', '12', '123', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(8, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(9, '12', '2025-05-29', 'Bapak/Ibu Dekan Fakultas Teknik UNNES di Tempat', 'Penampilan Boxing antar Kelas', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(10, '12', '2025-05-16', '12', '12', 'Dibuat dari fitur Buat surat', '../uploads/Surat_12.pdf'),
+(11, 'x', '2025-06-07', 'z', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(12, 'x', '2025-06-07', 'z', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(13, 'x', '2025-06-07', 'z', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_x.pdf'),
+(14, 'a', '2025-06-07', 'c', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
+(15, 'a', '2025-06-07', 'c', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_a.pdf'),
+(16, '907999', '2025-06-07', 'cz', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
+(17, '907999', '2025-06-07', 'cz', 'x', 'Dibuat dari fitur Buat surat', '../uploads/Surat_907999.pdf'),
+(18, 'x', '2025-06-11', 'z', 'Surat Keterangan', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf'),
+(19, 's', '2025-06-08', 's', '', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
+(20, 's', '2025-06-08', 's', '', 'Dibuat dari fitur Buat surat', '../uploads/Surat_s.pdf'),
+(21, 'z', '2025-06-11', 'x', 'Surat Keterangan', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_z.pdf'),
+(22, 'x', '2025-06-08', 'c', 'Surat Keterangan', 'Dibuat dari fitur Buat surat keterangan', '../uploads/Surat_Keterangan_x.pdf');
 
 -- --------------------------------------------------------
 

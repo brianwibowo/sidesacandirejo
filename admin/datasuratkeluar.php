@@ -141,7 +141,9 @@ include "login/ceksession.php";
                           <th width="12%">Perihal</th>
                           <th width="12%">Tempat Acara</th>
                           <th width="10%">Tanggal Kegiatan</th>
-                          <th width="13%">Kode</th>
+                          <th width="8%">Absensi</th>
+                          <th width="8%">Notulen</th>
+                          <th width="8%">Dokumentasi</th>
                           <th width="20%">Keterangan</th>
                           <th width="5%">Aksi</th>
                         </tr>
@@ -150,6 +152,43 @@ include "login/ceksession.php";
                       <tbody>
                         <?php
                             while($data = mysqli_fetch_array($query1)){
+                              $absensi_files = json_decode($data['lampiran_absensi'] ?? '[]', true);
+                              if (!is_array($absensi_files)) $absensi_files = [];
+                              $notulen_files = json_decode($data['lampiran_notulen'] ?? '[]', true);
+                              if (!is_array($notulen_files)) $notulen_files = [];
+                              $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
+                              if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
+
+                              $absensi_cell = '-';
+                              if (count($absensi_files) > 0) {
+                                $absensi_cell = '';
+                                foreach ($absensi_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $absensi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
+                              $notulen_cell = '-';
+                              if (count($notulen_files) > 0) {
+                                $notulen_cell = '';
+                                foreach ($notulen_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $notulen_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
+                              $dokumentasi_cell = '-';
+                              if (count($dokumentasi_files) > 0) {
+                                $dokumentasi_cell = '';
+                                foreach ($dokumentasi_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $dokumentasi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
                               echo'<tr>
                               <td>'. $data['No'].'</td>
                               <td>'. $data['nomor_surat'].'</td>
@@ -158,7 +197,9 @@ include "login/ceksession.php";
                               <td>'. $data['perihal'].'</td>
                               <td>'. (!empty($data['tempat_acara']) ? $data['tempat_acara'] : '-') .'</td>
                               <td>'. (!empty($data['tanggal_kegiatan']) ? $data['tanggal_kegiatan'] : '-') .'</td>
-                              <td>'. $data['kode'].'</td>
+                              <td>'. $absensi_cell .'</td>
+                              <td>'. $notulen_cell .'</td>
+                              <td>'. $dokumentasi_cell .'</td>
                               <td>'. $data['keterangan'].'</td>
                               <td style="text-align:center; white-space: nowrap;">
                                 <a href="surat_keluar/'.$data['file_surat'].'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
@@ -221,6 +262,7 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
+
   <script type="text/javascript" language="JavaScript">
   function konfirmasi() {
     tanya = confirm("Anda Yakin Akan Menghapus Data ?");
