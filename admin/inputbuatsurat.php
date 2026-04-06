@@ -110,7 +110,7 @@ include "login/ceksession.php";
 
                       <div class="form-group">
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="hidden" id="perihal" name="perihal" required="required" maxlength="200"
+                          <input type="hidden" id="perihal" name="perihal" value="Undangan" required="required" maxlength="200"
                             placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>

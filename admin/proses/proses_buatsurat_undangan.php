@@ -62,11 +62,16 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     $waktu_acara = htmlspecialchars($_POST['waktu_acara']);
     $tempat_acara = htmlspecialchars($_POST['tempat_acara']);
     $keperluan = htmlspecialchars($_POST['keperluan']);
-    $perihal = htmlspecialchars($_POST['perihal']);
+    $perihal = isset($_POST['perihal']) ? trim($_POST['perihal']) : '';
+    if ($perihal === '') {
+        $perihal = 'Undangan';
+    }
+    $perihal = htmlspecialchars($perihal);
     $lampiran = isset($_POST['lampiran']) ? htmlspecialchars($_POST['lampiran']) : '-';  // Optional field
 
     $tanggal_acara_input = DateTime::createFromFormat('Y-m-d', $tanggal_acara);
     $tanggal_acara_format = $tanggal_acara_input ? $tanggal_acara_input->format('d') . ' ' . $bulan[$bulan_angka] . ' ' . $tanggal_acara_input->format('Y') : '-';
+    $tanggal_kegiatan = $tanggal_acara_input ? $tanggal_acara_input->format('Y-m-d') : null;
 
     // Konfigurasi DomPDF
     $options = new Options();
@@ -196,8 +201,8 @@ if (isset($_POST['nomor_surat']) && isset($_POST['tanggal']) && isset($_POST['ke
     file_put_contents($pdf_path, $dompdf->output());
 
     // Insert record into the database
-    $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
-                  VALUES ('$tanggal', '$nomor_surat', '$kepada', '$perihal', '-','Dibuat dari fitur Buat surat' , '$pdf_path')";
+    $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, tempat_acara, tanggal_kegiatan, perihal, keterangan, file_surat) 
+                  VALUES ('$tanggal', '$nomor_surat', '$kepada', '$tempat_acara', '$tanggal_kegiatan', '$perihal', 'Dibuat dari fitur Buat surat' , '$pdf_path')";
 
     if (mysqli_query($db, $query)) {
         // Header for downloading PDF

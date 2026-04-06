@@ -136,6 +136,27 @@ include "login/ceksession.php";
                     if ($total == 0) {
                       echo "<center><h2>Belum Ada Data Surat Masuk</h2></center>";
                     } else { ?>
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-3 col-sm-4 col-xs-12">
+                        <label for="sort_column" style="margin-bottom: 4px;">Urutkan Berdasarkan</label>
+                        <select id="sort_column" class="form-control">
+                          <option value="0">No</option>
+                          <option value="1">Nomor Surat</option>
+                          <option value="2">Tanggal Terima</option>
+                          <option value="3">Tanggal Surat</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12">
+                        <label for="sort_direction" style="margin-bottom: 4px;">Arah</label>
+                        <select id="sort_direction" class="form-control">
+                          <option value="asc" selected>Asc</option>
+                          <option value="desc">Desc</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12" style="padding-top: 24px;">
+                        <button type="button" id="btn_sort" class="btn btn-info">Terapkan Urutan</button>
+                      </div>
+                    </div>
                     <div class="table-responsive-custom">
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
@@ -275,6 +296,22 @@ include "login/ceksession.php";
     }
 
     // ── Tampilkan SweetAlert dari redirect status ──────────────────────
+    // ── Sort DataTable ─────────────────────────────────────────────
+    $(document).ready(function() {
+      if ($.fn.DataTable.isDataTable('#datatable')) {
+        var table = $('#datatable').DataTable();
+
+        // Default: Nomor Surat ascending
+        table.order([1, 'asc']).draw();
+
+        $('#btn_sort').on('click', function() {
+          var selectedColumn    = parseInt($('#sort_column').val(), 10);
+          var selectedDirection = $('#sort_direction').val();
+          table.order([selectedColumn, selectedDirection]).draw();
+        });
+      }
+    });
+
     <?php if (isset($_GET['status'])): ?>
     document.addEventListener('DOMContentLoaded', function () {
       <?php if ($_GET['status'] === 'success'): ?>

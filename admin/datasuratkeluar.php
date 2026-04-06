@@ -112,6 +112,26 @@ include "login/ceksession.php";
                                 echo"<center><h2>Belum Ada Data Surat Keluar</h2></center>";
                               }
                               else{?>
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-3 col-sm-4 col-xs-12">
+                        <label for="sort_column" style="margin-bottom: 4px;">Urutkan Berdasarkan</label>
+                        <select id="sort_column" class="form-control">
+                          <option value="0">No</option>
+                          <option value="2">Tanggal Keluar</option>
+                          <option value="6">Tanggal Kegiatan</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12">
+                        <label for="sort_direction" style="margin-bottom: 4px;">Arah</label>
+                        <select id="sort_direction" class="form-control">
+                          <option value="asc" selected>Asc</option>
+                          <option value="desc">Desc</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 col-sm-3 col-xs-12" style="padding-top: 24px;">
+                        <button type="button" id="btn_sort" class="btn btn-info">Terapkan Urutan</button>
+                      </div>
+                    </div>
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
@@ -120,7 +140,11 @@ include "login/ceksession.php";
                           <th width="10%">Tanggal Keluar</th>
                           <th width="15%">Penerima</th>
                           <th width="12%">Perihal</th>
-                          <th width="13%">Kode</th>
+                          <th width="12%">Tempat Acara</th>
+                          <th width="10%">Tanggal Kegiatan</th>
+                          <th width="8%">Absensi</th>
+                          <th width="8%">Notulen</th>
+                          <th width="8%">Dokumentasi</th>
                           <th width="20%">Keterangan</th>
                           <th width="5%">Aksi</th>
                         </tr>
@@ -129,13 +153,54 @@ include "login/ceksession.php";
                       <tbody>
                         <?php
                             while($data = mysqli_fetch_array($query1)){
+                              $absensi_files = json_decode($data['lampiran_absensi'] ?? '[]', true);
+                              if (!is_array($absensi_files)) $absensi_files = [];
+                              $notulen_files = json_decode($data['lampiran_notulen'] ?? '[]', true);
+                              if (!is_array($notulen_files)) $notulen_files = [];
+                              $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
+                              if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
+
+                              $absensi_cell = '-';
+                              if (count($absensi_files) > 0) {
+                                $absensi_cell = '';
+                                foreach ($absensi_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $absensi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
+                              $notulen_cell = '-';
+                              if (count($notulen_files) > 0) {
+                                $notulen_cell = '';
+                                foreach ($notulen_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $notulen_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
+                              $dokumentasi_cell = '-';
+                              if (count($dokumentasi_files) > 0) {
+                                $dokumentasi_cell = '';
+                                foreach ($dokumentasi_files as $idx => $file_name) {
+                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
+                                  $dokumentasi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
+                                }
+                              }
+
                               echo'<tr>
                               <td>'. $data['No'].'</td>
                               <td>'. $data['nomor_surat'].'</td>
                               <td>'. $data['tanggal_keluar'].'</td>
                               <td>'. $data['penerima'].'</td>
                               <td>'. $data['perihal'].'</td>
-                              <td>'. $data['kode'].'</td>
+                              <td>'. (!empty($data['tempat_acara']) ? $data['tempat_acara'] : '-') .'</td>
+                              <td>'. (!empty($data['tanggal_kegiatan']) ? $data['tanggal_kegiatan'] : '-') .'</td>
+                              <td>'. $absensi_cell .'</td>
+                              <td>'. $notulen_cell .'</td>
+                              <td>'. $dokumentasi_cell .'</td>
                               <td>'. $data['keterangan'].'</td>
                               <td style="text-align:center; white-space: nowrap;">
                                 <a href="surat_keluar/'.$data['file_surat'].'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
@@ -198,12 +263,28 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
+
   <script type="text/javascript" language="JavaScript">
   function konfirmasi() {
     tanya = confirm("Anda Yakin Akan Menghapus Data ?");
     if (tanya == true) return true;
     else return false;
   }
+
+  $(document).ready(function() {
+    if ($.fn.DataTable.isDataTable('#datatable')) {
+      var table = $('#datatable').DataTable();
+
+      // Default sesuai tampilan lama: Nomor Surat ascending.
+      table.order([1, 'asc']).draw();
+
+      $('#btn_sort').on('click', function() {
+        var selectedColumn = parseInt($('#sort_column').val(), 10);
+        var selectedDirection = $('#sort_direction').val();
+        table.order([selectedColumn, selectedDirection]).draw();
+      });
+    }
+  });
   </script>
 
 </body>
