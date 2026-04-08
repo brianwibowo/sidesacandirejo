@@ -256,6 +256,38 @@ include "login/ceksession.php";
                 $query_kunjungan = mysqli_query($db, $sql_kunjungan);
                 $row_kunjungan = mysqli_fetch_assoc($query_kunjungan);
                 $total_kunjungan = $row_kunjungan['total_kunjungan'] ?? 0;
+
+                // Hitung total filter jika filter aktif
+                $filter_aktif = !empty($_GET['bulan']) || !empty($_GET['tahun']);
+                $total_pax_filter = 0;
+                $total_kunjungan_filter = 0;
+                $label_filter = '';
+                if ($filter_aktif) {
+                  $where_filter = "WHERE 1=1";
+                  if (!empty($_GET['bulan'])) {
+                    $fb = mysqli_real_escape_string($db, $_GET['bulan']);
+                    $where_filter .= " AND MONTH(tanggal_kunjungan) = '$fb'";
+                  }
+                  if (!empty($_GET['tahun'])) {
+                    $ft = mysqli_real_escape_string($db, $_GET['tahun']);
+                    $where_filter .= " AND YEAR(tanggal_kunjungan) = '$ft'";
+                  }
+                  $row_pax_f = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as total_pax FROM tb_data_pengunjung $where_filter"));
+                  $total_pax_filter = $row_pax_f['total_pax'] ?? 0;
+                  $row_sesi_f = mysqli_fetch_assoc(mysqli_query($db, "SELECT COUNT(*) as total_kunjungan FROM tb_data_pengunjung $where_filter"));
+                  $total_kunjungan_filter = $row_sesi_f['total_kunjungan'] ?? 0;
+
+                  // Buat label filter
+                  $bulan_list_lbl = [
+                    '01'=>'Januari','02'=>'Februari','03'=>'Maret','04'=>'April',
+                    '05'=>'Mei','06'=>'Juni','07'=>'Juli','08'=>'Agustus',
+                    '09'=>'September','10'=>'Oktober','11'=>'November','12'=>'Desember'
+                  ];
+                  $parts = [];
+                  if (!empty($_GET['bulan'])) $parts[] = $bulan_list_lbl[$_GET['bulan']] ?? $_GET['bulan'];
+                  if (!empty($_GET['tahun']))  $parts[] = $_GET['tahun'];
+                  $label_filter = implode(' ', $parts);
+                }
                 ?>
 
                 <!-- CARD TOTAL KUNJUNGAN -->
@@ -286,6 +318,35 @@ include "login/ceksession.php";
                       </div>
                     </div>
                   </div>
+
+                  <?php if ($filter_aktif) { ?>
+                  <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="card-total-kunjungan" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); box-shadow: 0 4px 18px rgba(245,87,108,0.30);">
+                      <div class="icon-wrap">
+                        <i class="fa fa-filter" id="card-filter-icon"></i>
+                      </div>
+                      <div class="info-wrap">
+                        <div class="label-text" id="card-filter-label">Total Kunjungan <?php echo htmlspecialchars($label_filter); ?></div>
+                        <div class="count-number" id="card-filter-count">
+                          <?php echo number_format($total_pax_filter, 0, ',', '.'); ?>
+                          <span id="card-filter-unit">orang</span>
+                        </div>
+                        <div class="sub-text" id="card-filter-sub">
+                          <i class="fa fa-users"></i> Hasil filter yang diterapkan
+                        </div>
+                        <!-- TOGGLE MODE FILTER -->
+                        <div class="toggle-mode-wrap">
+                          <span class="toggle-label" id="lbl-filter-pax" style="font-weight:700;">Pax</span>
+                          <label class="toggle-switch">
+                            <input type="checkbox" id="toggleModeFilter" onchange="switchFilterMode(this)">
+                            <span class="toggle-slider"></span>
+                          </label>
+                          <span class="toggle-label" id="lbl-filter-sesi">Sesi</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php } ?>
                 </div>
 
                 <script>
@@ -303,38 +364,61 @@ include "login/ceksession.php";
                   document.getElementById('lbl-pax').style.fontWeight = isSesi ? '400' : '700';
                   document.getElementById('lbl-sesi').style.fontWeight = isSesi ? '700' : '400';
                 }
+                <?php if ($filter_aktif) { ?>
+                var totalPaxFilter = <?php echo (int)$total_pax_filter; ?>;
+                var totalSesiFilter = <?php echo (int)$total_kunjungan_filter; ?>;
+                var labelFilter = <?php echo json_encode($label_filter); ?>;
+                function switchFilterMode(chk) {
+                  var isSesi = chk.checked;
+                  document.getElementById('card-filter-icon').className = isSesi ? 'fa fa-calendar' : 'fa fa-filter';
+                  document.getElementById('card-filter-label').textContent = (isSesi ? 'Total Sesi ' : 'Total Kunjungan ') + labelFilter;
+                  document.getElementById('card-filter-count').childNodes[0].nodeValue = (isSesi ? totalSesiFilter : totalPaxFilter).toLocaleString('id-ID') + ' ';
+                  document.getElementById('card-filter-unit').textContent = isSesi ? 'sesi' : 'orang';
+                  document.getElementById('card-filter-sub').innerHTML = isSesi
+                    ? '<i class="fa fa-info-circle"></i> Jumlah sesi kunjungan hasil filter'
+                    : '<i class="fa fa-users"></i> Hasil filter yang diterapkan';
+                  document.getElementById('lbl-filter-pax').style.fontWeight = isSesi ? '400' : '700';
+                  document.getElementById('lbl-filter-sesi').style.fontWeight = isSesi ? '700' : '400';
+                }
+                <?php } ?>
                 </script>
 
                 <!-- FILTER PANEL -->
                 <div class="filter-panel" style="margin: 0 15px 15px 15px;">
                   <div class="filter-title"><i class="fa fa-filter"></i> Filter Data</div>
-                  <form action="downloadlaporan_pengunjung.php" name="download_pengunjung" method="post"
-                    enctype="multipart/form-data" class="form-inline">
+                  <form action="datapengunjung.php" method="get" class="form-inline">
                     <div class="form-group" style="margin-right:10px;">
                       <label style="margin-right:6px; font-size:13px;">Bulan:</label>
                       <select name="bulan" class="form-control input-sm">
-                        <option>Pilih Bulan</option>
-                        <option value="01">Januari</option>
-                        <option value="02">Februari</option>
-                        <option value="03">Maret</option>
-                        <option value="04">April</option>
-                        <option value="05">Mei</option>
-                        <option value="06">Juni</option>
-                        <option value="07">Juli</option>
-                        <option value="08">Agustus</option>
-                        <option value="09">September</option>
-                        <option value="10">Oktober</option>
-                        <option value="11">November</option>
-                        <option value="12">Desember</option>
+                        <option value="">Pilih Bulan</option>
+                        <?php
+                        $bulan_list = [
+                          '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+                          '04' => 'April',   '05' => 'Mei',      '06' => 'Juni',
+                          '07' => 'Juli',    '08' => 'Agustus',  '09' => 'September',
+                          '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                        ];
+                        foreach ($bulan_list as $val => $nama) {
+                          $sel = (isset($_GET['bulan']) && $_GET['bulan'] == $val) ? 'selected' : '';
+                          echo '<option value="' . $val . '" ' . $sel . '>' . $nama . '</option>';
+                        }
+                        ?>
                       </select>
                     </div>
                     <div class="form-group" style="margin-right:10px;">
                       <label style="margin-right:6px; font-size:13px;">Tahun:</label>
                       <select name="tahun" class="form-control input-sm">
-                        <option>Pilih Tahun</option>
+                        <option value="">Pilih Tahun</option>
                         <?php
-                        for ($tahun = 2024; $tahun <= 2030; $tahun++) {
-                          echo '<option value="' . $tahun . '">' . $tahun . '</option>';
+                        // Ambil tahun terkecil dari database secara dinamis
+                        $sql_tahun_min = "SELECT YEAR(MIN(tanggal_kunjungan)) as tahun_min FROM tb_data_pengunjung";
+                        $res_tahun_min = mysqli_query($db, $sql_tahun_min);
+                        $row_tahun_min = mysqli_fetch_assoc($res_tahun_min);
+                        $tahun_min = !empty($row_tahun_min['tahun_min']) ? (int)$row_tahun_min['tahun_min'] : (int)date('Y');
+                        $tahun_max = (int)date('Y') + 1;
+                        for ($t = $tahun_min; $t <= $tahun_max; $t++) {
+                          $sel = (isset($_GET['tahun']) && $_GET['tahun'] == $t) ? 'selected' : '';
+                          echo '<option value="' . $t . '" ' . $sel . '>' . $t . '</option>';
                         }
                         ?>
                       </select>
@@ -367,7 +451,17 @@ include "login/ceksession.php";
 
                 <div class="x_content">
                   <?php
-                  $sql1   = "SELECT * FROM tb_data_pengunjung ORDER BY id ASC";
+                  // Terapkan filter dari GET
+                  $where = "WHERE 1=1";
+                  if (!empty($_GET['bulan'])) {
+                    $filter_bulan = mysqli_real_escape_string($db, $_GET['bulan']);
+                    $where .= " AND MONTH(tanggal_kunjungan) = '$filter_bulan'";
+                  }
+                  if (!empty($_GET['tahun'])) {
+                    $filter_tahun = mysqli_real_escape_string($db, $_GET['tahun']);
+                    $where .= " AND YEAR(tanggal_kunjungan) = '$filter_tahun'";
+                  }
+                  $sql1   = "SELECT * FROM tb_data_pengunjung $where ORDER BY id ASC";
                   $query1 = mysqli_query($db, $sql1);
                   $total  = mysqli_num_rows($query1);
                   if ($total == 0) {
@@ -433,6 +527,9 @@ include "login/ceksession.php";
                             case 'cooking_lesson':
                               $paket_display = 'Cooking Lesson';
                               break;
+                            case 'gamelan_class':
+                              $paket_display = 'Gamelan Class';
+                              break;
                             case 'village_experience':
                               $paket_display = 'Village Experience';
                               break;
@@ -458,6 +555,8 @@ include "login/ceksession.php";
                             $detail_paket = $makanan_map[$data['jenis_makanan_paket']] ?? $data['jenis_makanan_paket'];
                           } elseif ($paket_utama == 'cooking_lesson' && !empty($data['opsi_cooking_lesson'])) {
                             $detail_paket = ($data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'Cooking Lesson + Tour' : 'Cooking Lesson Saja';
+                          } elseif ($paket_utama == 'gamelan_class' && !empty($data['opsi_gamelan'])) {
+                            $detail_paket = ($data['opsi_gamelan'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
                           }
 
                           if (empty($detail_paket)) {
@@ -484,6 +583,21 @@ include "login/ceksession.php";
                           $pax_val = htmlspecialchars($data['pax']);
                           $pax_badge = '<span class="badge-pax">' . $pax_val . ' orang</span>';
 
+                          // Foto (support multiple / JSON)
+                          $foto_html = '-';
+                          if (!empty($data['foto'])) {
+                            $foto_arr = json_decode($data['foto'], true);
+                            if (is_array($foto_arr)) {
+                              $foto_html = '';
+                              foreach (array_slice($foto_arr, 0, 3) as $idx => $f) {
+                                $foto_html .= '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($f) . '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin:1px;" title="Foto ' . ($idx+1) . '">';
+                              }
+                              if (count($foto_arr) > 3) $foto_html .= '<span style="font-size:11px;color:#888;">+' . (count($foto_arr)-3) . '</span>';
+                            } else {
+                              $foto_html = '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($data['foto']) . '" style="max-width:60px;max-height:60px;border-radius:6px;">';
+                            }
+                          }
+
                           echo '<tr>
                               <td>' . htmlspecialchars($data['tanggal_kunjungan']) . '</td>
                               <td>' . $paket_display . '</td>
@@ -495,7 +609,7 @@ include "login/ceksession.php";
                               <td>' . htmlspecialchars($data['agen_wisata'] ?? '-') . '</td>
                               <td>' . htmlspecialchars($data['driver_agent_guide']) . '</td>
                               <td>' . htmlspecialchars($data['local_guide']) . '</td>
-                              <td>' . (!empty($data['foto']) ? '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($data['foto']) . '" style="max-width:60px;max-height:60px;border-radius:6px;">' : '-') . '</td>
+                              <td>' . $foto_html . '</td>
                               <td style="text-align:center;">
                                   <a href="detail-datapengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
                                   <a href="editpengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>

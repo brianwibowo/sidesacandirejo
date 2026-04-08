@@ -63,7 +63,7 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_inputdatapengunjung.php" name="forminputdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
 
                     <div class="form-group">
@@ -89,17 +89,19 @@ include "login/ceksession.php";
                         <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
                           class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
-                          <option value="meal_only">Breakfast/Lunch/Diner Only</option>
+                          <option value="meal_only">Breakfast/Lunch/Dinner Only</option>
                           <option value="studi_banding">Studi Banding</option>
                           <option value="fun_game">Paket Fun Game</option>
                           <option value="pelajar_live_in">Paket Pelajar - Live In Candirejo</option>
-                          <option value="pelajar_field_trip">Paket Pelajar – Field Trip</option>
+                          <option value="pelajar_field_trip_one_day">Paket Pelajar – Field Trip One Day</option>
+                          <option value="pelajar_field_trip_half_day">Paket Pelajar – Field Trip Half Day</option>
                           <option value="cycling_tour">Cycling Village Tour with/without Lunch</option>
                           <option value="traditional_dance">Traditional Dance</option>
                           <option value="walking_tour">Walking Around Village with/without Lunch</option>
                           <option value="homestay">Stay At Local House In Candirejo Village (Homestay)</option>
                           <option value="serenade">Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="cooking_lesson">Cooking lesson with/without Tour</option>
+                          <option value="cooking_lesson">Cooking Lesson with/without Tour</option>
+                          <option value="gamelan_class">Gamelan Class with/without Lunch</option>
                           <option value="village_experience">Village Experience</option>
                           <option value="dokar_tour">Dokar Village Tour with/without Lunch</option>
                           <option value="inspection">Inspection</option>
@@ -138,6 +140,17 @@ include "login/ceksession.php";
                           <option value="">--</option>
                           <option value="lesson_only">Lesson Only</option>
                           <option value="lesson_with_tour">Lesson With Tour</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_gamelan_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_gamelan">Opsi Gamelan Class</label>
+                      <div class="col-md-9">
+                        <select id="opsi_gamelan" name="opsi_gamelan" class="form-control">
+                          <option value="">--</option>
+                          <option value="without_lunch">Without Lunch</option>
+                          <option value="with_lunch">With Lunch</option>
                         </select>
                       </div>
                     </div>
@@ -225,8 +238,9 @@ include "login/ceksession.php";
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
+                        <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB per foto). Bisa pilih lebih dari 1 foto.</small>
+                        <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                       </div>
                     </div>
 
@@ -293,11 +307,13 @@ include "login/ceksession.php";
         $('#opsi_makan_tour_group').hide();
         $('#jenis_makanan_paket_group').hide();
         $('#opsi_cooking_lesson_group').hide();
+        $('#opsi_gamelan_group').hide();
         
         // Reset values
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
+        $('#opsi_gamelan').val('');
         
         // Show relevant fields based on selected package
         if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
@@ -308,6 +324,28 @@ include "login/ceksession.php";
         }
         if (paket === 'cooking_lesson') {
             $('#opsi_cooking_lesson_group').show();
+        }
+        if (paket === 'gamelan_class') {
+            $('#opsi_gamelan_group').show();
+        }
+    });
+
+    // Preview foto multiple
+    $('#foto').change(function() {
+        var preview = $('#foto-preview');
+        preview.empty();
+        var files = this.files;
+        for (var i = 0; i < files.length; i++) {
+            var reader = new FileReader();
+            reader.onload = (function(file) {
+                return function(e) {
+                    preview.append('<div style="position:relative;display:inline-block;">' +
+                        '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
+                        '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + file.name + '</div>' +
+                        '</div>');
+                };
+            })(files[i]);
+            reader.readAsDataURL(files[i]);
         }
     });
 

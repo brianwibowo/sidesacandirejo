@@ -112,7 +112,8 @@ if (!$data_pengunjung) {
                           <option value="homestay" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
                           <option value="serenade" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
                           <option value="cooking_lesson" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cooking_lesson') ? 'selected' : ''; ?>>Cooking
-                            lesson with/without Tour</option>
+                            Lesson with/without Tour</option>
+                          <option value="gamelan_class" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'gamelan_class') ? 'selected' : ''; ?>>Gamelan Class with/without Lunch</option>
                           <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>
                             Village Experience</option>
                           <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar
@@ -159,6 +160,17 @@ if (!$data_pengunjung) {
                           </option>
                           <option value="lesson_with_tour" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>
                             Lesson With Tour</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_gamelan_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_gamelan">Opsi Gamelan Class</label>
+                      <div class="col-md-9">
+                        <select id="opsi_gamelan" name="opsi_gamelan" class="form-control">
+                          <option value="">--</option>
+                          <option value="without_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
+                          <option value="with_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
                         </select>
                       </div>
                     </div>
@@ -251,12 +263,33 @@ if (!$data_pengunjung) {
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <?php if (!empty($data_pengunjung['foto'])): ?>
-                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data_pengunjung['foto']); ?>" 
-                               alt="Foto Pengunjung" style="max-width: 200px; margin-bottom: 10px;"><br>
+                        <?php
+                          // Cek apakah foto berformat JSON (multiple) atau string lama (single)
+                          $foto_existing = [];
+                          if (!empty($data_pengunjung['foto'])) {
+                            $decoded = json_decode($data_pengunjung['foto'], true);
+                            if (is_array($decoded)) {
+                              $foto_existing = $decoded;
+                            } else {
+                              $foto_existing = [$data_pengunjung['foto']];
+                            }
+                          }
+                        ?>
+                        <?php if (!empty($foto_existing)): ?>
+                          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                          <?php foreach($foto_existing as $f): ?>
+                            <div style="text-align:center;">
+                              <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" 
+                                   alt="Foto" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
+                              <div style="font-size:10px;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars($f); ?></div>
+                            </div>
+                          <?php endforeach; ?>
+                          </div>
+                          <small class="text-muted">Foto saat ini (upload baru akan <strong>menggantikan</strong> semua foto lama)</small><br>
                         <?php endif; ?>
-                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
+                        <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12" style="margin-top:6px;">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maks 2MB per foto). Bisa pilih lebih dari 1 foto.</small>
+                        <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                       </div>
                     </div>
 
@@ -303,6 +336,7 @@ if (!$data_pengunjung) {
       $('#opsi_makan_tour_group').hide();
       $('#jenis_makanan_paket_group').hide();
       $('#opsi_cooking_lesson_group').hide();
+      $('#opsi_gamelan_group').hide();
   
       // Show relevant fields based on selected package
       if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
@@ -314,6 +348,9 @@ if (!$data_pengunjung) {
       if (paket === 'cooking_lesson') {
         $('#opsi_cooking_lesson_group').show();
       }
+      if (paket === 'gamelan_class') {
+        $('#opsi_gamelan_group').show();
+      }
     }
   
     $('#pilihan_paket_wisata').change(function () {
@@ -324,12 +361,32 @@ if (!$data_pengunjung) {
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
+        $('#opsi_gamelan').val('');
       }
   
       showHideFields();
       
       // Set flag bahwa user sudah mengubah pilihan
       $(this).data('user-changed', true);
+    });
+
+    // Preview foto multiple
+    $('#foto').change(function() {
+      var preview = $('#foto-preview');
+      preview.empty();
+      var files = this.files;
+      for (var i = 0; i < files.length; i++) {
+        var reader = new FileReader();
+        reader.onload = (function(file) {
+          return function(e) {
+            preview.append('<div style="text-align:center;">' +
+              '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
+              '<div style="font-size:10px;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + file.name + '</div>' +
+              '</div>');
+          };
+        })(files[i]);
+        reader.readAsDataURL(files[i]);
+      }
     });
   
     $('#jenis_wisatawan').change(function () {

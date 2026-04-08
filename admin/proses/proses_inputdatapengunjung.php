@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $opsi_makan_tour = isset($_POST['opsi_makan_tour']) ? $_POST['opsi_makan_tour'] : null;
     $jenis_makanan_paket = isset($_POST['jenis_makanan_paket']) ? $_POST['jenis_makanan_paket'] : null;
     $opsi_cooking_lesson = isset($_POST['opsi_cooking_lesson']) ? $_POST['opsi_cooking_lesson'] : null;
+    $opsi_gamelan = isset($_POST['opsi_gamelan']) ? $_POST['opsi_gamelan'] : null;
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $kota = isset($_POST['kota']) ? $_POST['kota'] : null;
     $negara = isset($_POST['negara']) ? $_POST['negara'] : null;
@@ -18,30 +19,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $driver_agent_guide = isset($_POST['driver_agent_guide']) ? $_POST['driver_agent_guide'] : null;
     $local_guide = isset($_POST['local_guide']) ? $_POST['local_guide'] : null;
 
-    // Handle file upload
-    $foto = null;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+    // Handle multiple file upload
+    $foto_list = [];
+    if (isset($_FILES['foto']) && is_array($_FILES['foto']['name'])) {
         $allowed = ['jpg', 'jpeg', 'png'];
-        $filename = $_FILES['foto']['name'];
-        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
         
-        if (in_array(strtolower($filetype), $allowed)) {
-            // Check file size (2MB max)
-            if ($_FILES['foto']['size'] <= 2 * 1024 * 1024) {
-                $new_filename = uniqid() . '.' . $filetype;
-                $upload_path = '../uploads/pengunjung/' . $new_filename;
+        // Create directory if it doesn't exist
+        if (!file_exists('../uploads/pengunjung')) {
+            mkdir('../uploads/pengunjung', 0777, true);
+        }
+
+        for ($i = 0; $i < count($_FILES['foto']['name']); $i++) {
+            if ($_FILES['foto']['error'][$i] == 0) {
+                $filename = $_FILES['foto']['name'][$i];
+                $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                 
-                // Create directory if it doesn't exist
-                if (!file_exists('../uploads/pengunjung')) {
-                    mkdir('../uploads/pengunjung', 0777, true);
-                }
-                
-                if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
-                    $foto = $new_filename;
+                if (in_array($filetype, $allowed) && $_FILES['foto']['size'][$i] <= 2 * 1024 * 1024) {
+                    $new_filename = uniqid() . '_' . $i . '.' . $filetype;
+                    $upload_path = '../uploads/pengunjung/' . $new_filename;
+                    
+                    if (move_uploaded_file($_FILES['foto']['tmp_name'][$i], $upload_path)) {
+                        $foto_list[] = $new_filename;
+                    }
                 }
             }
         }
     }
+    $foto = !empty($foto_list) ? json_encode($foto_list) : null;
 
     // Validation
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
@@ -56,21 +60,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare statement
     $stmt = $db->prepare("INSERT INTO tb_data_pengunjung 
-      (tanggal_kunjungan, pilihan_paket_wisata, opsi_makan_tour, jenis_makanan_paket, opsi_cooking_lesson, 
+      (tanggal_kunjungan, pilihan_paket_wisata, opsi_makan_tour, jenis_makanan_paket, opsi_cooking_lesson, opsi_gamelan,
       jenis_wisatawan, kota, negara, nama, pax, agen_wisata, driver_agent_guide, local_guide, foto) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
         echo "<script>alert('Error preparing statement: " . htmlspecialchars($db->error) . "'); window.location='../datapengunjung.php';</script>";
         exit;
     }
 
-    $stmt->bind_param("sssssssssissss", 
+    $stmt->bind_param("ssssssssssissss", 
         $tanggal_kunjungan, 
         $pilihan_paket_wisata, 
         $opsi_makan_tour, 
         $jenis_makanan_paket, 
-        $opsi_cooking_lesson, 
+        $opsi_cooking_lesson,
+        $opsi_gamelan,
         $jenis_wisatawan, 
         $kota, 
         $negara, 

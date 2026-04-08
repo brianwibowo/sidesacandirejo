@@ -38,13 +38,6 @@ $is_kategori_data_active  = in_array($current_page, $kategori_data_pages);
         <h3>Kategori</h3>
         <ul class="nav side-menu">
 
-          <!-- Buat Surat -->
-          <li class="<?php echo $current_page == 'inputbuatsurat.php' ? 'active' : ''; ?>">
-            <a href="#" style="pointer-events:none; color:gray;">
-              <i class="fa fa-plus-square"></i> Buat Surat
-            </a>
-          </li>
-
           <!-- Kategori Surat -->
           <li class="<?php echo $is_kategori_surat_active ? 'active' : ''; ?>">
             <a href="#">
@@ -82,7 +75,7 @@ $is_kategori_data_active  = in_array($current_page, $kategori_data_pages);
           </li>
 
           <!-- Manajemen Admin (superadmin only) -->
-          <?php if ($_SESSION['role'] == 'superadmin') { ?>
+          <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'superadmin') { ?>
             <li class="<?php echo $current_page == 'manajemen_admin.php' ? 'active' : ''; ?>">
               <a href="manajemen_admin.php"><i class="fa fa-user"></i> Manajemen Admin</a>
             </li>

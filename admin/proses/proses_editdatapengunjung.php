@@ -42,6 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $opsi_cooking_lesson = (isset($_POST['opsi_cooking_lesson']) && !empty($_POST['opsi_cooking_lesson'])) ? $_POST['opsi_cooking_lesson'] : null;
     }
 
+    $opsi_gamelan = null;
+    if ($pilihan_paket_wisata == 'gamelan_class') {
+        $opsi_gamelan = (isset($_POST['opsi_gamelan']) && !empty($_POST['opsi_gamelan'])) ? $_POST['opsi_gamelan'] : null;
+    }
+
     // Validation
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
         echo "<script>alert('Kota harus diisi untuk wisatawan domestik!'); window.history.back();</script>";
@@ -76,49 +81,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 
-    // Handle file upload
-    $foto = $current_foto;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+    // Handle multiple file upload
+    $foto = $current_foto; // keep existing (JSON string or old single filename)
+    if (isset($_FILES['foto']) && is_array($_FILES['foto']['name'])) {
         $allowed = ['jpg', 'jpeg', 'png'];
-        $filename = $_FILES['foto']['name'];
-        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
-        
-        if (in_array(strtolower($filetype), $allowed)) {
-            // Check file size (2MB max)
-            if ($_FILES['foto']['size'] <= 2 * 1024 * 1024) {
-                $new_filename = uniqid() . '.' . $filetype;
-                $upload_path = '../uploads/pengunjung/' . $new_filename;
-                
-                // Debug info
-                error_log("Uploading file: " . $filename);
-                error_log("New filename: " . $new_filename);
-                error_log("Upload path: " . $upload_path);
-                
-                // Create directory if it doesn't exist
-                if (!file_exists('../uploads/pengunjung/')) {
-                    mkdir('../uploads/pengunjung', 0777, true);
-                    error_log("Created upload directory");
-                }
-                
-                if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
-                    error_log("File successfully uploaded to: " . $upload_path);
-                    // Delete old foto if exists
-                    if ($current_foto && file_exists('../uploads/pengunjung/' . $current_foto)) {
-                        unlink('../uploads/pengunjung/' . $current_foto);
-                        error_log("Deleted old file: " . $current_foto);
-                    }
-                    $foto = $new_filename;
-                } else {
-                    error_log("Failed to move uploaded file. Error: " . error_get_last()['message']);
-                }
-            } else {
-                error_log("File too large: " . $_FILES['foto']['size']);
-            }
-        } else {
-            error_log("Invalid file type: " . $filetype);
+        $new_foto_list = [];
+
+        // Create directory if needed
+        if (!file_exists('../uploads/pengunjung/')) {
+            mkdir('../uploads/pengunjung', 0777, true);
         }
-    } else if (isset($_FILES['foto'])) {
-        error_log("File upload error code: " . $_FILES['foto']['error']);
+
+        for ($i = 0; $i < count($_FILES['foto']['name']); $i++) {
+            if ($_FILES['foto']['error'][$i] == 0) {
+                $filename = $_FILES['foto']['name'][$i];
+                $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                if (in_array($filetype, $allowed) && $_FILES['foto']['size'][$i] <= 2 * 1024 * 1024) {
+                    $new_filename = uniqid() . '_' . $i . '.' . $filetype;
+                    $upload_path = '../uploads/pengunjung/' . $new_filename;
+
+                    if (move_uploaded_file($_FILES['foto']['tmp_name'][$i], $upload_path)) {
+                        $new_foto_list[] = $new_filename;
+                    }
+                }
+            }
+        }
+
+        if (!empty($new_foto_list)) {
+            // Hapus foto lama
+            if (!empty($current_foto)) {
+                $old_list = json_decode($current_foto, true);
+                if (is_array($old_list)) {
+                    foreach ($old_list as $old_f) {
+                        $old_path = '../uploads/pengunjung/' . $old_f;
+                        if (file_exists($old_path)) unlink($old_path);
+                    }
+                } else {
+                    $old_path = '../uploads/pengunjung/' . $current_foto;
+                    if (file_exists($old_path)) unlink($old_path);
+                }
+            }
+            $foto = json_encode($new_foto_list);
+        }
     }
 
     // Prepare statement untuk UPDATE
@@ -128,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       opsi_makan_tour = ?, 
       jenis_makanan_paket = ?, 
       opsi_cooking_lesson = ?, 
+      opsi_gamelan = ?,
       jenis_wisatawan = ?, 
       kota = ?, 
       negara = ?, 
@@ -144,12 +150,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->bind_param("sssssssssissssi", 
+    $stmt->bind_param("ssssssssssissssi", 
       $tanggal_kunjungan, 
       $pilihan_paket_wisata, 
       $opsi_makan_tour, 
       $jenis_makanan_paket, 
-      $opsi_cooking_lesson, 
+      $opsi_cooking_lesson,
+      $opsi_gamelan,
       $jenis_wisatawan, 
       $kota, 
       $negara, 

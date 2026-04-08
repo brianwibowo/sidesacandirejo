@@ -63,18 +63,43 @@ include "login/ceksession.php";
       
                   ?>
                 <div class="x_content">
+                  <?php
+                    // Decode foto (support JSON multiple atau string lama)
+                    $foto_avatar = null;
+                    $foto_semua = [];
+                    if (!empty($data['foto'])) {
+                        $decoded = json_decode($data['foto'], true);
+                        if (is_array($decoded)) {
+                            $foto_semua = $decoded;
+                            $foto_avatar = $decoded[0]; // foto pertama sebagai avatar
+                        } else {
+                            $foto_avatar = $data['foto'];
+                            $foto_semua = [$data['foto']];
+                        }
+                    }
+                  ?>
                   <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                     <div class="profile_img">
                       <div id="crop-avatar">
-                        <!-- Current avatar -->
-                        <?php if (!empty($data['foto'])): ?>
+                        <?php if ($foto_avatar): ?>
                         <img class="img-responsive avatar-view"
-                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data['foto']); ?>" alt="Avatar">
+                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($foto_avatar); ?>" alt="Avatar">
                         <?php else: ?>
                         <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
                         <?php endif; ?>
                       </div>
                     </div>
+                    <?php if (count($foto_semua) > 1): ?>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px;">
+                      <?php foreach(array_slice($foto_semua, 1) as $idx => $f): ?>
+                        <a href="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                            style="width:50px;height:50px;object-fit:cover;border-radius:5px;border:1px solid #ddd;"
+                            title="Foto <?php echo $idx+2; ?>">
+                        </a>
+                      <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                     <h3 align="center"><?php echo isset($data['nama']) ? $data['nama'] : 'N/A'; ?></h3>
                     <br />
                   </div>
@@ -127,8 +152,32 @@ include "login/ceksession.php";
                             <td>Local Guide</td>
                             <td><?php echo isset($data['local_guide']) ? $data['local_guide'] : 'N/A'; ?></td>
                           </tr>
+                          <?php if (!empty($data['opsi_gamelan'])): ?>
                           <tr>
-                            
+                            <td>Opsi Gamelan Class</td>
+                            <td><?php echo ($data['opsi_gamelan'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch'; ?></td>
+                          </tr>
+                          <?php endif; ?>
+                          <tr>
+                            <td>Foto</td>
+                            <td>
+                              <?php if (!empty($foto_semua)): ?>
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                                <?php foreach ($foto_semua as $idx => $f): ?>
+                                  <div style="text-align:center;">
+                                    <a href="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                                      <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                                        style="width:100px;height:100px;object-fit:cover;border-radius:6px;border:1px solid #ddd;"
+                                        title="Foto <?php echo $idx+1; ?>">
+                                    </a>
+                                    <div style="font-size:11px;color:#555;">Foto <?php echo $idx+1; ?></div>
+                                  </div>
+                                <?php endforeach; ?>
+                                </div>
+                              <?php else: ?>
+                                <span class="text-muted">Tidak ada foto</span>
+                              <?php endif; ?>
+                            </td>
                           </tr>
                         </tbody>
                       </table>

@@ -21,6 +21,7 @@ if ($data) {
         $_SESSION['id'] = $data['id_admin'];
         $_SESSION['username'] = $data['username_admin'];
         $_SESSION['nama'] = $data['nama_admin'];
+        $_SESSION['role'] = $data['role']; // tambahan: simpan role ke session
 
         header('Location: ../');
         exit();
