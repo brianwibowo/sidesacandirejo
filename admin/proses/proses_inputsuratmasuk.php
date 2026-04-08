@@ -5,7 +5,8 @@
 include '../../koneksi/koneksi.php';
 
 // Helper: redirect dengan SweetAlert via GET param
-function redirectAlert($page, $status, $msg = '') {
+function redirectAlert($page, $status, $msg = '')
+{
     $url = $page . '?status=' . $status;
     if ($msg) $url .= '&msg=' . urlencode($msg);
     echo "<script>window.location='" . $url . "';</script>";
@@ -13,13 +14,15 @@ function redirectAlert($page, $status, $msg = '') {
 }
 
 // Helper: konversi gambar ke WebP menggunakan GD
-function convertToWebP($sourcePath, $destPath, $quality = 85) {
+function convertToWebP($sourcePath, $destPath, $quality = 85)
+{
     $info = @getimagesize($sourcePath);
     if (!$info) return false;
 
     switch ($info['mime']) {
         case 'image/jpeg':
-            $img = @imagecreatefromjpeg($sourcePath); break;
+            $img = @imagecreatefromjpeg($sourcePath);
+            break;
         case 'image/png':
             $img = @imagecreatefrompng($sourcePath);
             // Pertahankan transparansi PNG
@@ -30,9 +33,11 @@ function convertToWebP($sourcePath, $destPath, $quality = 85) {
             }
             break;
         case 'image/gif':
-            $img = @imagecreatefromgif($sourcePath); break;
+            $img = @imagecreatefromgif($sourcePath);
+            break;
         case 'image/webp':
-            $img = @imagecreatefromwebp($sourcePath); break;
+            $img = @imagecreatefromwebp($sourcePath);
+            break;
         default:
             return false;
     }
@@ -73,9 +78,9 @@ if (!isset($_FILES['file_surat']) || $_FILES['file_surat']['error'] !== UPLOAD_E
     redirectAlert('../datasuratmasuk.php', 'error', 'File surat wajib diupload.');
 }
 
-// Validasi ukuran (maks 10 MB)
-if ($_FILES['file_surat']['size'] > 10 * 1024 * 1024) {
-    redirectAlert('../datasuratmasuk.php', 'error', 'Ukuran file surat melebihi 10 MB.');
+// Validasi ukuran (maks 5 MB)
+if ($_FILES['file_surat']['size'] > 5 * 1024 * 1024) {
+    redirectAlert('../datasuratmasuk.php', 'error', 'Ukuran file surat melebihi 5 MB.');
 }
 
 $nama_file   = "{$nama_dasar}_{$tanggal_fmt}_{$jam_fmt}.pdf";

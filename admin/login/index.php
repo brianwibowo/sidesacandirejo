@@ -1,68 +1,80 @@
 <?php
-	session_start();
-	include "ceksessionn.php";
+session_start();
+include "ceksessionn.php";
 ?>
 
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SIDESA Candirejo</title>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link href="../../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- Animate.css -->
-    <link href="../../assets/vendors/animate.css/animate.min.css" rel="stylesheet">
+  <title>SIDESA Candirejo</title>
 
-    <!-- Custom Theme Style -->
-    <link href="../../assets/build/css/custom.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="../../img/icon.ico">
-  </head>
+  <!-- Bootstrap -->
+  <link href="../../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="../../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- NProgress -->
+  <link href="../../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
+  <!-- Animate.css -->
+  <link href="../../assets/vendors/animate.css/animate.min.css" rel="stylesheet">
 
-  <body class="login">
-    <div>
-      <a class="hiddenanchor" id="signin"></a>
+  <!-- Custom Theme Style -->
+  <link href="../../assets/build/css/custom.min.css" rel="stylesheet">
+  <link rel="shortcut icon" href="../../img/icon.ico">
+</head>
 
-      <div class="login_wrapper">
-        <div class="animate form login_form">
-          <section class="login_content">
-            <form action="proses_login.php" id="login" name="login" method="post">
-              <h1>Login</h1>
-              <div class="form-group has-feedback">
-                <input type="text" id="username" name="username_admin" class="form-control" autocomplete="off" maxlength="50" placeholder="Username" required="username" />
-                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+<body class="login">
+  <div>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+          <form action="proses_login.php" id="login" name="login" method="post">
+            <h1>Login</h1>
+            <?php if (isset($_SESSION['error'])): ?>
+              <div class="alert alert-danger" role="alert" style="text-align: left; margin-top: 10px;">
+                <?= $_SESSION['error']; ?>
               </div>
-              <div class="form-group has-feedback">
-                <input type="password" id="password" name="password" class="form-control" autocomplete="off" maxlength="50" placeholder="Password" required="password" />
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-              </div>
+            <?php endif; ?>
+            <div class="form-group has-feedback">
+              <input type="text" id="username" name="username_admin" class="form-control" autocomplete="off" maxlength="50" placeholder="Username"
+                value="<?= isset($_SESSION['old_username']) ? $_SESSION['old_username'] : '' ?>" required />
+              <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+              <input type="password" id="password" name="password" class="form-control" autocomplete="off" maxlength="50" placeholder="Password" required="password" />
+              <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div>
+              <a href="../../index.php"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Kembali</button></a>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Masuk</button>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
               <div>
-                <a href="../../index.php"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Kembali</button></a>
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Masuk</button>
+                <h2><i class="fa fa-institution"></i>DESA WISATA CANDIREJO</h2>
+                <p>Tim Pengabdian DRTPM UNNES. All Right Reserved</p>
               </div>
-
-              <div class="clearfix"></div>
-
-              <div class="separator">
-                <div>
-                  <h2><i class="fa fa-institution"></i>DESA WISATA CANDIREJO</h2>
-                  <p>Tim Pengabdian DRTPM UNNES. All Right Reserved</p>
-                </div>
-              </div>
-            </form>
-          </section>
-        </div>
+            </div>
+            <?php
+            unset($_SESSION['error']);
+            unset($_SESSION['old_username']);
+            ?>
+          </form>
+        </section>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

@@ -45,7 +45,7 @@ function uploadMultipleFiles($inputName, $allowedExtensions, $targetDir)
     return $uploaded;
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tgl_keluar = $_POST['tanggal_keluar'];
     $nomor_surat = $_POST['nomor_surat'];
     $penerima = $_POST['penerima'];
@@ -99,16 +99,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $row = mysqli_fetch_assoc($result);
         $next_no = ($row['last_no'] ?? 0) + 1;
 
-          $query = "INSERT INTO tb_arsip_surat_keluar (No, tanggal_keluar, nomor_surat, penerima, tempat_acara, tanggal_kegiatan, perihal, keterangan, file_surat, lampiran_absensi, lampiran_notulen, dokumentasi_foto) 
+        $query = "INSERT INTO tb_arsip_surat_keluar (No, tanggal_keluar, nomor_surat, penerima, tempat_acara, tanggal_kegiatan, perihal, keterangan, file_surat, lampiran_absensi, lampiran_notulen, dokumentasi_foto) 
               VALUES ('$next_no', '$tanggal_keluar_db', '$nomor_surat', '$penerima', '$tempat_acara', $tanggal_kegiatan_sql, '$perihal', '$keterangan', '$destination', $absensi_sql, $notulen_sql, $dokumentasi_sql)";
 
         if (mysqli_query($db, $query)) {
-            echo "<script>alert('Data berhasil disimpan!'); window.location='../datasuratkeluar.php';</script>";
+            redirectAlert('../datasuratkeluar.php', 'success');
         } else {
-            echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "'); window.location='../datasuratkeluar.php';</script>";
+            redirectAlert('../datasuratkeluar.php', 'error', 'Terjadi kesalahan: ' . mysqli_error($db));
         }
     } else {
-        echo "<script>alert('File gagal diupload!'); window.location='../datasuratkeluar.php';</script>";
+        redirectAlert('../datasuratkeluar.php', 'error', 'File gagal diupload!');
     }
-    
 }

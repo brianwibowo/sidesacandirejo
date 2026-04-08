@@ -39,6 +39,7 @@ include "login/ceksession.php";
       gap: 10px;
       margin-top: 10px;
     }
+
     .foto-preview-item {
       position: relative;
       width: 100px;
@@ -46,18 +47,20 @@ include "login/ceksession.php";
       border-radius: 6px;
       overflow: hidden;
       border: 2px solid #ddd;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
+
     .foto-preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
     .foto-preview-item .remove-foto {
       position: absolute;
       top: 3px;
       right: 3px;
-      background: rgba(220,53,69,0.85);
+      background: rgba(220, 53, 69, 0.85);
       color: #fff;
       border: none;
       border-radius: 50%;
@@ -69,13 +72,16 @@ include "login/ceksession.php";
       cursor: pointer;
       padding: 0;
     }
+
     /* Flatpickr override */
     .flatpickr-input {
       background: #fff !important;
     }
+
     .input-group .flatpickr-input {
       border-radius: 4px 0 0 4px;
     }
+
     .input-group-addon {
       cursor: pointer;
     }
@@ -274,9 +280,9 @@ include "login/ceksession.php";
     // ── Flatpickr Date Picker ──────────────────────────────────────────
     flatpickr(".datepicker", {
       locale: "id",
-      dateFormat: "Y-m-d",        // format yang dikirim ke server
-      altInput: true,              // tampilkan format manusia
-      altFormat: "d F Y",          // contoh: 22 Mei 2025
+      dateFormat: "Y-m-d", // format yang dikirim ke server
+      altInput: true, // tampilkan format manusia
+      altFormat: "d F Y", // contoh: 22 Mei 2025
       allowInput: false,
       disableMobile: false
     });
@@ -284,7 +290,7 @@ include "login/ceksession.php";
     // ── Multi-foto preview ─────────────────────────────────────────────
     let selectedFiles = [];
 
-    document.getElementById('lampiran_foto').addEventListener('change', function () {
+    document.getElementById('lampiran_foto').addEventListener('change', function() {
       const files = Array.from(this.files);
       files.forEach(file => {
         // cegah duplikat nama
@@ -301,7 +307,7 @@ include "login/ceksession.php";
       container.innerHTML = '';
       selectedFiles.forEach((file, idx) => {
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
           const div = document.createElement('div');
           div.className = 'foto-preview-item';
           div.innerHTML = `
@@ -339,26 +345,27 @@ include "login/ceksession.php";
 
     // ── SweetAlert2 — tampilkan pesan dari PHP via URL param ───────────
     <?php if (isset($_GET['status'])): ?>
-    window.addEventListener('DOMContentLoaded', function () {
-      <?php if ($_GET['status'] === 'success'): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: 'Data surat masuk berhasil disimpan.',
-        confirmButtonColor: '#26B99A',
-        confirmButtonText: 'OK'
+      window.addEventListener('DOMContentLoaded', function() {
+        <?php if ($_GET['status'] === 'success'): ?>
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data surat masuk berhasil disimpan.',
+            confirmButtonColor: '#26B99A',
+            confirmButtonText: 'OK'
+          });
+        <?php elseif ($_GET['status'] === 'error'): ?>
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
+            confirmButtonColor: '#e74c3c',
+            confirmButtonText: 'Tutup'
+          });
+        <?php endif; ?>
       });
-      <?php elseif ($_GET['status'] === 'error'): ?>
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal!',
-        text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
-        confirmButtonColor: '#e74c3c',
-        confirmButtonText: 'Tutup'
-      });
-      <?php endif; ?>
-    });
     <?php endif; ?>
   </script>
 </body>
+
 </html>

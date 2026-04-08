@@ -1,6 +1,6 @@
-<?php 
+<?php
 include '../koneksi/koneksi.php';
-$sql = "SELECT * FROM tb_admin WHERE id_admin='".$_SESSION['id']."'";                        
+$sql = "SELECT * FROM tb_admin WHERE id_admin='" . $_SESSION['id'] . "'";
 $query = mysqli_query($db, $sql);
 $admin_login = mysqli_fetch_array($query);
 
@@ -40,7 +40,9 @@ $is_kategori_data_active  = in_array($current_page, $kategori_data_pages);
 
           <!-- Buat Surat -->
           <li class="<?php echo $current_page == 'inputbuatsurat.php' ? 'active' : ''; ?>">
-            <a href="inputbuatsurat.php"><i class="fa fa-plus-square"></i> Buat Surat</a>
+            <a href="#" style="pointer-events:none; color:gray;">
+              <i class="fa fa-plus-square"></i> Buat Surat
+            </a>
           </li>
 
           <!-- Kategori Surat -->
@@ -80,10 +82,10 @@ $is_kategori_data_active  = in_array($current_page, $kategori_data_pages);
           </li>
 
           <!-- Manajemen Admin (superadmin only) -->
-          <?php if($_SESSION['role'] == 'superadmin'){ ?>
-          <li class="<?php echo $current_page == 'manajemen_admin.php' ? 'active' : ''; ?>">
-            <a href="manajemen_admin.php"><i class="fa fa-user"></i> Manajemen Admin</a>
-          </li>
+          <?php if ($_SESSION['role'] == 'superadmin') { ?>
+            <li class="<?php echo $current_page == 'manajemen_admin.php' ? 'active' : ''; ?>">
+              <a href="manajemen_admin.php"><i class="fa fa-user"></i> Manajemen Admin</a>
+            </li>
           <?php } ?>
 
         </ul>
