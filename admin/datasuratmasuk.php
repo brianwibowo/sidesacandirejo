@@ -279,42 +279,41 @@ include "login/ceksession.php";
     }
 
     // ── Tampilkan SweetAlert dari redirect status ──────────────────────
-    // ── Sort DataTable ─────────────────────────────────────────────
     $(document).ready(function() {
 
-    <?php if (isset($_GET['status'])): ?>
-    document.addEventListener('DOMContentLoaded', function () {
-      <?php if ($_GET['status'] === 'success'): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: 'Operasi berhasil dilakukan.',
-        confirmButtonColor: '#26B99A',
-        confirmButtonText: 'OK',
-        timer: 3000,
-        timerProgressBar: true
-      });
-      <?php elseif ($_GET['status'] === 'deleted'): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Dihapus!',
-        text: 'Data berhasil dihapus.',
-        confirmButtonColor: '#26B99A',
-        confirmButtonText: 'OK',
-        timer: 3000,
-        timerProgressBar: true
-      });
-      <?php elseif ($_GET['status'] === 'error'): ?>
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal!',
-        text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
-        confirmButtonColor: '#e74c3c',
-        confirmButtonText: 'Tutup'
-      });
+      <?php if (isset($_GET['status'])): ?>
+        <?php if ($_GET['status'] === 'success'): ?>
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Operasi berhasil dilakukan.',
+          confirmButtonColor: '#26B99A',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+        <?php elseif ($_GET['status'] === 'deleted'): ?>
+        Swal.fire({
+          icon: 'success',
+          title: 'Dihapus!',
+          text: 'Data berhasil dihapus.',
+          confirmButtonColor: '#26B99A',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+        <?php elseif ($_GET['status'] === 'error'): ?>
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
+          confirmButtonColor: '#e74c3c',
+          confirmButtonText: 'Tutup'
+        });
+        <?php endif; ?>
       <?php endif; ?>
-    });
-    <?php endif; ?>
+
+    }); // ← TUTUP $(document).ready
   </script>
 </body>
 </html>

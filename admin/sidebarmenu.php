@@ -38,38 +38,38 @@ $is_kategori_data_active  = in_array($current_page, $kategori_data_pages);
         <h3>Kategori</h3>
         <ul class="nav side-menu">
 
-          <!-- Kategori Surat -->
-          <li class="<?php echo $is_kategori_surat_active ? 'active' : ''; ?>">
+          <!-- Kategori Data -->
+          <li class="<?php echo $is_kategori_data_active ? 'active' : ''; ?>">
             <a href="#">
-              <i class="fa fa-file-text"></i> Kategori Surat <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-database"></i> Kategori Data <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="<?php echo $is_kategori_surat_active ? 'display:block;' : 'display:none;'; ?>">
-              <li class="<?php echo $current_page == 'datasuratmasuk.php' ? 'active' : ''; ?>">
-                <a href="datasuratmasuk.php"><i class="fa fa-inbox"></i> Arsip Surat Masuk</a>
+            <ul class="nav child_menu" style="<?php echo $is_kategori_data_active ? 'display:block;' : 'display:none;'; ?>">
+              <li class="<?php echo $current_page == 'datapengunjung.php' ? 'active' : ''; ?>">
+                <a href="datapengunjung.php"><i class="fa fa-users"></i> Data Pengunjung</a>
               </li>
-              <li class="<?php echo $current_page == 'datasuratkeluar.php' ? 'active' : ''; ?>">
-                <a href="datasuratkeluar.php"><i class="fa fa-send"></i> Arsip Surat Keluar</a>
+              <li class="<?php echo $current_page == 'datamitra.php' ? 'active' : ''; ?>">
+                <a href="datamitra.php"><i class="fa fa-exchange"></i> Data Mitra</a>
+              </li>
+              <li class="<?php echo $current_page == 'datapengurus.php' ? 'active' : ''; ?>">
+                <a href="datapengurus.php"><i class="fa fa-briefcase"></i> Data Pengurus</a>
+              </li>
+              <li class="<?php echo $current_page == 'datapenjualanusaha.php' ? 'active' : ''; ?>">
+                <a href="datapenjualanusaha.php"><i class="fa fa-line-chart"></i> Data Penjualan Usaha</a>
               </li>
             </ul>
           </li>
 
-          <!-- Kategori Data -->
-          <li class="<?php echo $is_kategori_data_active ? 'active' : ''; ?>">
+          <!-- Kategori Surat -->
+          <li class="<?php echo $is_kategori_surat_active ? 'active' : ''; ?>">
             <a href="#">
-              <i class="fa fa-users"></i> Kategori Data <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-envelope"></i> Kategori Surat <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="<?php echo $is_kategori_data_active ? 'display:block;' : 'display:none;'; ?>">
-              <li class="<?php echo $current_page == 'datamitra.php' ? 'active' : ''; ?>">
-                <a href="datamitra.php"><i class="fa fa-inbox"></i> Data Mitra</a>
+            <ul class="nav child_menu" style="<?php echo $is_kategori_surat_active ? 'display:block;' : 'display:none;'; ?>">
+              <li class="<?php echo $current_page == 'datasuratmasuk.php' ? 'active' : ''; ?>">
+                <a href="datasuratmasuk.php"><i class="fa fa-envelope-o"></i> Arsip Surat Masuk</a>
               </li>
-              <li class="<?php echo $current_page == 'datapengunjung.php' ? 'active' : ''; ?>">
-                <a href="datapengunjung.php"><i class="fa fa-inbox"></i> Data Pengunjung</a>
-              </li>
-              <li class="<?php echo $current_page == 'datapenjualanusaha.php' ? 'active' : ''; ?>">
-                <a href="datapenjualanusaha.php"><i class="fa fa-inbox"></i> Data Penjualan Usaha</a>
-              </li>
-              <li class="<?php echo $current_page == 'datapengurus.php' ? 'active' : ''; ?>">
-                <a href="datapengurus.php"><i class="fa fa-users"></i> Data Pengurus</a>
+              <li class="<?php echo $current_page == 'datasuratkeluar.php' ? 'active' : ''; ?>">
+                <a href="datasuratkeluar.php"><i class="fa fa-paper-plane"></i> Arsip Surat Keluar</a>
               </li>
             </ul>
           </li>

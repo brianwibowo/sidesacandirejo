@@ -33,6 +33,8 @@ include "login/ceksession.php";
   <link rel="shortcut icon" href="../img/icon.ico">
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <!-- SweetAlert2 CSS only -->
+
 
   <style>
     /* ===== CARD TOTAL KUNJUNGAN ===== */
@@ -449,6 +451,17 @@ include "login/ceksession.php";
                   </div>
                 </div>
 
+                <?php if (!empty($_SESSION['notif_hapus'])): ?>
+                <div class="alert alert-<?php echo $_SESSION['notif_hapus'] === 'berhasil' ? 'success' : 'danger'; ?> alert-dismissible" role="alert" style="margin:0 15px 15px 15px;border-radius:8px;">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <?php if ($_SESSION['notif_hapus'] === 'berhasil'): ?>
+                    <i class="fa fa-check-circle"></i> <strong>Berhasil!</strong> Data pengunjung berhasil dihapus.
+                  <?php else: ?>
+                    <i class="fa fa-times-circle"></i> <strong>Gagal!</strong> Terjadi kesalahan saat menghapus data.
+                  <?php endif; ?>
+                </div>
+                <?php unset($_SESSION['notif_hapus']); endif; ?>
+
                 <div class="x_content">
                   <?php
                   // Terapkan filter dari GET
@@ -613,7 +626,7 @@ include "login/ceksession.php";
                               <td style="text-align:center;">
                                   <a href="detail-datapengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a><br>
                                   <a href="editpengunjung.php?id=' . urlencode($data['id']) . '"><button type="button" title="Edit" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></button></a><br>
-                                  <a onclick="return konfirmasi()" href="proses/proses_hapusdatapengunjung.php?id=' . $data['id'] . '"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a>
+                                  <button type="button" title="Hapus" onclick="konfirmasiHapus(' . $data['id'] . ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
                               </td>
                           </tr>';
                         }
@@ -638,6 +651,32 @@ include "login/ceksession.php";
         <div class="clearfix"></div>
       </footer>
       <!-- /footer content -->
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus -->
+  <div class="modal fade" id="modalHapus" tabindex="-1" role="dialog" aria-labelledby="modalHapusLabel">
+    <div class="modal-dialog modal-sm" role="document" style="margin-top:15%;">
+      <div class="modal-content" style="border-radius:12px;overflow:hidden;border:none;box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+        <div class="modal-body" style="text-align:center;padding:30px 24px 20px;">
+          <div style="width:60px;height:60px;border-radius:50%;background:#fdecea;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:3px solid #e74c3c;">
+            <i class="fa fa-exclamation" style="font-size:24px;color:#e74c3c;"></i>
+          </div>
+          <h4 style="font-weight:700;color:#1a1a2e;margin-bottom:8px;">Hapus Data?</h4>
+          <p style="color:#555;font-size:14px;margin-bottom:4px;">Data pengunjung ini akan dihapus permanen.</p>
+          <p style="color:#e74c3c;font-size:12px;margin-bottom:0;">Tindakan ini tidak dapat dibatalkan!</p>
+        </div>
+        <div class="modal-footer" style="border:none;justify-content:center;padding:0 24px 24px;display:flex;gap:10px;">
+          <button type="button" class="btn" data-dismiss="modal"
+            style="background:#f0f0f0;color:#555;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;">
+            <i class="fa fa-times"></i> Batal
+          </button>
+          <a id="btnYaHapus" href="#" class="btn"
+            style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;box-shadow:0 4px 12px rgba(231,76,60,0.35);">
+            <i class="fa fa-trash"></i> Ya, Hapus!
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -671,11 +710,13 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
-  <script type="text/javascript" language="JavaScript">
-  function konfirmasi() {
-    return confirm("Apakah Anda yakin akan menghapus data ini?");
+  <script type="text/javascript">
+  function konfirmasiHapus(id) {
+    document.getElementById('btnYaHapus').href = 'proses/proses_hapusdatapengunjung.php?id=' + id;
+    $('#modalHapus').modal('show');
   }
   </script>
+
 </body>
 
 </html>

@@ -32,45 +32,119 @@ include "login/ceksession.php";
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
 
   <style>
-    /* Preview foto grid */
-    #foto-preview-container {
+    /* Upload area drag-drop */
+    .upload-area {
+      border: 2px dashed #3498db;
+      border-radius: 8px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      background-color: #ecf0f1;
+      border-color: #2980b9;
+    }
+
+    .upload-area.dragover {
+      background-color: #d4e8f5;
+      border-color: #2980b9;
+      box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+    }
+
+    .upload-area.required-error {
+      border-color: #e74c3c;
+      background-color: #fdecea;
+      box-shadow: 0 0 10px rgba(231, 76, 60, 0.25);
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+
+    .file-list-preview {
+      margin-top: 15px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
     }
 
-    .foto-preview-item {
+    .file-item {
       position: relative;
-      width: 100px;
-      height: 100px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 2px solid #ddd;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .foto-preview-item img {
+    .file-item.image {
+      width: 80px;
+      height: 80px;
+      padding: 4px;
+    }
+
+    .file-item.image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 3px;
     }
 
-    .foto-preview-item .remove-foto {
+    .file-item.pdf,
+    .file-item.doc {
+      padding: 10px;
+      min-width: 120px;
+    }
+
+    .file-remove {
       position: absolute;
-      top: 3px;
-      right: 3px;
-      background: rgba(220, 53, 69, 0.85);
-      color: #fff;
-      border: none;
+      top: -8px;
+      right: -8px;
+      background: #e74c3c;
+      color: white;
       border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 13px;
-      line-height: 20px;
-      text-align: center;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      padding: 0;
+      font-size: 14px;
+    }
+
+    .file-remove:hover {
+      background: #c0392b;
+    }
+
+    .hidden-file-input {
+      display: none;
+    }
+
+    .file-type-badge {
+      display: inline-block;
+      background: #3498db;
+      color: white;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .upload-required-message {
+      display: none;
+      color: #e74c3c;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .upload-required-message.show {
+      display: block;
     }
 
     /* Flatpickr override */
@@ -108,7 +182,7 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post"
-                    enctype="multipart/form-data" id="demo-form2" class="form-horizontal form-label-left">
+                    enctype="multipart/form-data" id="demo-form2" class="form-horizontal form-label-left" novalidate>
 
                     <?php
                     include '../koneksi/koneksi.php';
@@ -212,25 +286,32 @@ include "login/ceksession.php";
 
                     <!-- File Surat -->
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Surat <span class="required">*</span></label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload File Surat <span class="fa fa-upload" style="color: #3498db;"></span> <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="file_surat" accept="application/pdf" type="file"
-                          id="file_surat" class="form-control" required />
-                        <small class="text-muted"><i class="fa fa-info-circle"></i> Format PDF, maks. 10 MB</small>
+                        <div class="upload-area" id="upload-area-surat" data-field="file_surat">
+                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
+                          <div><strong>Drag file atau klik untuk pilih</strong></div>
+                          <small style="color: #7f8c8d;">PDF (1 file wajib)</small>
+                        </div>
+                        <input type="file" name="file_surat" id="file_surat" accept="application/pdf" class="hidden-file-input" />
+                        <div class="file-list-preview" id="preview-surat"></div>
+                        <div id="file-surat-required" class="upload-required-message">File Surat wajib diisi.</div>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">*Wajib. Format PDF, maks. 10 MB</small>
                       </div>
                     </div>
 
                     <!-- Lampiran Foto (multi, opsional) -->
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Lampiran Foto
-                        <small class="text-muted">(opsional)</small>
-                      </label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Lampiran Foto <span class="fa fa-upload" style="color: #3498db;"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="lampiran_foto[]" accept="image/*" type="file"
-                          id="lampiran_foto" class="form-control" multiple />
-                        <small class="text-muted"><i class="fa fa-info-circle"></i> Boleh pilih beberapa foto sekaligus. Format JPG/PNG/GIF, maks. 2 MB/foto. Foto akan otomatis dikonversi ke WebP.</small>
-                        <!-- Preview container -->
-                        <div id="foto-preview-container"></div>
+                        <div class="upload-area" id="upload-area-foto" data-field="lampiran_foto">
+                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
+                          <div><strong>Drag file atau klik untuk pilih</strong></div>
+                          <small style="color: #7f8c8d;">JPG, PNG, GIF, WebP (Bisa lebih dari 1 file)</small>
+                        </div>
+                        <input type="file" name="lampiran_foto[]" id="lampiran_foto" accept="image/*" multiple class="hidden-file-input" />
+                        <div class="file-list-preview" id="preview-foto"></div>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Format JPG/PNG/GIF, maks. 2 MB/foto. Foto akan otomatis dikonversi ke WebP.</small>
                       </div>
                     </div>
 
@@ -239,6 +320,7 @@ include "login/ceksession.php";
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
                         <button type="button" class="btn btn-primary" onclick="resetFormInput()"><i class="fa fa-refresh"></i> Reset</button>
+                        <button type="button" class="btn btn-danger" onclick="kembaliPage()"><i class="fa fa-arrow-left"></i> Kembali</button>
                       </div>
                     </div>
 
@@ -280,68 +362,191 @@ include "login/ceksession.php";
     // ── Flatpickr Date Picker ──────────────────────────────────────────
     flatpickr(".datepicker", {
       locale: "id",
-      dateFormat: "Y-m-d", // format yang dikirim ke server
-      altInput: true, // tampilkan format manusia
-      altFormat: "d F Y", // contoh: 22 Mei 2025
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d F Y",
       allowInput: false,
       disableMobile: false
     });
 
-    // ── Multi-foto preview ─────────────────────────────────────────────
-    let selectedFiles = [];
+    // ── Upload drag-drop handler ───────────────────────────────────────
+    const uploadFields = ['file_surat', 'lampiran_foto'];
+    const singleFileFields = ['file_surat'];
+    const fileStorage = { file_surat: [], lampiran_foto: [] };
 
-    document.getElementById('lampiran_foto').addEventListener('change', function() {
-      const files = Array.from(this.files);
-      files.forEach(file => {
-        // cegah duplikat nama
-        if (!selectedFiles.find(f => f.name === file.name && f.size === file.size)) {
-          selectedFiles.push(file);
+    const fileSuratArea = $('#upload-area-surat');
+    const fileSuratRequiredMsg = $('#file-surat-required');
+
+    function showFileSuratRequiredError() {
+      fileSuratArea.addClass('required-error');
+      fileSuratRequiredMsg.addClass('show');
+      $('html, body').animate({ scrollTop: fileSuratArea.offset().top - 120 }, 400);
+    }
+
+    function clearFileSuratRequiredError() {
+      fileSuratArea.removeClass('required-error');
+      fileSuratRequiredMsg.removeClass('show');
+    }
+
+    $(function() {
+      uploadFields.forEach(function(fieldName) {
+        const uploadArea = $('[data-field="' + fieldName + '"]');
+        const fileInput = $('#' + fieldName);
+        const previewId = '#preview-' + (fieldName === 'lampiran_foto' ? 'foto' : 'surat');
+        const previewContainer = $(previewId);
+
+        uploadArea.on('dragover dragenter', function(e) {
+          e.preventDefault(); e.stopPropagation();
+          $(this).addClass('dragover');
+        });
+        uploadArea.on('dragleave', function() { $(this).removeClass('dragover'); });
+        uploadArea.on('drop', function(e) {
+          e.preventDefault(); e.stopPropagation();
+          $(this).removeClass('dragover');
+          handleFileSelect(e.originalEvent.dataTransfer.files, fieldName, previewContainer);
+        });
+        uploadArea.on('click', function() {
+          if (fieldName === 'file_surat') clearFileSuratRequiredError();
+          fileInput.click();
+        });
+        fileInput.on('change', function() {
+          handleFileSelect(this.files, fieldName, previewContainer);
+        });
+      });
+
+      function handleFileSelect(files, fieldName, previewContainer) {
+        const arr = Array.from(files);
+        if (singleFileFields.includes(fieldName)) {
+          fileStorage[fieldName] = arr.length > 0 ? [arr[0]] : [];
+        } else {
+          fileStorage[fieldName] = fileStorage[fieldName].concat(arr);
+        }
+        updatePreview(fieldName, previewContainer);
+        updateFileInput(fieldName);
+        if (fieldName === 'file_surat' && fileStorage.file_surat.length > 0) clearFileSuratRequiredError();
+      }
+
+      function updateFileInput(fieldName) {
+        const dt = new DataTransfer();
+        fileStorage[fieldName].forEach(function(f) { dt.items.add(f); });
+        document.getElementById(fieldName).files = dt.files;
+      }
+
+      function updatePreview(fieldName, previewContainer) {
+        previewContainer.empty();
+        fileStorage[fieldName].forEach(function(file, index) {
+          const ext = file.name.split('.').pop().toLowerCase();
+          const isImage = ['jpg','jpeg','png','webp','gif'].includes(ext);
+          const isPdf = ext === 'pdf';
+          let html = '<div class="file-item ' + (isImage ? 'image' : 'pdf') + '" data-index="' + index + '">';
+          html += '<div class="file-remove" onclick="removeFileByIndex(\'' + fieldName + '\', ' + index + ')" title="Hapus">×</div>';
+          if (isImage) {
+            html += '<img src="" alt="preview" />';
+          } else if (isPdf) {
+            html += '<div style="padding:15px;"><span class="fa fa-file-pdf-o" style="font-size:32px;color:#e74c3c;"></span>';
+            html += '<div style="font-size:11px;margin-top:5px;word-break:break-word;">' + file.name.substring(0,15) + (file.name.length > 15 ? '...' : '') + '</div>';
+            html += '<span class="file-type-badge">PDF</span></div>';
+          }
+          html += '</div>';
+          const $item = $(html);
+          previewContainer.append($item);
+          if (isImage) {
+            const reader = new FileReader();
+            reader.onload = function(e) { $item.find('img').attr('src', e.target.result); };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      window.removeFileByIndex = function(fieldName, index) {
+        fileStorage[fieldName].splice(index, 1);
+        const previewId = fieldName === 'lampiran_foto' ? '#preview-foto' : '#preview-surat';
+        updatePreview(fieldName, $(previewId));
+        updateFileInput(fieldName);
+      };
+
+      // ── Submit validasi file surat ──────────────────────────────────
+      // ── Validasi required fields (ganti browser native) ──────────────
+      function validateField($input) {
+        var val = $input.val() ? $input.val().trim() : '';
+        if ($input.attr('required') && val === '') {
+          $input.closest('.form-group').addClass('has-error');
+          // Untuk field di dalam input-group (datepicker), taruh error SETELAH input-group bukan di dalam
+          var $container = $input.closest('.input-group').length
+            ? $input.closest('.input-group')
+            : $input;
+          if ($input.closest('.form-group').find('.custom-error-msg').length === 0) {
+            $container.after('<span class="help-block custom-error-msg" style="color:#e74c3c;font-weight:600;">Field ini wajib diisi.</span>');
+          }
+          return false;
+        } else {
+          $input.closest('.form-group').removeClass('has-error');
+          $input.closest('.form-group').find('.custom-error-msg').remove();
+          return true;
+        }
+      }
+
+      // Live clear error saat diisi
+      $('#demo-form2').on('input change', '[required]', function() {
+        validateField($(this));
+      });
+
+      $('#demo-form2').on('submit', function(e) {
+        var valid = true;
+        var $firstError = null;
+
+        // Validasi semua required field teks/textarea
+        $(this).find('[required]').each(function() {
+          if (!validateField($(this))) {
+            valid = false;
+            if (!$firstError) $firstError = $(this);
+          }
+        });
+
+        // Validasi file surat
+        if (fileStorage.file_surat.length === 0) {
+          valid = false;
+          showFileSuratRequiredError();
+          if (!$firstError) $firstError = $('#upload-area-surat');
+        }
+
+        if (!valid) {
+          e.preventDefault();
+          if ($firstError) {
+            $('html, body').animate({ scrollTop: $firstError.offset().top - 120 }, 400);
+          }
+          return false;
         }
       });
-      renderPreviews();
-      syncFileInput();
+
+      // ── Reset form ──────────────────────────────────────────────────
+      window.resetFormInput = function() {
+        const currentScrollTop = $(window).scrollTop();
+        if (document.activeElement) $(document.activeElement).blur();
+        document.getElementById('demo-form2').reset();
+        setTimeout(function() {
+          uploadFields.forEach(function(fieldName) {
+            fileStorage[fieldName] = [];
+            updateFileInput(fieldName);
+            const previewId = fieldName === 'lampiran_foto' ? '#preview-foto' : '#preview-surat';
+            updatePreview(fieldName, $(previewId));
+          });
+          clearFileSuratRequiredError();
+          // Bersihkan error custom validasi
+          $('#demo-form2').find('.has-error').removeClass('has-error');
+          $('#demo-form2').find('.custom-error-msg').remove();
+          document.getElementById('tanggal_terima')._flatpickr.clear();
+          document.getElementById('tanggal_surat')._flatpickr.clear();
+          $(window).scrollTop(currentScrollTop);
+        }, 0);
+      };
+
+      // ── Tombol Kembali — langsung navigasi tanpa validasi ──────────
+      window.kembaliPage = function() {
+        clearFileSuratRequiredError();
+        window.location.href = 'datasuratmasuk.php';
+      };
     });
-
-    function renderPreviews() {
-      const container = document.getElementById('foto-preview-container');
-      container.innerHTML = '';
-      selectedFiles.forEach((file, idx) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const div = document.createElement('div');
-          div.className = 'foto-preview-item';
-          div.innerHTML = `
-            <img src="${e.target.result}" alt="preview">
-            <button type="button" class="remove-foto" onclick="removeFile(${idx})" title="Hapus">
-              <i class="fa fa-times"></i>
-            </button>`;
-          container.appendChild(div);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function removeFile(idx) {
-      selectedFiles.splice(idx, 1);
-      renderPreviews();
-      syncFileInput();
-    }
-
-    function syncFileInput() {
-      const dt = new DataTransfer();
-      selectedFiles.forEach(f => dt.items.add(f));
-      document.getElementById('lampiran_foto').files = dt.files;
-    }
-
-    // ── Reset form ─────────────────────────────────────────────────────
-    function resetFormInput() {
-      document.getElementById('demo-form2').reset();
-      selectedFiles = [];
-      document.getElementById('foto-preview-container').innerHTML = '';
-      // Reset flatpickr
-      document.getElementById('tanggal_terima')._flatpickr.clear();
-      document.getElementById('tanggal_surat')._flatpickr.clear();
-    }
 
     // ── SweetAlert2 — tampilkan pesan dari PHP via URL param ───────────
     <?php if (isset($_GET['status'])): ?>

@@ -2,6 +2,51 @@
 session_start();
 include '../../koneksi/koneksi.php';
 
+// Helper function untuk SweetAlert2 response
+function swalResponse($title, $message, $icon, $redirect, $iconColor = null) {
+    $color = $iconColor ?? ($icon == 'success' ? '#4ade80' : ($icon == 'error' ? '#e74c3c' : '#f39c12'));
+    $timerScript = ($icon == 'success') ? '
+      didOpen: () => {
+        const bar = Swal.getTimerProgressBar();
+        if (bar) { bar.style.background = "linear-gradient(90deg,#4ade80,#22d3ee)"; bar.style.height = "5px"; }
+      },' : '';
+    $confirmBtn = ($icon == 'success') ? 'showConfirmButton: false, timer: 2500, timerProgressBar: true,' : 'confirmButtonText: "Kembali",';
+    $willClose = ($icon == 'success') ? 'willClose: () => { window.location.href = "' . $redirect . '"; }' : '';
+    $then = ($icon != 'success') ? '.then(() => { window.location.href = "' . $redirect . '"; })' : '';
+    
+    return '<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Proses Data</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<style>
+  body{font-family:"Poppins",sans-serif;background:#f4f6f9;}
+  .swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;box-shadow:0 25px 60px rgba(0,0,0,0.25)!important;font-family:"Poppins",sans-serif!important;animation:swalPopIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275)!important;}
+  @keyframes swalPopIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .swal-custom-title{font-family:"Poppins",sans-serif!important;font-weight:700!important;font-size:20px!important;color:#1a1a2e!important;}
+</style>
+<script>
+  Swal.fire({
+    title: "' . $title . '",
+    html: `<div style="font-family:\'Poppins\',sans-serif;"><p style="color:#555;font-size:15px;margin-bottom:6px;">' . $message . '</p></div>`,
+    icon: "' . $icon . '",
+    iconColor: "' . $color . '",
+    ' . $confirmBtn . '
+    background: "#fff",
+    color: "#1a1a2e",
+    customClass: { popup: "swal-custom-popup", title: "swal-custom-title" },
+    ' . $timerScript . '
+    ' . $willClose . '
+  })' . $then . ';
+</script>
+</body></html>';
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Convert date format if needed (from YYYY/MM/DD to YYYY-MM-DD)
     $id = (int)$_POST['id'];
@@ -13,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // Validasi data wajib
     if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax <= 0) {
-        echo "<script>alert('Data wajib tidak boleh kosong!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Data wajib tidak boleh kosong!', 'warning', 'javascript:history.back()');
         exit;
     }
     
@@ -49,12 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validation
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
-        echo "<script>alert('Kota harus diisi untuk wisatawan domestik!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Kota harus diisi untuk wisatawan domestik!', 'warning', 'javascript:history.back()');
         exit;
     }
     
     if ($jenis_wisatawan == 'Mancanegara' && empty($negara)) {
-        echo "<script>alert('Negara harus diisi untuk wisatawan mancanegara!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Negara harus diisi untuk wisatawan mancanegara!', 'warning', 'javascript:history.back()');
         exit;
     }
 
@@ -65,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cek_result = $cek_stmt->get_result();
     
     if ($cek_result->num_rows == 0) {
-        echo "<script>alert('Data tidak ditemukan!'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Data Tidak Ditemukan!', 'Data pengunjung dengan ID tersebut tidak ditemukan.', 'error', '../datapengunjung.php');
         exit;
     }
     $cek_stmt->close();
@@ -146,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       WHERE id = ?");
 
     if (!$stmt) {
-        echo "<script>alert('Error preparing statement: " . htmlspecialchars($db->error) . "'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Error!', 'Error preparing statement: ' . htmlspecialchars($db->error), 'error', '../datapengunjung.php');
         exit;
     }
 
@@ -170,14 +215,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Data pengunjung berhasil diupdate!'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Berhasil Diupdate!', 'Data pengunjung berhasil diupdate. Mengalihkan ke halaman data pengunjung...', 'success', '../datapengunjung.php');
     } else {
-        echo "<script>alert('Terjadi kesalahan: " . htmlspecialchars($stmt->error) . "'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Terjadi Kesalahan!', htmlspecialchars($stmt->error), 'error', '../datapengunjung.php');
     }
     
     $stmt->close();
 } else {
-    echo "<script>alert('Permintaan tidak valid.'); window.location='../datapengunjung.php';</script>";
+    echo swalResponse('Permintaan Tidak Valid!', 'Metode permintaan tidak diizinkan.', 'error', '../datapengunjung.php');
 }
 
 $db->close();

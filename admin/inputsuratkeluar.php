@@ -38,6 +38,8 @@ include "login/ceksession.php";
   <!-- bootstrap-daterangepicker -->
   <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
@@ -183,8 +185,8 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_inputsuratkeluar.php" name="formsuratkeluar" method="post"
-                    enctype="multipart/form-data" id="demo-form2" data-parsley-validate
-                    class="form-horizontal form-label-left">
+                    enctype="multipart/form-data" id="demo-form2"
+                    class="form-horizontal form-label-left" novalidate>
                     <?php
                     include '../koneksi/koneksi.php';
                     // Get the last No from database
@@ -313,11 +315,11 @@ include "login/ceksession.php";
                         <div class="upload-area" id="upload-area-dokumentasi" data-field="file_dokumentasi">
                           <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
                           <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">PDF, JPG, PNG, WebP, GIF (Bisa lebih dari 1 file)</small>
+                          <small style="color: #7f8c8d;">JPG, PNG, WebP, GIF (Bisa lebih dari 1 file)</small>
                         </div>
-                        <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
+                        <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
                         <div class="file-list-preview" id="preview-dokumentasi"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto/dokumentasi kegiatan</small>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload foto/dokumentasi kegiatan (JPG, PNG, WebP, GIF)</small>
                       </div>
                     </div>
                     <div class="ln_solid"></div>
@@ -325,6 +327,7 @@ include "login/ceksession.php";
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="submit" class="btn btn-success">Submit</button>
                         <button type="reset" class="btn btn-primary">Reset</button>
+                        <button type="button" class="btn btn-danger" onclick="kembaliPage()"><i class="fa fa-arrow-left"></i> Kembali</button>
                       </div>
                     </div>
                   </form>
@@ -372,8 +375,8 @@ include "login/ceksession.php";
   <script src="../assets/vendors/switchery/dist/switchery.min.js"></script>
   <!-- Select2 -->
   <script src="../assets/vendors/select2/dist/js/select2.full.min.js"></script>
-  <!-- Parsley -->
-  <script src="../assets/vendors/parsleyjs/dist/parsley.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
   <!-- Moment.js -->
@@ -535,13 +538,64 @@ include "login/ceksession.php";
       // Backward-compatible alias.
       window.removeFile = window.removeFileByIndex;
 
+      // ── Validasi required fields (ganti Parsley/browser native) ────────
+      function validateField($input) {
+        var val = $input.val() ? $input.val().trim() : '';
+        if ($input.attr('required') && val === '') {
+          $input.closest('.form-group').addClass('has-error');
+          // Untuk field di dalam input-group (datepicker), taruh error SETELAH input-group bukan di dalam
+          var $container = $input.closest('.input-group').length
+            ? $input.closest('.input-group')
+            : $input;
+          if ($input.closest('.form-group').find('.custom-error-msg').length === 0) {
+            $container.after('<span class="help-block custom-error-msg" style="color:#e74c3c;font-weight:600;">Field ini wajib diisi.</span>');
+          }
+          return false;
+        } else {
+          $input.closest('.form-group').removeClass('has-error');
+          $input.closest('.form-group').find('.custom-error-msg').remove();
+          return true;
+        }
+      }
+
+      // Live clear error saat diisi
+      $('#demo-form2').on('input change', '[required]', function() {
+        validateField($(this));
+      });
+
       $('#demo-form2').on('submit', function(e) {
+        var valid = true;
+        var $firstError = null;
+
+        // Validasi semua required field teks/textarea
+        $(this).find('[required]').each(function() {
+          if (!validateField($(this))) {
+            valid = false;
+            if (!$firstError) $firstError = $(this);
+          }
+        });
+
+        // Validasi file surat
         if (fileStorage.file_surat.length === 0) {
-          e.preventDefault();
+          valid = false;
           showFileSuratRequiredError();
+          if (!$firstError) $firstError = $('#upload-area-surat');
+        }
+
+        if (!valid) {
+          e.preventDefault();
+          if ($firstError) {
+            $('html, body').animate({ scrollTop: $firstError.offset().top - 120 }, 400);
+          }
           return false;
         }
       });
+
+      // ── Tombol Kembali — langsung navigasi, tidak ada validasi ──────
+      window.kembaliPage = function() {
+        clearFileSuratRequiredError();
+        window.location.href = 'datasuratkeluar.php';
+      };
 
       $('#demo-form2').on('reset', function() {
         const $form = $(this);
@@ -563,12 +617,9 @@ include "login/ceksession.php";
 
           clearFileSuratRequiredError();
 
-          // Bersihkan jejak validasi Parsley (merah/hijau + pesan error).
-          if ($form.parsley) {
-            $form.parsley().reset();
-          }
-          $form.find('.parsley-error, .parsley-success').removeClass('parsley-error parsley-success');
-          $form.find('.parsley-errors-list').remove();
+          // Bersihkan error custom validasi
+          $form.find('.has-error').removeClass('has-error');
+          $form.find('.custom-error-msg').remove();
 
           // Pastikan tidak ada fokus tersisa di field tanggal, lalu kembalikan posisi scroll.
           $('#tanggal_keluar, #tanggal_kegiatan').blur();
@@ -578,25 +629,23 @@ include "login/ceksession.php";
     });
 
     <?php if (isset($_GET['status'])): ?>
-        <
-        script >
-        window.addEventListener('DOMContentLoaded', function() {
-          <?php if ($_GET['status'] === 'success'): ?>
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil!',
-              text: 'Data surat keluar berhasil disimpan.',
-              confirmButtonColor: '#26B99A'
-            });
-          <?php elseif ($_GET['status'] === 'error'): ?>
-            Swal.fire({
-              icon: 'error',
-              title: 'Gagal!',
-              text: '<?= htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan.") ?>',
-              confirmButtonColor: '#e74c3c'
-            });
-          <?php endif; ?>
-        });
+      window.addEventListener('DOMContentLoaded', function() {
+        <?php if ($_GET['status'] === 'success'): ?>
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Data surat keluar berhasil disimpan.',
+            confirmButtonColor: '#26B99A'
+          });
+        <?php elseif ($_GET['status'] === 'error'): ?>
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '<?= htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan.") ?>',
+            confirmButtonColor: '#e74c3c'
+          });
+        <?php endif; ?>
+      });
     <?php endif; ?>
   </script>
 </body>

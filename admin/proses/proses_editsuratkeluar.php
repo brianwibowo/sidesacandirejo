@@ -101,7 +101,7 @@ $existing_absensi = array_values(array_diff($existing_absensi, $delete_absensi))
 $existing_notulen = array_values(array_diff($existing_notulen, $delete_notulen));
 $existing_dokumentasi = array_values(array_diff($existing_dokumentasi, $delete_dokumentasi));
 
-$lampiran_dir = '../uploads/surat_keluar_lampiran/';
+$lampiran_dir = '../uploads/';
 
 foreach ($delete_absensi as $filename) {
     $delete_path = $lampiran_dir . $filename;
@@ -122,9 +122,9 @@ foreach ($delete_dokumentasi as $filename) {
     }
 }
 
-$new_absensi = uploadMultipleFiles('file_absensi', ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
-$new_notulen = uploadMultipleFiles('file_notulen', ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
-$new_dokumentasi = uploadMultipleFiles('file_dokumentasi', ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
+$new_absensi     = uploadMultipleFiles('file_absensi',     ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
+$new_notulen     = uploadMultipleFiles('file_notulen',     ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
+$new_dokumentasi = uploadMultipleFiles('file_dokumentasi', ['jpg', 'jpeg', 'png', 'webp', 'gif'],        $lampiran_dir);
 
 $absensi_final = array_values(array_unique(array_merge($existing_absensi, $new_absensi)));
 $notulen_final = array_values(array_unique(array_merge($existing_notulen, $new_notulen)));
@@ -159,8 +159,14 @@ if ($has_new_file_surat) {
     }
 
     if (move_uploaded_file($_FILES['file_surat']['tmp_name'], $destination)) {
-        if (!empty($file_lama) && $file_lama !== $destination && file_exists($file_lama)) {
-            unlink($file_lama);
+        if (!empty($file_lama)) {
+            // file_lama bisa berupa path lengkap (lama) atau nama file saja (baru)
+            $old_path = (strpos($file_lama, '/') !== false)
+                ? $file_lama
+                : '../uploads/' . $file_lama;
+            if ($old_path !== $destination && file_exists($old_path)) {
+                unlink($old_path);
+            }
         }
 
         $query = "UPDATE tb_arsip_surat_keluar SET 
@@ -175,15 +181,15 @@ if ($has_new_file_surat) {
                   lampiran_absensi = $absensi_sql,
                   lampiran_notulen = $notulen_sql,
                   dokumentasi_foto = $dokumentasi_sql,
-                  file_surat = '$destination'
+                  file_surat = '$nama_file'
                   WHERE No = '$id'";
     } else {
         echo "Gagal memindahkan file.";
         exit;
     }
 } else {
-    $file_surat_sql = !empty($file_lama)
-        ? "'" . mysqli_real_escape_string($db, $file_lama) . "'"
+    $file_surat_val = !empty($file_lama)
+        ? "'" . mysqli_real_escape_string($db, basename($file_lama)) . "'"
         : "NULL";
 
     $query = "UPDATE tb_arsip_surat_keluar SET 
@@ -198,7 +204,7 @@ if ($has_new_file_surat) {
               lampiran_absensi = $absensi_sql,
               lampiran_notulen = $notulen_sql,
               dokumentasi_foto = $dokumentasi_sql,
-              file_surat = $file_surat_sql
+              file_surat = $file_surat_val
               WHERE No = '$id'";
 }
 

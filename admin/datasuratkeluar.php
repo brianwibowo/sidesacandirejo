@@ -8,7 +8,6 @@ include "login/ceksession.php";
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!-- Meta, title, CSS, favicons, etc. -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,30 +28,90 @@ include "login/ceksession.php";
   <link href="../assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
   <link href="../assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
   <link href="../assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="shortcut icon" href="../img/icon.ico">
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+
+  <style>
+    /* ── Wrapper scroll horizontal ──────────────────────────────────── */
+    .table-responsive-custom {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    /* ── Sticky kolom Aksi (kolom terakhir) ─────────────────────────── */
+    #datatable thead tr th:last-child,
+    #datatable tbody tr td:last-child {
+      position: sticky;
+      right: 0;
+      z-index: 2;
+      background-color: #fff;
+      box-shadow: -3px 0 6px -2px rgba(0, 0, 0, 0.15);
+      white-space: nowrap;
+    }
+
+    /* Zebra stripe tetap jalan pada sticky cell */
+    #datatable tbody tr.odd  td:last-child { background-color: #f9f9f9; }
+    #datatable tbody tr.even td:last-child { background-color: #ffffff; }
+
+    /* Hover row */
+    #datatable tbody tr:hover td:last-child { background-color: #f0faf8; }
+
+    /* Header sticky */
+    #datatable thead tr th:last-child {
+      background-color: #f2f2f2;
+      z-index: 3;
+    }
+
+    /* ── Thumbnail dokumentasi ──────────────────────────────────────── */
+    .foto-thumb {
+      display: inline-block;
+      margin: 2px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .foto-thumb img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      display: block;
+      transition: opacity .2s;
+    }
+    .foto-thumb img:hover { opacity: .75; }
+
+    /* Badge jumlah foto jika lebih dari 3 */
+    .foto-more {
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+      text-align: center;
+      background: #31708f;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      vertical-align: top;
+      margin: 2px;
+      cursor: default;
+    }
+  </style>
 </head>
 
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
-      <!-- Profile and Sidebarmenu -->
-      <?php
-        include("sidebarmenu.php");
-        ?>
-      <!-- /Profile and Sidebarmenu -->
-
-      <!-- top navigation -->
-      <?php
-        include("header.php");
-        ?>
-      <!-- /top navigation -->
+      <?php include("sidebarmenu.php"); ?>
+      <?php include("header.php"); ?>
 
       <!-- page content -->
       <div class="right_col" role="main">
         <div class="">
-
           <div class="clearfix"></div>
 
           <div class="row">
@@ -62,6 +121,7 @@ include "login/ceksession.php";
                   <h2>Data Surat Keluar</h2>
                   <div class="clearfix"></div>
                 </div>
+
                 <form action="datasuratkeluar.php" method="get" style="margin-bottom:15px;">
                   <div class="row" style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; padding:0 15px;">
                     <div style="width:160px;">
@@ -98,109 +158,129 @@ include "login/ceksession.php";
                     <a href="inputsuratkeluar.php" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambah Surat Keluar</a>
                   </div>
                 </form>
+
                 <div class="x_content">
                   <div class="x_content">
                     <?php
-                              $where_sk = "WHERE 1=1";
-                              if (!empty($_GET['bulan'])) {
-                                $fb_sk = mysqli_real_escape_string($db, $_GET['bulan']);
-                                $where_sk .= " AND MONTH(tanggal_keluar) = '$fb_sk'";
-                              }
-                              if (!empty($_GET['tahun'])) {
-                                $ft_sk = mysqli_real_escape_string($db, $_GET['tahun']);
-                                $where_sk .= " AND YEAR(tanggal_keluar) = '$ft_sk'";
-                              }
-                              $sql1  		= "SELECT * FROM tb_arsip_surat_keluar $where_sk ORDER BY nomor_surat ASC";
-                              $query1  	= mysqli_query($db, $sql1);
-                              $total		= mysqli_num_rows($query1);
-                              if ($total == 0) {
-                                echo"<center><h2>Belum Ada Data Surat Keluar</h2></center>";
-                              }
-                              else{?>
+                    $where_sk = "WHERE 1=1";
+                    if (!empty($_GET['bulan'])) {
+                      $fb_sk = mysqli_real_escape_string($db, $_GET['bulan']);
+                      $where_sk .= " AND MONTH(tanggal_keluar) = '$fb_sk'";
+                    }
+                    if (!empty($_GET['tahun'])) {
+                      $ft_sk = mysqli_real_escape_string($db, $_GET['tahun']);
+                      $where_sk .= " AND YEAR(tanggal_keluar) = '$ft_sk'";
+                    }
+                    $sql1   = "SELECT * FROM tb_arsip_surat_keluar $where_sk ORDER BY nomor_surat ASC";
+                    $query1 = mysqli_query($db, $sql1);
+                    $total  = mysqli_num_rows($query1);
+                    if ($total == 0) {
+                      echo "<center><h2>Belum Ada Data Surat Keluar</h2></center>";
+                    } else { ?>
+                    <div class="table-responsive-custom">
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
                           <th width="5%">No</th>
-                          <th width="15%">Nomor Surat</th>
-                          <th width="10%">Tanggal Keluar</th>
-                          <th width="15%">Penerima</th>
-                          <th width="12%">Perihal</th>
-                          <th width="12%">Tempat Acara</th>
-                          <th width="10%">Tanggal Kegiatan</th>
-                          <th width="8%">Absensi</th>
-                          <th width="8%">Notulen</th>
+                          <th width="12%">Nomor Surat</th>
+                          <th width="8%">Tanggal Keluar</th>
+                          <th width="10%">Penerima</th>
+                          <th width="10%">Perihal</th>
+                          <th width="10%">Tempat Acara</th>
+                          <th width="8%">Tanggal Kegiatan</th>
+                          <th width="7%">Absensi</th>
+                          <th width="7%">Notulen</th>
                           <th width="8%">Dokumentasi</th>
-                          <th width="20%">Keterangan</th>
+                          <th width="10%">Keterangan</th>
                           <th width="5%">Aksi</th>
                         </tr>
                       </thead>
-
                       <tbody>
                         <?php
-                            while($data = mysqli_fetch_array($query1)){
-                              $absensi_files = json_decode($data['lampiran_absensi'] ?? '[]', true);
-                              if (!is_array($absensi_files)) $absensi_files = [];
-                              $notulen_files = json_decode($data['lampiran_notulen'] ?? '[]', true);
-                              if (!is_array($notulen_files)) $notulen_files = [];
-                              $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
-                              if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
+                        while ($data = mysqli_fetch_array($query1)) {
 
-                              $absensi_cell = '-';
-                              if (count($absensi_files) > 0) {
-                                $absensi_cell = '';
-                                foreach ($absensi_files as $idx => $file_name) {
-                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
-                                  $absensi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
-                                }
-                              }
+                          $absensi_files    = json_decode($data['lampiran_absensi']  ?? '[]', true);
+                          if (!is_array($absensi_files))    $absensi_files    = [];
+                          $notulen_files    = json_decode($data['lampiran_notulen']  ?? '[]', true);
+                          if (!is_array($notulen_files))    $notulen_files    = [];
+                          $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
+                          if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
 
-                              $notulen_cell = '-';
-                              if (count($notulen_files) > 0) {
-                                $notulen_cell = '';
-                                foreach ($notulen_files as $idx => $file_name) {
-                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
-                                  $notulen_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
-                                }
-                              }
-
-                              $dokumentasi_cell = '-';
-                              if (count($dokumentasi_files) > 0) {
-                                $dokumentasi_cell = '';
-                                foreach ($dokumentasi_files as $idx => $file_name) {
-                                  $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                                  $file_url = 'uploads/surat_keluar_lampiran/' . rawurlencode($file_name);
-                                  $dokumentasi_cell .= '<a href="' . $file_url . '" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="' . $safe_name . '"><i class="fa fa-download"></i> File ' . ($idx + 1) . '</a>';
-                                }
-                              }
-
-                              echo'<tr>
-                              <td>'. $data['No'].'</td>
-                              <td>'. $data['nomor_surat'].'</td>
-                              <td>'. $data['tanggal_keluar'].'</td>
-                              <td>'. $data['penerima'].'</td>
-                              <td>'. $data['perihal'].'</td>
-                              <td>'. (!empty($data['tempat_acara']) ? $data['tempat_acara'] : '-') .'</td>
-                              <td>'. (!empty($data['tanggal_kegiatan']) ? $data['tanggal_kegiatan'] : '-') .'</td>
-                              <td>'. $absensi_cell .'</td>
-                              <td>'. $notulen_cell .'</td>
-                              <td>'. $dokumentasi_cell .'</td>
-                              <td>'. $data['keterangan'].'</td>
-                              <td style="text-align:center; white-space: nowrap;">
-                                <a href="surat_keluar/'.$data['file_surat'].'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
-                                <a href="detail-suratkeluar.php?id='.$data['No'].'" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
-                                <a href="editsuratkeluar.php?id='.$data['No'].'" class="btn btn-default btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
-                                <a onclick="return konfirmasi()" href="proses/proses_hapussuratkeluar.php?id='.$data['No'].'" class="btn btn-danger btn-xs" title="Hapus"><i class="fa fa-trash-o"></i></a>
-                              </td>
-                              </tr>';
+                          // ── Absensi: tombol download ────────────────────
+                          $absensi_cell = '-';
+                          if (count($absensi_files) > 0) {
+                            $absensi_cell = '';
+                            foreach ($absensi_files as $idx => $file_name) {
+                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                              $file_url  = 'uploads/' . rawurlencode($file_name);
+                              $absensi_cell .= '<a href="'.$file_url.'" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="'.$safe_name.'"><i class="fa fa-download"></i> File '.($idx+1).'</a>';
                             }
-                            ?>
+                          }
+
+                          // ── Notulen: tombol download ────────────────────
+                          $notulen_cell = '-';
+                          if (count($notulen_files) > 0) {
+                            $notulen_cell = '';
+                            foreach ($notulen_files as $idx => $file_name) {
+                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                              $file_url  = 'uploads/' . rawurlencode($file_name);
+                              $notulen_cell .= '<a href="'.$file_url.'" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="'.$safe_name.'"><i class="fa fa-download"></i> File '.($idx+1).'</a>';
+                            }
+                          }
+
+                          // ── Dokumentasi: tampil thumbnail foto ─────────
+                          // Klik thumbnail → buka foto penuh di tab baru
+                          // Jika > 3 foto → tampilkan 3 + badge "+N lagi"
+                          $dokumentasi_cell = '-';
+                          if (count($dokumentasi_files) > 0) {
+                            $dokumentasi_cell = '';
+                            $max_thumb = 3;
+                            $total_dok = count($dokumentasi_files);
+                            foreach ($dokumentasi_files as $idx => $file_name) {
+                              if ($idx >= $max_thumb) break;
+                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
+                              $file_url  = 'uploads/' . rawurlencode($file_name);
+                              $dokumentasi_cell .= '<a href="'.$file_url.'" target="_blank" class="foto-thumb" title="'.$safe_name.'">'
+                                                 . '<img src="'.$file_url.'" alt="'.$safe_name.'" loading="lazy">'
+                                                 . '</a>';
+                            }
+                            if ($total_dok > $max_thumb) {
+                              $sisa = $total_dok - $max_thumb;
+                              $dokumentasi_cell .= '<span class="foto-more">+'.$sisa.'</span>';
+                            }
+                          }
+
+                          echo '<tr>
+                            <td>'.htmlspecialchars($data['No']).'</td>
+                            <td>'.htmlspecialchars($data['nomor_surat']).'</td>
+                            <td>'.htmlspecialchars($data['tanggal_keluar']).'</td>
+                            <td>'.htmlspecialchars($data['penerima']).'</td>
+                            <td>'.htmlspecialchars($data['perihal']).'</td>
+                            <td>'.(!empty($data['tempat_acara']) ? htmlspecialchars($data['tempat_acara']) : '-').'</td>
+                            <td>'.(!empty($data['tanggal_kegiatan']) ? htmlspecialchars($data['tanggal_kegiatan']) : '-').'</td>
+                            <td>'.$absensi_cell.'</td>
+                            <td>'.$notulen_cell.'</td>
+                            <td>'.$dokumentasi_cell.'</td>
+                            <td>'.htmlspecialchars($data['keterangan']).'</td>
+                            <td style="text-align:center; white-space:nowrap;">
+                              <a href="uploads/'.htmlspecialchars(basename($data['file_surat'])).'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
+                              <a href="detail-suratkeluar.php?id='.htmlspecialchars($data['No']).'" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
+                              <a href="editsuratkeluar.php?id='.htmlspecialchars($data['No']).'" class="btn btn-warning btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
+                              <button type="button" title="Hapus" class="btn btn-danger btn-xs"
+                                onclick="konfirmasiHapus('.htmlspecialchars($data['No']).')">
+                                <i class="fa fa-trash-o"></i>
+                              </button>
+                            </td>
+                          </tr>';
+                        }
+                        ?>
                       </tbody>
                     </table>
+                    </div><!-- /.table-responsive-custom -->
                     <?php } ?>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -208,14 +288,10 @@ include "login/ceksession.php";
       </div>
       <!-- /page content -->
 
-      <!-- footer content -->
       <footer>
-        <div class="pull-right">
-          Supported by DRTPM
-        </div>
+        <div class="pull-right">Supported by DRTPM</div>
         <div class="clearfix"></div>
       </footer>
-      <!-- /footer content -->
     </div>
   </div>
 
@@ -245,18 +321,68 @@ include "login/ceksession.php";
   <script src="../assets/vendors/jszip/dist/jszip.min.js"></script>
   <script src="../assets/vendors/pdfmake/build/pdfmake.min.js"></script>
   <script src="../assets/vendors/pdfmake/build/vfs_fonts.js"></script>
-
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
-  <script type="text/javascript" language="JavaScript">
-  function konfirmasi() {
-    tanya = confirm("Anda Yakin Akan Menghapus Data ?");
-    if (tanya == true) return true;
-    else return false;
-  }
+  <script>
+    // ── Konfirmasi hapus dengan SweetAlert ────────────────────────────
+    function konfirmasiHapus(id) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Hapus Data?',
+        text: 'Data yang dihapus tidak dapat dikembalikan!',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c',
+        cancelButtonColor: '#95a5a6',
+        confirmButtonText: '<i class="fa fa-trash-o"></i> Ya, Hapus',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+      }).then(function(result) {
+        if (result.isConfirmed) {
+          window.location = 'proses/proses_hapussuratkeluar.php?id=' + id;
+        }
+      });
+    }
+
+    // ── Tampilkan SweetAlert dari redirect status ──────────────────────
+    $(document).ready(function() {
+
+      <?php if (isset($_GET['status'])): ?>
+        <?php if ($_GET['status'] === 'deleted'): ?>
+        Swal.fire({
+          icon: 'success',
+          title: 'Dihapus!',
+          text: 'Data berhasil dihapus.',
+          confirmButtonColor: '#26B99A',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+        <?php elseif ($_GET['status'] === 'success'): ?>
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Operasi berhasil dilakukan.',
+          confirmButtonColor: '#26B99A',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+        <?php elseif ($_GET['status'] === 'error'): ?>
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
+          confirmButtonColor: '#e74c3c',
+          confirmButtonText: 'Tutup'
+        });
+        <?php endif; ?>
+      <?php endif; ?>
+
+    }); // ← TUTUP $(document).ready
   </script>
 
 </body>
-
 </html>

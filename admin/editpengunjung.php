@@ -7,7 +7,15 @@ ob_start();
 // Ambil ID dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 if (empty($id)) {
-  echo "<script>alert('ID tidak valid!'); window.location='datapengunjung.php';</script>";
+  echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>body{font-family:"Poppins",sans-serif;background:#f4f6f9;}.swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;font-family:"Poppins",sans-serif!important;}</style>
+  </head><body>
+  <script>
+  Swal.fire({title:"ID Tidak Valid!",html:"<p style=\'color:#555;font-size:15px;\'>Parameter ID tidak ditemukan atau tidak valid.</p>",icon:"error",iconColor:"#e74c3c",confirmButtonText:"Kembali",background:"#fff",color:"#1a1a2e",customClass:{popup:"swal-custom-popup"}}).then(()=>{window.location.href="datapengunjung.php";});
+  </script></body></html>';
   exit;
 }
 
@@ -20,7 +28,15 @@ $result = mysqli_stmt_get_result($stmt);
 $data_pengunjung = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
 if (!$data_pengunjung) {
-  echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
+  echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>body{font-family:"Poppins",sans-serif;background:#f4f6f9;}.swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;font-family:"Poppins",sans-serif!important;}</style>
+  </head><body>
+  <script>
+  Swal.fire({title:"Data Tidak Ditemukan!",html:"<p style=\'color:#555;font-size:15px;\'>Data pengunjung yang dicari tidak ditemukan di sistem.</p>",icon:"error",iconColor:"#e74c3c",confirmButtonText:"Kembali",background:"#fff",color:"#1a1a2e",customClass:{popup:"swal-custom-popup"}}).then(()=>{window.location.href="datapengunjung.php";});
+  </script></body></html>';
   exit;
 }
 
@@ -44,6 +60,9 @@ if (!$data_pengunjung) {
   <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="nav-md">

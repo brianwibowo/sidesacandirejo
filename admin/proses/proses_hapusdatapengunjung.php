@@ -2,16 +2,16 @@
 include '../../koneksi/koneksi.php';
 
 $id = $_GET['id'];
-
 $sql = "DELETE FROM tb_data_pengunjung WHERE id = '$id'";
 
 if (mysqli_query($db, $sql)) {
-  echo "<script>
-      alert('Hapus Data Berhasil');
-      window.location.href = '../datapengunjung.php';
-      </script>";
+  session_start();
+  $_SESSION['notif_hapus'] = 'berhasil';
 } else {
-  echo "Error deleting record: " . mysqli_error($db);
+  session_start();
+  $_SESSION['notif_hapus'] = 'gagal';
 }
 
 mysqli_close($db);
+header('Location: ../datapengunjung.php');
+exit;

@@ -1,86 +1,75 @@
 <?php
-// Koneksi ke database
+session_start();
 include '../../koneksi/koneksi.php';
 
-// Cek koneksi
-if (!$db) {
-    die("Koneksi gagal: " . mysqli_connect_error());
+// Helper format tanggal Indonesia
+function tgl_id($tgl) {
+    if (empty($tgl)) return '-';
+    $bulan = ['','Januari','Februari','Maret','April','Mei','Juni',
+              'Juli','Agustus','September','Oktober','November','Desember'];
+    $ts = strtotime($tgl);
+    return date('d', $ts) . ' ' . $bulan[(int)date('m', $ts)] . ' ' . date('Y', $ts);
 }
 
-$timestamp = date("Ymd_His"); 
-$filename = "Data_Surat_Masuk_$timestamp.xls"; 
+$timestamp = date("Ymd_His");
+$filename  = "Data_Surat_Masuk_$timestamp.xls";
 
-// Set header untuk file Excel
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-
-// Tampilkan konten
-echo '<!DOCTYPE html>
+$sql    = "SELECT * FROM tb_arsip_surat_masuk ORDER BY No ASC";
+$result = mysqli_query($db, $sql);
+?>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Export Data Ke Excel</title>
-    <style type="text/css">
-    body {
-        font-family: sans-serif;
-    }
-    table {
-        margin: 20px auto;
-        border-collapse: collapse;
-    }
-    table th, table td {
-        border: 1px solid #3c3c3c;
-        padding: 3px 8px;
-    }
-    </style>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 11px; }
+    h2   { text-align: center; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #333; padding: 4px 6px; }
+    th { background-color: #dce6f1; text-align: center; }
+  </style>
 </head>
 <body>
-    <center>
-        <h1>Data Surat Masuk</h1>
-    </center>
-    <table border="1">
+  <h2>Data Surat Masuk &mdash; Desa Candirejo Borobudur</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nomor Surat</th>
+        <th>Tanggal Terima</th>
+        <th>Tanggal Surat</th>
+        <th>Pengirim</th>
+        <th>Penerima</th>
+        <th>Disposisi</th>
+        <th>Perihal</th>
+        <th>Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if (mysqli_num_rows($result) > 0): ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
         <tr>
-            <th>No</th>
-            <th>Nomor Surat</th>
-            <th>Tanggal Terima</th>
-            <th>Tanggal Surat</th>
-            <th>Pengirim</th>
-            <th>Penerima</th>
-            <th>Disposisi</th>
-            <th>Perihal</th>
-            <th>Kode</th>
-            <th>Keterangan</th>
-        </tr>';
-
-// Ambil data dari tabel
-$sql = "SELECT * FROM tb_arsip_surat_masuk ORDER BY No ASC";
-$result = mysqli_query($db, $sql);
-
-// Tampilkan data
-if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo '<tr>
-                <td>' . htmlspecialchars($row['No']) . '</td>
-                <td>' . htmlspecialchars($row['nomor_surat']) . '</td>
-                <td>' . htmlspecialchars($row['tanggal_terima']) . '</td>
-                <td>' . htmlspecialchars($row['tanggal_surat']) . '</td>
-                <td>' . htmlspecialchars($row['pengirim']) . '</td>
-                <td>' . htmlspecialchars($row['penerima_surat']) . '</td>
-                <td>' . htmlspecialchars($row['disposisi']) . '</td>
-                <td>' . htmlspecialchars($row['perihal']) . '</td>
-                <td>' . htmlspecialchars($row['kode']) . '</td>
-                <td>' . htmlspecialchars($row['keterangan']) . '</td>
-              </tr>';
-    }
-} else {
-    echo '<tr><td colspan="9" style="text-align:center;">Tidak ada data</td></tr>';
-}
-
-echo '    </table>
+          <td style="text-align:center;"><?php echo htmlspecialchars($row['No']); ?></td>
+          <td><?php echo htmlspecialchars($row['nomor_surat']); ?></td>
+          <td style="text-align:center;"><?php echo tgl_id($row['tanggal_terima']); ?></td>
+          <td style="text-align:center;"><?php echo tgl_id($row['tanggal_surat']); ?></td>
+          <td><?php echo htmlspecialchars($row['pengirim']); ?></td>
+          <td><?php echo htmlspecialchars($row['penerima_surat']); ?></td>
+          <td><?php echo htmlspecialchars($row['disposisi']); ?></td>
+          <td><?php echo htmlspecialchars($row['perihal']); ?></td>
+          <td><?php echo htmlspecialchars($row['keterangan']); ?></td>
+        </tr>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <tr><td colspan="9" style="text-align:center;">Tidak ada data</td></tr>
+      <?php endif; ?>
+    </tbody>
+  </table>
 </body>
-</html>';
-
-// Menutup d
-mysqli_close($db);
+</html>
+<?php mysqli_close($db); ?>

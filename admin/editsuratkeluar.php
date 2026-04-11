@@ -191,7 +191,7 @@ include "login/ceksession.php";
                     </div>
                     <?php
                       // Set base path untuk lampiran
-                      $lampiran_base = '../uploads/surat_keluar_lampiran/';
+                      $lampiran_base = '../uploads/';
                       
                       $absensi_files = json_decode($data['lampiran_absensi'] ?? '[]', true);
                       if (!is_array($absensi_files)) $absensi_files = [];
@@ -208,7 +208,7 @@ include "login/ceksession.php";
                             <strong style="color: #2c3e50;">File Yang Ada:</strong>
                             <div style="margin-top: 10px; max-width: 220px;">
                               <?php foreach ($absensi_files as $idx => $filename) {
-                                $fileUrl = 'uploads/surat_keluar_lampiran/' . rawurlencode($filename);
+                                $fileUrl = 'uploads/' . rawurlencode($filename);
                                 ?>
                                 <input type="checkbox" id="delete-absensi-<?php echo $idx; ?>" name="delete_absensi[]" value="<?php echo htmlspecialchars($filename, ENT_QUOTES, 'UTF-8'); ?>" style="display:none;">
                                 <div id="existing-absensi-<?php echo $idx; ?>" style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
@@ -237,7 +237,7 @@ include "login/ceksession.php";
                             <strong style="color: #2c3e50;">File Yang Ada:</strong>
                             <div style="margin-top: 10px; max-width: 220px;">
                               <?php foreach ($notulen_files as $idx => $filename) {
-                                $fileUrl = 'uploads/surat_keluar_lampiran/' . rawurlencode($filename);
+                                $fileUrl = 'uploads/' . rawurlencode($filename);
                                 ?>
                                 <input type="checkbox" id="delete-notulen-<?php echo $idx; ?>" name="delete_notulen[]" value="<?php echo htmlspecialchars($filename, ENT_QUOTES, 'UTF-8'); ?>" style="display:none;">
                                 <div id="existing-notulen-<?php echo $idx; ?>" style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
@@ -266,7 +266,7 @@ include "login/ceksession.php";
                             <strong style="color: #2c3e50;">File Dokumentasi Yang Ada:</strong>
                             <div style="margin-top: 10px; max-width: 220px;">
                               <?php foreach ($dokumentasi_files as $idx => $filename) {
-                                $fileUrl = 'uploads/surat_keluar_lampiran/' . rawurlencode($filename);
+                                $fileUrl = 'uploads/' . rawurlencode($filename);
                                 ?>
                                 <input type="checkbox" id="delete-dokumentasi-<?php echo $idx; ?>" name="delete_dokumentasi[]" value="<?php echo htmlspecialchars($filename, ENT_QUOTES, 'UTF-8'); ?>" style="display:none;">
                                 <div id="existing-dokumentasi-<?php echo $idx; ?>" style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
@@ -280,11 +280,11 @@ include "login/ceksession.php";
                         <div style="border: 2px dashed #3498db; border-radius: 8px; padding: 30px 20px; text-align: center; cursor: pointer; background-color: #f8f9fa; transition: all 0.3s ease;" id="upload-area-dokumentasi" data-field="file_dokumentasi">
                           <div style="font-size: 32px; color: #3498db; margin-bottom: 10px;"><span class="fa fa-cloud-upload"></span></div>
                           <div><strong>Drag file atau klik untuk tambah</strong></div>
-                          <small style="color: #7f8c8d;">PDF, JPG, PNG, WebP, GIF (Bisa lebih dari 1 file)</small>
+                          <small style="color: #7f8c8d;">JPG, PNG, WebP, GIF (Bisa lebih dari 1 file)</small>
                         </div>
-                        <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple style="display: none;" />
+                        <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display: none;" />
                         <div style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;" id="preview-dokumentasi"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto/dokumentasi tambahan</small>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload foto/dokumentasi kegiatan (JPG, PNG, WebP, GIF)</small>
                       </div>
                     </div>
                     <div class="form-group">
