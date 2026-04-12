@@ -23,7 +23,7 @@ include "koneksi/ceksession.php";
                     <img src="./img/samarinda.png" alt="logo">
                 </a>
             </div>
-            <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a>
+            <!-- <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a> -->
         </nav>
 
         <!-- -maincontent -->
@@ -31,18 +31,26 @@ include "koneksi/ceksession.php";
             <div class="home" id="home">
                 <div class="before-copyright">
                     <div class="hero-section-main-header">
-                        <div class="hero-section-teks1">
-                            <div class="hero-chip">
-                                <div class="chip1"><i class="hgi hgi-stroke hgi-inbox-download"></i> Surat Masuk</div>
-                                <div class="chip2"><i class="hgi hgi-stroke hgi-inbox-upload"></i> Surat Keluar</div>
-                            </div>
-                            <div class="hero-heading">
-                                <span class="heading1">Sistem Informasi Pengarsipan Surat</span>
-                                <span class="heading2">Desa Wisata Candirejo Borobudur</span>
-                            </div>
+                        <div class="hero-heading">
+                            <span class="heading1">Sistem Informasi Pengarsipan Surat</span>
+                            <span class="heading2">Desa Wisata Candirejo Borobudur</span>
                         </div>
                         <div class="hero-section-teks2">
                             <p>Website ini berguna untuk pengarsipan Surat Masuk dan Surat Keluar dari Desa Wisata Candirejo Borobudur</p>
+                        </div>
+                        <div class="hero-chip">
+                                <a href="" class="chip1">
+                                <div class="left-layout">
+                                    <i class="hgi hgi-stroke hgi-invoice-01"></i> Sistem Booking
+                                </div>
+                                <i class="hgi hgi-stroke hgi-arrow-right-01"></i>
+                                </a>
+                                <a href="" class="chip2">
+                                <div class="left-layout">
+                                    <i class="hgi hgi-stroke hgi-file-02"></i> Arsip Surat
+                                </div>
+                                <i class="hgi hgi-stroke hgi-arrow-right-01"></i>
+                                </a>
                         </div>
                     </div>
                     <div class="hero-img">

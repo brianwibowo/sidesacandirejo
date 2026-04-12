@@ -114,11 +114,11 @@ nav{
 .hero-chip{
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 16px;
     color: #3D3434;
     text-align: center;
     font-family: Inter;
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: 120%; /* 30px */
@@ -128,17 +128,24 @@ nav{
 .hero-chip .chip1,
 .hero-chip .chip2{
     display: flex;
-    padding: 4px 10px;
+    padding: 8px 16px;
     align-items: center;
-    gap: 8px;
+    gap: 14px;
+    text-decoration: none;
+    color: #FFF;
     border-radius: 8px;
-    border: 1.5px solid #ECECEC;
-    background: #FFF;
+    background: #83C024;
 }
 
 .hero-chip i{
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    /* font-weight: 600; */
+}
+
+.hero-chip .left-layout{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
 }
 
 .hero-section-teks1{
@@ -239,12 +246,17 @@ nav{
     }
     .hero-chip{
         font-size: 14px;
-        gap: 8px;
+        width: 100%;
+        gap: 18px;
+        margin-bottom: 40px;
+        margin-top: 32px;
+        display: flex;
+        flex-direction: column;
     }
     .hero-chip .chip1,
     .hero-chip .chip2{
-        padding: 2px 8px;
-        gap: 4px;
+        padding: 12px 10px;
+        justify-content: space-between;
     }
     .hero-chip i{
         font-size: 16px;
