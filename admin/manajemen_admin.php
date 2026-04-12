@@ -34,6 +34,8 @@ $query = mysqli_query($db, $sql);
 <!-- Custom Theme Style -->
 <link href="../assets/build/css/custom.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="../img/icon.ico">
+<!-- SweetAlert2 -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body class="nav-md">
 <div class="container body">
@@ -49,24 +51,7 @@ $query = mysqli_query($db, $sql);
 
     <!-- Page content -->
     <div class="right_col" role="main">
-      <?php
-        if(isset($_SESSION['alert'])){
-            $type = $_SESSION['alert']['type']; // success, danger, warning
-            $msg = $_SESSION['alert']['msg'];
 
-            // Map type ke class Bootstrap 3
-            $bsClass = ($type == 'success' ? 'alert-success' : ($type == 'danger' ? 'alert-danger' : 'alert-warning'));
-
-            echo "<div class='alert $bsClass alert-dismissible fade in' role='alert'>
-                    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                    </button>
-                    $msg
-                  </div>";
-
-            unset($_SESSION['alert']);
-        }
-        ?>
       <div class="row">
         <div class="col-md-12">
           <div class="x_panel">
@@ -92,19 +77,18 @@ $query = mysqli_query($db, $sql);
                 <tbody>
                     <?php
                     $sql = "SELECT * FROM tb_admin ORDER BY id_admin ASC";
-                    $query = mysqli_query($db, $sql); // query baru
-                    if (!$query) die(mysqli_error($db)); // cek error
+                    $query = mysqli_query($db, $sql);
+                    if (!$query) die(mysqli_error($db));
                     $no = 1;
 
                     while ($data = mysqli_fetch_assoc($query)) {
+                        // Status awal dihitung server-side saat render
                         $online = "Offline";
                         $warna = "red";
 
                         if($data['last_active'] != NULL){
-
                             $last = strtotime($data['last_active']);
                             $now = time();
-
                             if(($now - $last) <= 120){
                                 $online = "Online";
                                 $warna = "green";
@@ -116,17 +100,15 @@ $query = mysqli_query($db, $sql);
                             <td>" . htmlspecialchars($data['username_admin']) . "</td>
                             <td>" . htmlspecialchars($data['role']) . "</td>
                             <td>
-                            <span style='color:$warna;' class='status-dot'>●</span> $online <br>
-                            <small class='last-active'>" . htmlspecialchars($data['last_active'] ?? '-') . "</small>
+                                <span style='color:$warna;' class='status-dot'>●</span> <span class='status-text'>$online</span><br>
+                                <small class='last-active'>" . htmlspecialchars($data['last_active'] ?? '-') . "</small>
                             </td>
                             <td>
                                 <a href='edit_admin.php?id={$data['id_admin']}' class='btn btn-primary btn-sm'><i class='fa fa-edit'></i> Edit</a>
                                 <a href='reset_password.php?id={$data['id_admin']}' class='btn btn-warning btn-sm'><i class='fa fa-key'></i> Reset Password</a>
                                 <button class='btn btn-danger btn-sm btn-delete-admin'
                                         data-id='{$data['id_admin']}'
-                                        data-nama='{$data['nama_admin']}'
-                                        data-toggle='modal'
-                                        data-target='#modalHapus'>
+                                        data-nama='{$data['nama_admin']}'>
                                     <i class='fa fa-trash'></i> Hapus
                                 </button>
                             </td>
@@ -140,28 +122,7 @@ $query = mysqli_query($db, $sql);
         </div>
       </div>
     </div>
-    <!-- /Modal hapus -->
-    <div class="modal fade" id="modalHapus" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
 
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Konfirmasi Hapus</h4>
-        </div>
-
-        <div class="modal-body" id="textHapusAdmin">
-            Apakah Anda yakin ingin menghapus admin ini?
-        </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-            <a href="#" id="btnHapusAdmin" class="btn btn-danger">Hapus</a>
-        </div>
-
-        </div>
-    </div>
-    </div>
     <!-- Footer -->
     <footer>
       <div class="pull-right">Apriansyah Wibowo. All Rights Reserved.</div>
@@ -182,75 +143,111 @@ $query = mysqli_query($db, $sql);
 <script src="../assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
 <!-- Custom Theme Scripts -->
 <script src="../assets/build/js/custom.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
 <script>
 $(document).ready(function() {
     $('#datatable-admin').DataTable({
         responsive: true
     });
-});
-</script>
-<!-- <script>
-function updateOnlineStatus(){
-    fetch("update_status.php", {
-        method: "GET",
-        credentials: "same-origin"
-    })
-    .then(response => response.text())
-    .then(data => console.log("Status updated"))
-    .catch(error => console.log(error));
-}
 
-setInterval(updateOnlineStatus, 5000);
-</script> -->
-<script>
-function updateStatus() {
-    fetch('update_status.php', { method: 'GET', credentials: 'same-origin' })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Status updated');
+    // =============================================
+    // SweetAlert untuk alert dari session PHP
+    // =============================================
+    <?php if(isset($_SESSION['alert'])): ?>
+    <?php
+        $type = $_SESSION['alert']['type']; // success, danger, warning
+        $msg  = $_SESSION['alert']['msg'];
 
-        // Ambil data terbaru
-        fetch('get_admin_status.php')
-        .then(res => res.json())
-        .then(admins => {
-            admins.forEach(admin => {
-                // Gunakan jQuery selector agar aman dengan DataTables
-                var $row = $('#datatable-admin tbody tr#admin-row-' + admin.id_admin);
-                if($row.length){
-                    var $statusSpan = $row.find('.status-dot');
-                    var $lastActive = $row.find('.last-active');
+        // Map ke icon SweetAlert2
+        $icon = 'info';
+        if($type == 'success') $icon = 'success';
+        elseif($type == 'danger') $icon = 'error';
+        elseif($type == 'warning') $icon = 'warning';
 
-                    if(admin.online){
-                        $statusSpan.css('color', 'green').text('●');
-                    } else {
-                        $statusSpan.css('color', 'red').text('●');
-                    }
+        unset($_SESSION['alert']);
+    ?>
+    Swal.fire({
+        icon: '<?= $icon ?>',
+        title: <?= $icon == 'success' ? "'Berhasil'" : ($icon == 'error' ? "'Gagal'" : "'Perhatian'") ?>,
+        html: '<?= addslashes($msg) ?>',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: true,
+        confirmButtonText: 'OK'
+    });
+    <?php endif; ?>
 
-                    $lastActive.text(admin.last_active || '-');
-                }
-            });
-        });
-    })
-    .catch(err => console.log(err));
-}
-
-// Jalankan setiap 5 detik
-setInterval(updateStatus, 5000);
-</script>
-<script>
-$(document).ready(function(){
-    $('.btn-delete-admin').click(function(){
-        var id = $(this).data('id');
+    // =============================================
+    // Hapus Admin pakai SweetAlert2
+    // =============================================
+    $(document).on('click', '.btn-delete-admin', function(){
+        var id   = $(this).data('id');
         var nama = $(this).data('nama');
 
-        // Isi teks modal
-        $('#textHapusAdmin').html("Apakah Anda yakin ingin menghapus admin <strong>"+nama+"</strong>?");
-
-        // Set link tombol Hapus
-        $('#btnHapusAdmin').attr('href', 'hapus_admin.php?id='+id);
+        Swal.fire({
+            icon: 'warning',
+            title: 'Konfirmasi Hapus',
+            html: 'Apakah Anda yakin ingin menghapus admin <strong>' + nama + '</strong>?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fa fa-trash"></i> Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if(result.isConfirmed){
+                window.location.href = 'hapus_admin.php?id=' + id;
+            }
+        });
     });
 });
+
+// =============================================
+// Update & Polling Status Online/Offline
+// =============================================
+function updateStatus() {
+    // 1. Update last_active milik admin yang sedang login
+    fetch('update_status.php', { method: 'GET', credentials: 'same-origin' })
+    .then(response => response.text())
+    .then(() => {
+        // 2. Setelah update, ambil status semua admin
+        fetchAdminStatus();
+    })
+    .catch(err => console.error('Update status error:', err));
+}
+
+function fetchAdminStatus() {
+    fetch('get_admin_status.php', { credentials: 'same-origin' })
+    .then(res => res.json())
+    .then(admins => {
+        admins.forEach(admin => {
+            var $row = $('#datatable-admin tbody tr#admin-row-' + admin.id_admin);
+            if($row.length){
+                var $dot  = $row.find('.status-dot');
+                var $text = $row.find('.status-text');
+                var $last = $row.find('.last-active');
+
+                if(admin.online){
+                    $dot.css('color', 'green');
+                    $text.text('Online');
+                } else {
+                    $dot.css('color', 'red');
+                    $text.text('Offline');
+                }
+
+                $last.text(admin.last_active || '-');
+            }
+        });
+    })
+    .catch(err => console.error('Fetch status error:', err));
+}
+
+// Langsung fetch status saat halaman baru dibuka (tanpa tunggu 5 detik)
+fetchAdminStatus();
+
+// Polling setiap 5 detik
+setInterval(updateStatus, 5000);
 </script>
 </body>
 </html>
