@@ -293,8 +293,9 @@ include "login/ceksession.php";
                 ?>
 
                 <!-- CARD TOTAL KUNJUNGAN -->
-                <div class="row" style="padding: 0 15px 10px 15px;">
-                  <div class="col-md-4 col-sm-6 col-xs-12">
+                <div style="padding: 0 15px 10px 15px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <div class="row" style="min-width: 520px; flex-wrap: nowrap; display: flex;">
+                  <div class="col-md-4 col-sm-6 col-xs-12" style="min-width: 260px;">
                     <div class="card-total-kunjungan">
                       <div class="icon-wrap">
                         <i class="fa fa-globe" id="card-icon"></i>
@@ -322,7 +323,7 @@ include "login/ceksession.php";
                   </div>
 
                   <?php if ($filter_aktif) { ?>
-                  <div class="col-md-4 col-sm-6 col-xs-12">
+                  <div class="col-md-4 col-sm-6 col-xs-12" style="min-width: 260px;">
                     <div class="card-total-kunjungan" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); box-shadow: 0 4px 18px rgba(245,87,108,0.30);">
                       <div class="icon-wrap">
                         <i class="fa fa-filter" id="card-filter-icon"></i>
@@ -349,7 +350,8 @@ include "login/ceksession.php";
                     </div>
                   </div>
                   <?php } ?>
-                </div>
+                </div><!-- end row card -->
+                </div><!-- end scroll wrapper -->
 
                 <script>
                 var totalPax = <?php echo (int)$total_pax; ?>;
@@ -474,7 +476,7 @@ include "login/ceksession.php";
                     $filter_tahun = mysqli_real_escape_string($db, $_GET['tahun']);
                     $where .= " AND YEAR(tanggal_kunjungan) = '$filter_tahun'";
                   }
-                  $sql1   = "SELECT * FROM tb_data_pengunjung $where ORDER BY id ASC";
+                  $sql1   = "SELECT * FROM tb_data_pengunjung $where ORDER BY id DESC";
                   $query1 = mysqli_query($db, $sql1);
                   $total  = mysqli_num_rows($query1);
                   if ($total == 0) {
@@ -710,11 +712,86 @@ include "login/ceksession.php";
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
+  <style>
+    /* Hilangkan overflow dari x_content agar tidak muncul 2 scrollbar */
+    .x_content {
+      overflow: visible !important;
+    }
+    /* Bungkus tabel dengan satu scrollbar saja */
+    .table-scroll-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+    }
+    /* Freeze kolom Aksi (kolom terakhir) pakai sticky */
+    #datatable thead tr th:last-child,
+    #datatable tbody tr td:last-child {
+      position: sticky;
+      right: 0;
+      background-color: #fff;
+      z-index: 2;
+      box-shadow: -3px 0 6px rgba(0,0,0,0.08);
+    }
+    #datatable thead tr th:last-child {
+      background-color: #f5f5f5;
+      z-index: 3;
+    }
+    /* Sempitkan kolom Paket Wisata (kolom ke-2) */
+    #datatable thead tr th:nth-child(2),
+    #datatable tbody tr td:nth-child(2) {
+      max-width: 130px;
+      min-width: 100px;
+      white-space: normal;
+      word-break: break-word;
+    }
+    /* Sempitkan kolom Driver/Guide (kolom ke-9) */
+    #datatable thead tr th:nth-child(9),
+    #datatable tbody tr td:nth-child(9) {
+      max-width: 100px;
+      min-width: 80px;
+      white-space: normal;
+      word-break: break-word;
+    }
+  </style>
+
   <script type="text/javascript">
   function konfirmasiHapus(id) {
     document.getElementById('btnYaHapus').href = 'proses/proses_hapusdatapengunjung.php?id=' + id;
     $('#modalHapus').modal('show');
   }
+
+  $(document).ready(function() {
+    // Bungkus tabel dengan div scroll wrapper supaya cukup 1 scrollbar
+    if (!$('#datatable').closest('.table-scroll-wrapper').length) {
+      $('#datatable').wrap('<div class="table-scroll-wrapper"></div>');
+    }
+
+    // Destroy inisialisasi dari custom.min.js lalu re-init dengan order DESC
+    if ($.fn.DataTable.isDataTable('#datatable')) {
+      $('#datatable').DataTable().destroy();
+    }
+    $('#datatable').DataTable({
+      "order": [[0, "desc"]],
+      "columnDefs": [
+        { "orderable": false, "targets": 11 }
+      ],
+      "pageLength": 10,
+      "scrollX": false,
+      "language": {
+        "search": "Cari:",
+        "lengthMenu": "Tampilkan _MENU_ data",
+        "info": "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+        "infoEmpty": "Tidak ada data",
+        "zeroRecords": "Data tidak ditemukan",
+        "paginate": {
+          "first": "Pertama",
+          "last": "Terakhir",
+          "next": "Berikutnya",
+          "previous": "Sebelumnya"
+        }
+      }
+    });
+  });
   </script>
 
 </body>

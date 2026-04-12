@@ -50,7 +50,14 @@ function swalResponse($title, $message, $icon, $redirect, $iconColor = null) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Convert date format if needed (from YYYY/MM/DD to YYYY-MM-DD)
     $id = (int)$_POST['id'];
-    $tanggal_kunjungan = $_POST['tanggal_kunjungan'];
+    // Format tanggal dari datepicker adalah YYYY-MM-DD, langsung validasi
+    $tanggal_raw = $_POST['tanggal_kunjungan'];
+    $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal_raw);
+    if (!$tanggal_obj) {
+        // Fallback: coba format d-m-Y jika datepicker mengirim format lama
+        $tanggal_obj = DateTime::createFromFormat('d-m-Y', $tanggal_raw);
+    }
+    $tanggal_kunjungan = $tanggal_obj ? $tanggal_obj->format('Y-m-d') : $tanggal_raw;
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $nama = trim($_POST['nama']);

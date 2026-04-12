@@ -102,7 +102,7 @@ if (!$data_pengunjung) {
                         <div class='input-group date' id='myDatepicker6'>
                           <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required"
                             class="form-control" readonly="readonly"
-                            value="<?php echo htmlspecialchars(date('d-m-Y', strtotime($data_pengunjung['tanggal_kunjungan'] ?? ''))); ?>" />
+                            value="<?php echo htmlspecialchars($data_pengunjung['tanggal_kunjungan'] ?? ''); ?>" />
                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                       </div>
