@@ -10,7 +10,7 @@ include "koneksi/ceksession.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arsip Surat Desa Candirejo Borobudur</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="shortcut icon" href="img/icon.ico">
+    <link rel="shortcut icon" href="./img/icon.ico" type="image/x-icon"/>
     <!-- --------- UNICONS ---------- -->
     <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
 </head>
@@ -23,7 +23,7 @@ include "koneksi/ceksession.php";
                     <img src="./img/samarinda.png" alt="logo">
                 </a>
             </div>
-            <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a>
+            <!-- <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a> -->
         </nav>
 
         <!-- -maincontent -->
@@ -31,18 +31,47 @@ include "koneksi/ceksession.php";
             <div class="home" id="home">
                 <div class="before-copyright">
                     <div class="hero-section-main-header">
-                        <div class="hero-section-teks1">
-                            <div class="hero-chip">
-                                <div class="chip1"><i class="hgi hgi-stroke hgi-inbox-download"></i> Surat Masuk</div>
-                                <div class="chip2"><i class="hgi hgi-stroke hgi-inbox-upload"></i> Surat Keluar</div>
-                            </div>
-                            <div class="hero-heading">
-                                <span class="heading1">Sistem Informasi Pengarsipan Surat</span>
-                                <span class="heading2">Desa Wisata Candirejo Borobudur</span>
-                            </div>
+                        <div class="hero-heading">
+                            <span class="heading1">Sistem Informasi Terpadu</span>
+                            <span class="heading2">Arsip Surat & Rekap Booking</span>
                         </div>
                         <div class="hero-section-teks2">
-                            <p>Website ini berguna untuk pengarsipan Surat Masuk dan Surat Keluar dari Desa Wisata Candirejo Borobudur</p>
+                            <p>Platform digital untuk mengelola <strong>Surat Masuk & Surat Keluar</strong> sekaligus <strong>Rekap Data Booking</strong> Desa Wisata Candirejo Borobudur secara mudah dan terpusat.</p>
+                        </div>
+                        <div class="hero-feature-row">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="hgi hgi-stroke hgi-file-02"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <span class="feature-title">Arsip Surat</span>
+                                    <span class="feature-desc">Kelola surat masuk & keluar secara digital</span>
+                                </div>
+                            </div>
+                            <div class="feature-divider"></div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="hgi hgi-stroke hgi-invoice-01"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <span class="feature-title">Rekap Booking</span>
+                                    <span class="feature-desc">Pantau & rekap data pemesanan wisatawan</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-chip">
+                                <a href="admin/login/?from=booking" class="chip1">
+                                <div class="left-layout">
+                                    <i class="hgi hgi-stroke hgi-invoice-01"></i> Sistem Booking
+                                </div>
+                                <i class="hgi hgi-stroke hgi-arrow-right-01"></i>
+                                </a>
+                                <a href="admin/login/?from=arsip" class="chip2">
+                                <div class="left-layout">
+                                    <i class="hgi hgi-stroke hgi-file-02"></i> Arsip Surat
+                                </div>
+                                <i class="hgi hgi-stroke hgi-arrow-right-01"></i>
+                                </a>
                         </div>
                     </div>
                     <div class="hero-img">

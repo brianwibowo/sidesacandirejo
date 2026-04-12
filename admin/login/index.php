@@ -1,6 +1,11 @@
 <?php
 session_start();
 include "ceksessionn.php";
+
+// Simpan asal tombol ke session supaya proses_login.php tahu harus redirect ke mana
+if (isset($_GET['from'])) {
+    $_SESSION['login_from'] = $_GET['from'];
+}
 ?>
 
 <!DOCTYPE html>

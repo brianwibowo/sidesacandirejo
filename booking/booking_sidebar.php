@@ -124,6 +124,28 @@ $initials = strtoupper(substr($nama, 0, 1));
 
     </ul>
   </nav>
+
+  <!-- Switch ke Arsip Surat -->
+  <div class="sidebar-switch-arsip">
+    <a href="../admin/" target="_blank" class="switch-btn-arsip">
+      <span class="switch-arsip-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+          <path d="M3 7l9 6 9-6"/>
+        </svg>
+      </span>
+      <span class="switch-arsip-text">
+        <span class="switch-arsip-label">Buka Arsip Surat</span>
+        <span class="switch-arsip-sub">Sistem Pengarsipan Desa</span>
+      </span>
+      <span class="switch-arsip-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path d="M7 17L17 7M7 7h10v10"/>
+        </svg>
+      </span>
+    </a>
+  </div>
+
 </div>
 
 <style>
@@ -140,7 +162,7 @@ $initials = strtoupper(substr($nama, 0, 1));
 
 /* Sidebar base */
 .booking-sidebar {
-  width: var(--sidebar-width); min-height: 100vh;
+  width: var(--sidebar-width); height: 100vh;
   background: var(--sidebar-bg);
   display: flex; flex-direction: column;
   position: fixed; left: 0; top: 0; z-index: 100;
@@ -231,7 +253,64 @@ $initials = strtoupper(substr($nama, 0, 1));
   white-space: nowrap; transition: color 0.15s, background 0.15s;
 }
 .submenu li a:hover { color: #fff; background: var(--sidebar-hover); }
-.submenu li.active a { color: var(--sidebar-accent); }
+/* Sidebar nav flex grow */
+.sidebar-nav { padding: 12px 0; flex: 1; overflow: hidden; }
+
+/* Switch ke Arsip */
+.sidebar-switch-arsip {
+  padding: 12px 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+  min-width: var(--sidebar-width);
+}
+.switch-btn-arsip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  text-decoration: none;
+  width: 100%;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.switch-btn-arsip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.switch-arsip-icon {
+  width: 32px; height: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #a8c8b8;
+  flex-shrink: 0;
+}
+.switch-arsip-text {
+  display: flex; flex-direction: column; flex: 1; gap: 1px;
+}
+.switch-arsip-label {
+  color: #ddeee6;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.switch-arsip-sub {
+  color: var(--sidebar-text-muted);
+  font-size: 11px;
+  line-height: 1.2;
+}
+.switch-arsip-arrow {
+  color: #7fa892;
+  display: flex; align-items: center;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.switch-btn-arsip:hover .switch-arsip-arrow { opacity: 1; }
+.collapsed .sidebar-switch-arsip { display: none; }
 </style>
 
 <script>
