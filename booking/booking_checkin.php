@@ -223,7 +223,7 @@ function tglIndo($date) {
               <td><span class="badge badge-checkin">Check-in</span></td>
               <td>
                 <div class="aksi-cell">
-                  <a href="detail_booking.php?id=<?php echo $row['id']; ?>" class="link-detail">Detail</a>
+                  <a href="detail_booking.php?id=<?php echo $row['id']; ?>&ref=booking_checkin.php" class="link-detail">Detail</a>
                 </div>
               </td>
             </tr>

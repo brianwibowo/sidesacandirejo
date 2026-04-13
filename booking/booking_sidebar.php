@@ -59,7 +59,7 @@ $initials = strtoupper(substr($nama, 0, 1));
         </a>
       </li>
 
-      <li class="has-submenu <?php echo $is_booking_active ? 'open' : ''; ?>">
+      <li class="has-submenu <?php echo $is_booking_active ? 'open active' : ''; ?>">
         <a href="#" class="submenu-toggle" data-label="Data Booking">
           <span class="nav-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -216,6 +216,10 @@ $initials = strtoupper(substr($nama, 0, 1));
   background: var(--sidebar-active); color: #fff;
   border-left: 3px solid var(--sidebar-accent); padding-left: 17px;
 }
+.sidebar-nav > ul > li.has-submenu.open > a {
+  background: var(--sidebar-active); color: #fff;
+  border-left: 3px solid var(--sidebar-accent); padding-left: 17px;
+}
 
 /* Tooltip saat collapsed */
 .booking-sidebar.collapsed .sidebar-nav > ul > li > a::after {
@@ -253,6 +257,12 @@ $initials = strtoupper(substr($nama, 0, 1));
   white-space: nowrap; transition: color 0.15s, background 0.15s;
 }
 .submenu li a:hover { color: #fff; background: var(--sidebar-hover); }
+.submenu li.active a {
+  color: #fff;
+  background: rgba(76, 175, 128, 0.18);
+  border-left: 3px solid var(--sidebar-accent);
+  padding-left: 37px;
+}
 /* Sidebar nav flex grow */
 .sidebar-nav { padding: 12px 0; flex: 1; overflow: hidden; }
 

@@ -103,6 +103,15 @@ function tglIndo($date) {
       background: #fff; outline: none; transition: border-color 0.15s;
     }
     .filter-date:focus { border-color: #2e7d4f; }
+    .btn-tambah {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      height: 38px; padding: 0 14px;
+      border: 1px solid #1e3a2f; border-radius: 8px;
+      background: #1e3a2f; color: #fff; text-decoration: none;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-tambah:hover { background: #2d5540; border-color: #2d5540; color: #fff; }
 
     /* ── TABLE ── */
     .table-wrapper { overflow-x: auto; border-radius: 0 0 12px 12px; }
@@ -145,6 +154,14 @@ function tglIndo($date) {
       transition: background 0.15s; white-space: nowrap;
     }
     .btn-checkin:hover { background: #2d5540; }
+    .btn-tidakhadir {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #fceaea; color: #c0392b; border: 1px solid #f5b8b8;
+      border-radius: 7px; padding: 6px 12px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background 0.15s, color 0.15s; white-space: nowrap;
+    }
+    .btn-tidakhadir:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
 
     /* ── TABLE FOOTER ── */
     .table-footer {
@@ -201,6 +218,10 @@ function tglIndo($date) {
             value="<?php echo isset($_GET['tanggal']) ? htmlspecialchars($_GET['tanggal']) : ''; ?>"
             onchange="document.getElementById('filterForm').submit()"
           >
+          <a href="tambah_booking.php" class="btn-tambah">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            Tambah Booking
+          </a>
         </div>
       </form>
 
@@ -233,11 +254,18 @@ function tglIndo($date) {
               <td><span class="badge badge-pending">Pending</span></td>
               <td>
                 <div class="aksi-cell">
-                  <a href="detail_booking.php?id=<?php echo $row['id']; ?>" class="link-detail">Detail</a>
+                  <a href="detail_booking.php?id=<?php echo $row['id']; ?>&ref=booking_pending.php" class="link-detail">Detail</a>
                   <button
+                    type="button"
                     class="btn-checkin"
-                    onclick="konfirmasiCheckin(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
+                    onclick="konfirmasiAksi(<?php echo $row['id']; ?>, 'checkin', '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
                     Check-in
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-tidakhadir"
+                    onclick="konfirmasiAksi(<?php echo $row['id']; ?>, 'tidak_hadir', '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
+                    Tidak Hadir
                   </button>
                 </div>
               </td>
@@ -260,10 +288,10 @@ function tglIndo($date) {
   <div class="booking-footer">Apriansyah Wibowo. All Rights Reserved.</div>
 </main>
 
-<!-- Form tersembunyi untuk proses check-in -->
-<form id="formCheckin" action="proses/proses_checkin.php" method="POST" style="display:none;">
+<!-- Form tersembunyi untuk proses aksi booking -->
+<form id="formAksi" action="proses/proses_checkin.php" method="POST" style="display:none;">
   <input type="hidden" name="id_booking" id="inputIdBooking">
-  <input type="hidden" name="aksi" value="checkin">
+  <input type="hidden" name="aksi" id="inputAksi">
 </form>
 
 <script>
@@ -274,26 +302,27 @@ document.getElementById('searchInput').addEventListener('keydown', function (e) 
   }
 });
 
-function konfirmasiCheckin(id, nama) {
+function konfirmasiAksi(id, aksi, nama) {
+  const isCheckin = aksi === 'checkin';
   Swal.fire({
-    title: 'Konfirmasi Check-in',
+    title: isCheckin ? 'Konfirmasi Check-in' : 'Tandai Tidak Hadir',
     html: `<p style="font-size:15px;color:#555;">
-      Check-in untuk <strong>${nama}</strong>?<br>
-      <small style="color:#9ab5a8;margin-top:6px;display:block;">
-        Data otomatis masuk ke Data Pengunjung.
-      </small>
+      ${isCheckin
+        ? 'Check-in untuk <strong>' + nama + '</strong>?<br><small style="color:#9ab5a8;margin-top:6px;display:block;">Data otomatis masuk ke Data Pengunjung.</small>'
+        : 'Tandai <strong>' + nama + '</strong> sebagai tidak hadir?'}
     </p>`,
-    icon: 'question',
-    iconColor: '#2e7d4f',
+    icon: isCheckin ? 'question' : 'warning',
+    iconColor: isCheckin ? '#2e7d4f' : '#c0392b',
     showCancelButton: true,
-    confirmButtonText: 'Ya, Check-in',
+    confirmButtonText: isCheckin ? 'Ya, Check-in' : 'Ya, Tidak Hadir',
     cancelButtonText: 'Batal',
-    confirmButtonColor: '#2e7d4f',
+    confirmButtonColor: isCheckin ? '#2e7d4f' : '#c0392b',
     cancelButtonColor: '#aaa',
   }).then(result => {
     if (result.isConfirmed) {
       document.getElementById('inputIdBooking').value = id;
-      document.getElementById('formCheckin').submit();
+      document.getElementById('inputAksi').value = aksi;
+      document.getElementById('formAksi').submit();
     }
   });
 }

@@ -74,7 +74,7 @@ if (!$booking) {
 //  AKSI: TIDAK HADIR
 // ════════════════════════════════════════════════════════════════════════════
 if ($aksi === 'tidak_hadir') {
-    $stmt = $db->prepare("UPDATE tb_booking SET status = 'tidak_hadir' WHERE id = ?");
+    $stmt = $db->prepare("UPDATE tb_booking SET status = 'tidak_hadir', checkin_at = NOW() WHERE id = ?");
     $stmt->bind_param("i", $id_booking);
 
     if ($stmt->execute()) {
