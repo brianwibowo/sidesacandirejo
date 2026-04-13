@@ -618,7 +618,7 @@ include "login/ceksession.php";
                               <td>' . $paket_display . '</td>
                               <td>' . $detail_paket . '</td>
                               <td>' . $jenis_badge . '</td>
-                              <td>' . htmlspecialchars($lokasi) . '</td>
+                              <td>' . htmlspecialchars($lokasi ?? '-') . '</td>
                               <td>' . htmlspecialchars($data['nama']) . '</td>
                               <td>' . $pax_badge . '</td>
                               <td>' . htmlspecialchars($data['agen_wisata'] ?? '-') . '</td>
