@@ -235,7 +235,7 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
           <div class="panel-header">Informasi Wisatawan</div>
           <div class="panel-body">
             <div class="info-list">
-              <div class="info-label">Nama / Rombongan</div><div class="info-value"><?php echo e($bk['nama']); ?></div>
+              <div class="info-label">Nama Wisatawan</div><div class="info-value"><?php echo e($bk['nama']); ?></div>
               <div class="info-label">Jenis Wisatawan</div><div class="info-value"><?php echo e($bk['jenis_wisatawan']); ?></div>
               <div class="info-label">Asal</div><div class="info-value"><?php echo $asal; ?></div>
               <div class="info-label">Agen Wisata</div><div class="info-value"><?php echo displayField($bk['agen_wisata']); ?></div>

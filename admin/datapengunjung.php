@@ -37,17 +37,27 @@ include "login/ceksession.php";
 
 
   <style>
+    /* Override agresif agar card scroll tidak diblokir template */
+    #card-area-wrap { display: block !important; width: 100% !important; float: none !important; }
+    #card-scroll-inner {
+      overflow-x: auto !important;
+      overflow-y: visible !important;
+      -webkit-overflow-scrolling: touch !important;
+      display: block !important;
+      width: 100% !important;
+    }
+
     /* ===== CARD TOTAL KUNJUNGAN ===== */
     .card-total-kunjungan {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 12px;
-      padding: 14px 18px;
+      padding: 14px 18px 32px 18px;
       color: #fff;
       box-shadow: 0 4px 18px rgba(102, 126, 234, 0.30);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 4px;
       position: relative;
       overflow: hidden;
     }
@@ -60,6 +70,7 @@ include "login/ceksession.php";
       height: 110px;
       background: rgba(255,255,255,0.08);
       border-radius: 50%;
+      pointer-events: none;
     }
     .card-total-kunjungan::after {
       content: '';
@@ -70,6 +81,7 @@ include "login/ceksession.php";
       height: 150px;
       background: rgba(255,255,255,0.05);
       border-radius: 50%;
+      pointer-events: none;
     }
     .card-total-kunjungan .icon-wrap {
       background: rgba(255,255,255,0.18);
@@ -236,6 +248,145 @@ include "login/ceksession.php";
 
           <div class="clearfix"></div>
 
+          <?php
+          include '../koneksi/koneksi.php';
+
+          // Tahun card default 2026
+          $tahun_card = isset($_GET['tahun_card']) && is_numeric($_GET['tahun_card']) ? (int)$_GET['tahun_card'] : 2026;
+
+          // Daftar tahun dari DB
+          $res_years = mysqli_query($db, "SELECT DISTINCT YEAR(tanggal_kunjungan) as thn FROM tb_data_pengunjung ORDER BY thn ASC");
+          $available_years = [];
+          while ($ry = mysqli_fetch_assoc($res_years)) { $available_years[] = (int)$ry['thn']; }
+          if (empty($available_years)) { $available_years = [2026]; }
+          if (!in_array($tahun_card, $available_years)) { $available_years[] = $tahun_card; sort($available_years); }
+
+          // Total per tahun card
+          $r_pax  = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as v FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card'"));
+          $r_sesi = mysqli_fetch_assoc(mysqli_query($db, "SELECT COUNT(*) as v FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card'"));
+          $total_pax      = $r_pax['v']  ?? 0;
+          $total_kunjungan= $r_sesi['v'] ?? 0;
+
+          // Filter aktif
+          $filter_aktif = !empty($_GET['bulan']) || !empty($_GET['tahun']);
+          $total_pax_filter = 0; $total_kunjungan_filter = 0; $label_filter = '';
+          if ($filter_aktif) {
+            $wf = "WHERE 1=1";
+            if (!empty($_GET['bulan'])) { $fb = mysqli_real_escape_string($db, $_GET['bulan']); $wf .= " AND MONTH(tanggal_kunjungan)='$fb'"; }
+            if (!empty($_GET['tahun'])) { $ft = mysqli_real_escape_string($db, $_GET['tahun']); $wf .= " AND YEAR(tanggal_kunjungan)='$ft'"; }
+            $total_pax_filter       = mysqli_fetch_assoc(mysqli_query($db,"SELECT SUM(pax) as v FROM tb_data_pengunjung $wf"))['v'] ?? 0;
+            $total_kunjungan_filter = mysqli_fetch_assoc(mysqli_query($db,"SELECT COUNT(*) as v FROM tb_data_pengunjung $wf"))['v'] ?? 0;
+            $bl = ['01'=>'Januari','02'=>'Februari','03'=>'Maret','04'=>'April','05'=>'Mei','06'=>'Juni','07'=>'Juli','08'=>'Agustus','09'=>'September','10'=>'Oktober','11'=>'November','12'=>'Desember'];
+            $parts = [];
+            if (!empty($_GET['bulan'])) $parts[] = $bl[$_GET['bulan']] ?? $_GET['bulan'];
+            if (!empty($_GET['tahun']))  $parts[] = $_GET['tahun'];
+            $label_filter = implode(' ', $parts);
+          }
+          ?>
+
+          <!-- CARD TOTAL KUNJUNGAN -->
+          <div id="card-area-wrap" style="width:100%;margin-bottom:4px;">
+            <div id="card-scroll-inner" style="overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding-bottom:6px;">
+              <div style="display:table;white-space:nowrap;border-spacing:14px 0;padding:0 0 0 0;">
+
+                <!-- Card Utama -->
+                <div style="display:table-cell;vertical-align:top;width:290px;">
+                  <div class="card-total-kunjungan">
+                    <div id="mode-pax" style="display:flex;align-items:flex-start;gap:14px;width:100%;">
+                      <div class="icon-wrap"><i class="fa fa-users"></i></div>
+                      <div class="info-wrap" style="flex:1;">
+                        <div class="label-text">Total Kunjungan Tahun <?php echo $tahun_card; ?></div>
+                        <div class="count-number"><?php echo number_format($total_pax,0,',','.'); ?> <span>orang</span></div>
+                        <div class="sub-text"><i class="fa fa-users"></i> Jumlah total pax tahun <?php echo $tahun_card; ?></div>
+                      </div>
+                    </div>
+                    <div id="mode-sesi" style="display:none;align-items:flex-start;gap:14px;width:100%;">
+                      <div class="icon-wrap"><i class="fa fa-calendar"></i></div>
+                      <div class="info-wrap" style="flex:1;">
+                        <div class="label-text">Total Sesi Kunjungan Tahun <?php echo $tahun_card; ?></div>
+                        <div class="count-number"><?php echo number_format($total_kunjungan,0,',','.'); ?> <span>sesi</span></div>
+                        <div class="sub-text"><i class="fa fa-info-circle"></i> Jumlah kunjungan tanpa dihitung pax</div>
+                      </div>
+                    </div>
+                    <div style="position:absolute;bottom:10px;left:74px;right:14px;">
+                      <div class="toggle-mode-wrap">
+                        <span class="toggle-label" id="lbl-pax" style="font-weight:700;">Pax</span>
+                        <label class="toggle-switch">
+                          <input type="checkbox" id="toggleMode" onclick="handleToggleMain(this)">
+                          <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label" id="lbl-sesi">Sesi</span>
+                        &nbsp;
+                        <select onchange="gantiTahunCard(this.value)" style="background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:6px;color:#fff;font-size:11px;padding:2px 6px;cursor:pointer;outline:none;">
+                          <?php foreach ($available_years as $yr): ?>
+                            <option value="<?php echo $yr; ?>" <?php echo ($yr==$tahun_card)?'selected':''; ?> style="color:#333;background:#fff;"><?php echo $yr; ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <?php if ($filter_aktif): ?>
+                <!-- Card Filter -->
+                <div style="display:table-cell;vertical-align:top;width:290px;">
+                  <div class="card-total-kunjungan" style="background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);box-shadow:0 4px 18px rgba(245,87,108,0.30);">
+                    <div id="fmode-pax" style="display:flex;align-items:flex-start;gap:14px;width:100%;">
+                      <div class="icon-wrap"><i class="fa fa-filter"></i></div>
+                      <div class="info-wrap" style="flex:1;">
+                        <div class="label-text">Total Kunjungan <?php echo htmlspecialchars($label_filter); ?></div>
+                        <div class="count-number"><?php echo number_format($total_pax_filter,0,',','.'); ?> <span>orang</span></div>
+                        <div class="sub-text"><i class="fa fa-users"></i> Hasil filter yang diterapkan</div>
+                      </div>
+                    </div>
+                    <div id="fmode-sesi" style="display:none;align-items:flex-start;gap:14px;width:100%;">
+                      <div class="icon-wrap"><i class="fa fa-calendar"></i></div>
+                      <div class="info-wrap" style="flex:1;">
+                        <div class="label-text">Total Sesi <?php echo htmlspecialchars($label_filter); ?></div>
+                        <div class="count-number"><?php echo number_format($total_kunjungan_filter,0,',','.'); ?> <span>sesi</span></div>
+                        <div class="sub-text"><i class="fa fa-info-circle"></i> Jumlah sesi kunjungan hasil filter</div>
+                      </div>
+                    </div>
+                    <div style="position:absolute;bottom:10px;left:74px;right:14px;">
+                      <div class="toggle-mode-wrap">
+                        <span class="toggle-label" id="lbl-f-pax" style="font-weight:700;">Pax</span>
+                        <label class="toggle-switch">
+                          <input type="checkbox" id="toggleModeFilter" onclick="handleToggleFilter(this)">
+                          <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label" id="lbl-f-sesi">Sesi</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <?php endif; ?>
+
+              </div><!-- end table -->
+            </div><!-- end scroll -->
+          </div><!-- end card area -->
+
+          <script>
+          function handleToggleMain(el) {
+            var isSesi = el.checked;
+            document.getElementById('mode-pax').style.display  = isSesi ? 'none' : 'flex';
+            document.getElementById('mode-sesi').style.display = isSesi ? 'flex' : 'none';
+            document.getElementById('lbl-pax').style.fontWeight  = isSesi ? '400' : '700';
+            document.getElementById('lbl-sesi').style.fontWeight = isSesi ? '700' : '400';
+          }
+          function handleToggleFilter(el) {
+            var isSesi = el.checked;
+            document.getElementById('fmode-pax').style.display  = isSesi ? 'none' : 'flex';
+            document.getElementById('fmode-sesi').style.display = isSesi ? 'flex' : 'none';
+            document.getElementById('lbl-f-pax').style.fontWeight  = isSesi ? '400' : '700';
+            document.getElementById('lbl-f-sesi').style.fontWeight = isSesi ? '700' : '400';
+          }
+          function gantiTahunCard(thn) {
+            var u = new URL(window.location.href);
+            u.searchParams.set('tahun_card', thn);
+            window.location.href = u.toString();
+          }
+          </script>
+
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
@@ -245,147 +396,8 @@ include "login/ceksession.php";
                 </div>
 
                 <?php
-                include '../koneksi/koneksi.php';
-
-                // Hitung total keseluruhan PAX (bukan jumlah row)
-                $sql_total = "SELECT SUM(pax) as total_pax FROM tb_data_pengunjung";
-                $query_total = mysqli_query($db, $sql_total);
-                $row_total = mysqli_fetch_assoc($query_total);
-                $total_pax = $row_total['total_pax'] ?? 0;
-
-                // Hitung juga jumlah kunjungan (row)
-                $sql_kunjungan = "SELECT COUNT(*) as total_kunjungan FROM tb_data_pengunjung";
-                $query_kunjungan = mysqli_query($db, $sql_kunjungan);
-                $row_kunjungan = mysqli_fetch_assoc($query_kunjungan);
-                $total_kunjungan = $row_kunjungan['total_kunjungan'] ?? 0;
-
-                // Hitung total filter jika filter aktif
-                $filter_aktif = !empty($_GET['bulan']) || !empty($_GET['tahun']);
-                $total_pax_filter = 0;
-                $total_kunjungan_filter = 0;
-                $label_filter = '';
-                if ($filter_aktif) {
-                  $where_filter = "WHERE 1=1";
-                  if (!empty($_GET['bulan'])) {
-                    $fb = mysqli_real_escape_string($db, $_GET['bulan']);
-                    $where_filter .= " AND MONTH(tanggal_kunjungan) = '$fb'";
-                  }
-                  if (!empty($_GET['tahun'])) {
-                    $ft = mysqli_real_escape_string($db, $_GET['tahun']);
-                    $where_filter .= " AND YEAR(tanggal_kunjungan) = '$ft'";
-                  }
-                  $row_pax_f = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as total_pax FROM tb_data_pengunjung $where_filter"));
-                  $total_pax_filter = $row_pax_f['total_pax'] ?? 0;
-                  $row_sesi_f = mysqli_fetch_assoc(mysqli_query($db, "SELECT COUNT(*) as total_kunjungan FROM tb_data_pengunjung $where_filter"));
-                  $total_kunjungan_filter = $row_sesi_f['total_kunjungan'] ?? 0;
-
-                  // Buat label filter
-                  $bulan_list_lbl = [
-                    '01'=>'Januari','02'=>'Februari','03'=>'Maret','04'=>'April',
-                    '05'=>'Mei','06'=>'Juni','07'=>'Juli','08'=>'Agustus',
-                    '09'=>'September','10'=>'Oktober','11'=>'November','12'=>'Desember'
-                  ];
-                  $parts = [];
-                  if (!empty($_GET['bulan'])) $parts[] = $bulan_list_lbl[$_GET['bulan']] ?? $_GET['bulan'];
-                  if (!empty($_GET['tahun']))  $parts[] = $_GET['tahun'];
-                  $label_filter = implode(' ', $parts);
-                }
+                // koneksi & variabel sudah di-include di atas
                 ?>
-
-                <!-- CARD TOTAL KUNJUNGAN -->
-                <div style="padding: 0 15px 10px 15px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                <div class="row" style="min-width: 520px; flex-wrap: nowrap; display: flex;">
-                  <div class="col-md-4 col-sm-6 col-xs-12" style="min-width: 260px;">
-                    <div class="card-total-kunjungan">
-                      <div class="icon-wrap">
-                        <i class="fa fa-globe" id="card-icon"></i>
-                      </div>
-                      <div class="info-wrap">
-                        <div class="label-text" id="card-label">Total Kunjungan Keseluruhan</div>
-                        <div class="count-number" id="card-count">
-                          <?php echo number_format($total_pax, 0, ',', '.'); ?>
-                          <span id="card-unit">orang</span>
-                        </div>
-                        <div class="sub-text" id="card-sub">
-                          <i class="fa fa-users"></i> Jumlah total pax seluruh kunjungan
-                        </div>
-                        <!-- TOGGLE MODE -->
-                        <div class="toggle-mode-wrap">
-                          <span class="toggle-label" id="lbl-pax" style="font-weight:700;">Pax</span>
-                          <label class="toggle-switch">
-                            <input type="checkbox" id="toggleMode" onchange="switchTotalMode(this)">
-                            <span class="toggle-slider"></span>
-                          </label>
-                          <span class="toggle-label" id="lbl-sesi">Sesi</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <?php if ($filter_aktif) { ?>
-                  <div class="col-md-4 col-sm-6 col-xs-12" style="min-width: 260px;">
-                    <div class="card-total-kunjungan" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); box-shadow: 0 4px 18px rgba(245,87,108,0.30);">
-                      <div class="icon-wrap">
-                        <i class="fa fa-filter" id="card-filter-icon"></i>
-                      </div>
-                      <div class="info-wrap">
-                        <div class="label-text" id="card-filter-label">Total Kunjungan <?php echo htmlspecialchars($label_filter); ?></div>
-                        <div class="count-number" id="card-filter-count">
-                          <?php echo number_format($total_pax_filter, 0, ',', '.'); ?>
-                          <span id="card-filter-unit">orang</span>
-                        </div>
-                        <div class="sub-text" id="card-filter-sub">
-                          <i class="fa fa-users"></i> Hasil filter yang diterapkan
-                        </div>
-                        <!-- TOGGLE MODE FILTER -->
-                        <div class="toggle-mode-wrap">
-                          <span class="toggle-label" id="lbl-filter-pax" style="font-weight:700;">Pax</span>
-                          <label class="toggle-switch">
-                            <input type="checkbox" id="toggleModeFilter" onchange="switchFilterMode(this)">
-                            <span class="toggle-slider"></span>
-                          </label>
-                          <span class="toggle-label" id="lbl-filter-sesi">Sesi</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <?php } ?>
-                </div><!-- end row card -->
-                </div><!-- end scroll wrapper -->
-
-                <script>
-                var totalPax = <?php echo (int)$total_pax; ?>;
-                var totalSesi = <?php echo (int)$total_kunjungan; ?>;
-                function switchTotalMode(chk) {
-                  var isSesi = chk.checked;
-                  document.getElementById('card-icon').className = isSesi ? 'fa fa-calendar' : 'fa fa-globe';
-                  document.getElementById('card-label').textContent = isSesi ? 'Total Sesi Kunjungan' : 'Total Kunjungan Keseluruhan';
-                  document.getElementById('card-count').childNodes[0].nodeValue = (isSesi ? totalSesi : totalPax).toLocaleString('id-ID') + ' ';
-                  document.getElementById('card-unit').textContent = isSesi ? 'sesi' : 'orang';
-                  document.getElementById('card-sub').innerHTML = isSesi
-                    ? '<i class="fa fa-info-circle"></i> Jumlah kunjungan tanpa dihitung pax'
-                    : '<i class="fa fa-users"></i> Jumlah total pax seluruh kunjungan';
-                  document.getElementById('lbl-pax').style.fontWeight = isSesi ? '400' : '700';
-                  document.getElementById('lbl-sesi').style.fontWeight = isSesi ? '700' : '400';
-                }
-                <?php if ($filter_aktif) { ?>
-                var totalPaxFilter = <?php echo (int)$total_pax_filter; ?>;
-                var totalSesiFilter = <?php echo (int)$total_kunjungan_filter; ?>;
-                var labelFilter = <?php echo json_encode($label_filter); ?>;
-                function switchFilterMode(chk) {
-                  var isSesi = chk.checked;
-                  document.getElementById('card-filter-icon').className = isSesi ? 'fa fa-calendar' : 'fa fa-filter';
-                  document.getElementById('card-filter-label').textContent = (isSesi ? 'Total Sesi ' : 'Total Kunjungan ') + labelFilter;
-                  document.getElementById('card-filter-count').childNodes[0].nodeValue = (isSesi ? totalSesiFilter : totalPaxFilter).toLocaleString('id-ID') + ' ';
-                  document.getElementById('card-filter-unit').textContent = isSesi ? 'sesi' : 'orang';
-                  document.getElementById('card-filter-sub').innerHTML = isSesi
-                    ? '<i class="fa fa-info-circle"></i> Jumlah sesi kunjungan hasil filter'
-                    : '<i class="fa fa-users"></i> Hasil filter yang diterapkan';
-                  document.getElementById('lbl-filter-pax').style.fontWeight = isSesi ? '400' : '700';
-                  document.getElementById('lbl-filter-sesi').style.fontWeight = isSesi ? '700' : '400';
-                }
-                <?php } ?>
-                </script>
 
                 <!-- FILTER PANEL -->
                 <div class="filter-panel" style="margin: 0 15px 15px 15px;">

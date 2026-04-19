@@ -136,6 +136,14 @@ document.addEventListener('DOMContentLoaded', function () {
       sidebar.classList.toggle('collapsed', collapsed);
       if (header)  header.style.left        = collapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-width)';
       if (content) content.classList.toggle('collapsed', collapsed);
+
+      // Tunggu animasi sidebar selesai (0.25s), lalu destroy & recreate semua chart
+      setTimeout(function () {
+        if (window._chartBar) { window._chartBar.destroy(); window._chartBar = null; }
+        if (window._chartPie) { window._chartPie.destroy(); window._chartPie = null; }
+        if (typeof window._rebuildBarChart === 'function') window._rebuildBarChart();
+        if (typeof window._rebuildPieChart === 'function') window._rebuildPieChart();
+      }, 260);
     });
   }
 });

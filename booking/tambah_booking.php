@@ -234,8 +234,8 @@ include "login/ceksession.php";
           </div>
 
           <div class="form-row">
-            <label class="form-label">Nama / Rombongan<span class="req">*</span></label>
-            <input type="text" name="nama" id="nama" required maxlength="100" class="form-input" placeholder="Nama pengunjung atau nama rombongan">
+            <label class="form-label">Nama Wisatawan<span class="req">*</span></label>
+            <input type="text" name="nama" id="nama" required maxlength="100" class="form-input" placeholder="Nama pengunjung atau nama wisatawan">
           </div>
 
           <div class="form-row">
@@ -284,8 +284,8 @@ include "login/ceksession.php";
           </div>
 
           <div class="form-row">
-            <label class="form-label">Agen Wisata<small>Opsional</small></label>
-            <input type="text" name="agen_wisata" maxlength="100" class="form-input" placeholder="Nama agen wisata (jika ada)">
+            <label class="form-label">Agen Wisata<span class="req">*</span></label>
+            <input type="text" name="agen_wisata" id="agen_wisata" required maxlength="100" class="form-input" placeholder="Nama agen wisata">
           </div>
 
           <div class="form-row">

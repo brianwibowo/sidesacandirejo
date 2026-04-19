@@ -23,8 +23,10 @@ $total_checkin  = 0;
 $total_tidakdatang = 0;
 $total_pax      = 0;
 $rekap_harian   = [];
-$chart_labels   = [];
-$chart_data     = [];
+$chart_labels        = [];
+$chart_data          = [];
+$chart_data_dom      = [];
+$chart_data_manca    = [];
 $pie_checkin    = 0;
 $pie_pending    = 0;
 $pie_tidak      = 0;
@@ -51,9 +53,11 @@ if ($show) {
     $q2 = mysqli_query($db,
         "SELECT tanggal_kunjungan,
                 COUNT(*) as total,
-                SUM(CASE WHEN status='checkin'     THEN 1 ELSE 0 END) as jml_checkin,
-                SUM(CASE WHEN status='tidak_hadir' THEN 1 ELSE 0 END) as jml_tidak,
-                SUM(pax) as total_pax
+                SUM(CASE WHEN status='checkin'          THEN 1 ELSE 0 END) as jml_checkin,
+                SUM(CASE WHEN status='tidak_hadir'      THEN 1 ELSE 0 END) as jml_tidak,
+                SUM(pax) as total_pax,
+                SUM(CASE WHEN jenis_wisatawan='Domestik'    THEN 1 ELSE 0 END) as jml_domestik,
+                SUM(CASE WHEN jenis_wisatawan!='Domestik'   THEN 1 ELSE 0 END) as jml_mancanegara
          FROM tb_booking
          WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
          GROUP BY tanggal_kunjungan
@@ -62,8 +66,10 @@ if ($show) {
         $rekap_harian[] = $r;
         // Label singkat untuk chart: "11 Apr"
         $ts = strtotime($r['tanggal_kunjungan']);
-        $chart_labels[] = date('j', $ts) . ' ' . substr($bulan_id[(int)date('n',$ts)], 0, 3);
-        $chart_data[]   = (int)$r['total'];
+        $chart_labels[]     = date('j', $ts) . ' ' . substr($bulan_id[(int)date('n',$ts)], 0, 3);
+        $chart_data[]       = (int)$r['total'];
+        $chart_data_dom[]   = (int)$r['jml_domestik'];
+        $chart_data_manca[] = (int)$r['jml_mancanegara'];
     }
 }
 ?>
@@ -307,87 +313,115 @@ if ($show) {
 
 <?php if ($show): ?>
 <script>
-/* ── Bar Chart ── */
-const ctxBar = document.getElementById('chartBar').getContext('2d');
-new Chart(ctxBar, {
-  type: 'bar',
-  data: {
-    labels: <?php echo json_encode($chart_labels); ?>,
-    datasets: [{
-      data: <?php echo json_encode($chart_data); ?>,
-      backgroundColor: '#1e3a2f',
-      borderRadius: 4,
-      borderSkipped: false,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: ctx => ' ' + ctx.parsed.y + ' booking'
+/* ── Bar Chart (Domestik vs Mancanegara) ── */
+window._rebuildBarChart = function () {
+  const ctxBar = document.getElementById('chartBar').getContext('2d');
+  window._chartBar = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: <?php echo json_encode($chart_labels); ?>,
+      datasets: [
+        {
+          label: 'Wisatawan Domestik',
+          data: <?php echo json_encode($chart_data_dom); ?>,
+          backgroundColor: '#1e3a2f',
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+        {
+          label: 'Wisatawan Mancanegara',
+          data: <?php echo json_encode($chart_data_manca); ?>,
+          backgroundColor: '#5fa87a',
+          borderRadius: 4,
+          borderSkipped: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            color: '#1e3a2f',
+            font: { size: 12 },
+            padding: 16,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' booking'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: '#7a9e8e', font: { size: 12 } }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#7a9e8e', font: { size: 12 },
+            stepSize: 2,
+            callback: v => Number.isInteger(v) ? v : ''
+          },
+          grid: { color: '#f0f5f2' }
         }
       }
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: '#7a9e8e', font: { size: 12 } }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          color: '#7a9e8e', font: { size: 12 },
-          stepSize: 2,
-          callback: v => Number.isInteger(v) ? v : ''
-        },
-        grid: { color: '#f0f5f2' }
-      }
     }
-  }
-});
+  });
+};
+
+window._rebuildBarChart();
 
 /* ── Pie Chart ── */
-const ctxPie = document.getElementById('chartPie').getContext('2d');
-const pieData    = [<?php echo $pie_checkin; ?>, <?php echo $pie_pending; ?>, <?php echo $pie_tidak; ?>];
-const pieLabels  = ['Check-in: <?php echo $pie_checkin; ?>', 'Pending: <?php echo $pie_pending; ?>', 'Tidak Datang: <?php echo $pie_tidak; ?>'];
-const pieColors  = ['#2e7d4f', '#f0a500', '#c0392b'];
+const pieData   = [<?php echo $pie_checkin; ?>, <?php echo $pie_pending; ?>, <?php echo $pie_tidak; ?>];
+const pieLabels = ['Check-in: <?php echo $pie_checkin; ?>', 'Pending: <?php echo $pie_pending; ?>', 'Tidak Datang: <?php echo $pie_tidak; ?>'];
+const pieColors = ['#2e7d4f', '#f0a500', '#c0392b'];
 
-new Chart(ctxPie, {
-  type: 'pie',
-  data: {
-    labels: pieLabels,
-    datasets: [{
-      data: pieData,
-      backgroundColor: pieColors,
-      borderWidth: 2,
-      borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: {
-          color: '#1e3a2f',
-          font: { size: 12 },
-          padding: 14,
-          usePointStyle: true,
-          pointStyleWidth: 10,
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: ctx => ' ' + ctx.label
+window._rebuildPieChart = function () {
+  const ctxPie = document.getElementById('chartPie').getContext('2d');
+  window._chartPie = new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+      labels: pieLabels,
+      datasets: [{
+        data: pieData,
+        backgroundColor: pieColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            color: '#1e3a2f',
+            font: { size: 12 },
+            padding: 14,
+            usePointStyle: true,
+            pointStyleWidth: 10,
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.label
+          }
         }
       }
     }
-  }
-});
+  });
+};
+
+window._rebuildPieChart();
 </script>
 <?php endif; ?>
 </body>
