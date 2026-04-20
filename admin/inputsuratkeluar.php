@@ -204,6 +204,17 @@ include "login/ceksession.php";
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_surat">Jenis Surat <span
+                          class="required">*</span></label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="jenis_surat" name="jenis_surat" required="required" class="form-control col-md-7 col-xs-12">
+                          <option value="">-- Pilih Jenis Surat --</option>
+                          <option value="keterangan">Surat Keterangan</option>
+                          <option value="undangan">Surat Undangan</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_keluar">Tanggal Keluar <span
                           class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -232,7 +243,7 @@ include "login/ceksession.php";
                           placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display:none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tempat_acara">Tempat Acara <span
                           class="required"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -240,7 +251,7 @@ include "login/ceksession.php";
                           placeholder="Masukkan Tempat Acara" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display:none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kegiatan">Tanggal Kegiatan <span
                           class="required"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -251,6 +262,13 @@ include "login/ceksession.php";
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
                         </div>
+                      </div>
+                    </div>
+                    <div class="form-group undangan-field" style="display:none;">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jam_kegiatan">Jam Kegiatan <span
+                          class="required"></span></label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input type="time" id="jam_kegiatan" name="jam_kegiatan" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
@@ -283,7 +301,7 @@ include "login/ceksession.php";
                         <small class="text-muted" style="display: block; margin-top: 5px;">*Wajib. Format PDF, max 10mb</small>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display:none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Absensi <span class="fa fa-upload" style="color: #3498db;"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class="upload-area" id="upload-area-absensi" data-field="file_absensi">
@@ -296,7 +314,7 @@ include "login/ceksession.php";
                         <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto</small>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display:none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Notulen <span class="fa fa-upload" style="color: #3498db;"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <div class="upload-area" id="upload-area-notulen" data-field="file_notulen">
@@ -404,8 +422,43 @@ include "login/ceksession.php";
         file_notulen: [],
         file_dokumentasi: []
       };
+      const jenisSuratSelect = $('#jenis_surat');
+      const undanganFieldGroups = $('.undangan-field');
+      const tempatAcaraInput = $('#tempat_acara');
+      const tanggalKegiatanInput = $('#tanggal_kegiatan');
+      const jamKegiatanInput = $('#jam_kegiatan');
       const fileSuratArea = $('#upload-area-surat');
       const fileSuratRequiredMsg = $('#file-surat-required');
+
+      function clearUndanganFile(fieldName) {
+        fileStorage[fieldName] = [];
+        updateFileInput(fieldName);
+        const previewContainer = $('#preview-' + fieldName.replace('file_', ''));
+        updatePreview(fieldName, previewContainer);
+      }
+
+      function toggleJenisSuratFields() {
+        const isUndangan = jenisSuratSelect.val() === 'undangan';
+
+        undanganFieldGroups.toggle(isUndangan);
+
+        tempatAcaraInput.prop('required', isUndangan);
+        tanggalKegiatanInput.prop('required', isUndangan);
+        jamKegiatanInput.prop('required', isUndangan);
+
+        if (!isUndangan) {
+          tempatAcaraInput.val('');
+          tanggalKegiatanInput.val('');
+          jamKegiatanInput.val('');
+          clearUndanganFile('file_absensi');
+          clearUndanganFile('file_notulen');
+        }
+
+        [tempatAcaraInput, tanggalKegiatanInput, jamKegiatanInput].forEach(function($input) {
+          $input.closest('.form-group').removeClass('has-error');
+          $input.closest('.form-group').find('.custom-error-msg').remove();
+        });
+      }
 
       function showFileSuratRequiredError() {
         fileSuratArea.addClass('required-error');
@@ -477,6 +530,9 @@ include "login/ceksession.php";
           clearFileSuratRequiredError();
         }
       }
+
+      toggleJenisSuratFields();
+      jenisSuratSelect.on('change', toggleJenisSuratFields);
 
       function updateFileInput(fieldName) {
         // Update file input dengan semua files yang ada di fileStorage

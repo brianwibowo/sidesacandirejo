@@ -171,6 +171,8 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
     .btn-checkin:hover { background: #2e7d4f; color: #fff; }
     .btn-tidakhadir { background: #fceaea; color: #c0392b; }
     .btn-tidakhadir:hover { background: #c0392b; color: #fff; }
+    .btn-hapus { background: #ffe9e9; color: #b71c1c; border: 1px solid #f0b0b0; }
+    .btn-hapus:hover { background: #b71c1c; color: #fff; border-color: #b71c1c; }
     .btn-edit { background: #eef3ff; color: #3b6fd4; }
     .btn-edit:hover { background: #3b6fd4; color: #fff; }
     .btn-outline { background: #fff; color: #4a6a57; border: 1px solid #d6e6dc; }
@@ -277,7 +279,10 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
               <?php if ($bk['status'] === 'pending'): ?>
                 <button type="button" class="btn btn-checkin" onclick="konfirmasiAksi(<?php echo (int)$bk['id']; ?>, 'checkin', '<?php echo e($bk['nama']); ?>')">Check-in Sekarang</button>
                 <button type="button" class="btn btn-tidakhadir" onclick="konfirmasiAksi(<?php echo (int)$bk['id']; ?>, 'tidak_hadir', '<?php echo e($bk['nama']); ?>')">Tandai Tidak Hadir</button>
+                <button type="button" class="btn btn-hapus" onclick="konfirmasiHapus(<?php echo (int)$bk['id']; ?>, '<?php echo e($bk['nama']); ?>')">Hapus Booking</button>
                 <a href="edit_booking.php?id=<?php echo (int)$bk['id']; ?>" class="btn btn-edit">Edit Data Booking</a>
+              <?php elseif ($bk['status'] === 'tidak_hadir'): ?>
+                <button type="button" class="btn btn-hapus" onclick="konfirmasiHapus(<?php echo (int)$bk['id']; ?>, '<?php echo e($bk['nama']); ?>')">Hapus Booking</button>
               <?php else: ?>
                 <div class="info-value" style="font-size:13px;color:#6b8f7e;">
                   Aksi status dinonaktifkan karena booking sudah diproses.
@@ -336,6 +341,10 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
   <input type="hidden" name="id_booking" id="inputIdBooking">
   <input type="hidden" name="aksi" id="inputAksi">
 </form>
+<form id="formHapus" action="proses/proses_hapus_booking.php" method="POST" style="display:none;">
+  <input type="hidden" name="id_booking" id="inputIdHapus">
+  <input type="hidden" name="ref" value="<?php echo e($ref); ?>">
+</form>
 
 <script>
 function konfirmasiAksi(id, aksi, nama) {
@@ -359,6 +368,25 @@ function konfirmasiAksi(id, aksi, nama) {
       document.getElementById('inputIdBooking').value = id;
       document.getElementById('inputAksi').value = aksi;
       document.getElementById('formAksi').submit();
+    }
+  });
+}
+
+function konfirmasiHapus(id, nama) {
+  Swal.fire({
+    title: 'Hapus Booking',
+    html: `<p style="font-size:15px;color:#555;">Hapus booking <strong>${nama}</strong>?</p><small style="color:#9ab5a8;">Aksi ini tidak bisa dibatalkan.</small>`,
+    icon: 'warning',
+    iconColor: '#c0392b',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Hapus',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#c0392b',
+    cancelButtonColor: '#aaa',
+  }).then(result => {
+    if (result.isConfirmed) {
+      document.getElementById('inputIdHapus').value = id;
+      document.getElementById('formHapus').submit();
     }
   });
 }

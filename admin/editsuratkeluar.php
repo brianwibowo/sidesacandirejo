@@ -102,6 +102,10 @@ include "login/ceksession.php";
                             $sql  		= "SELECT * FROM tb_arsip_surat_keluar where No='".$id."'";                        
                             $query  	= mysqli_query($db, $sql);
                             $data 		= mysqli_fetch_array($query);
+                            $jenis_surat = strtolower($data['jenis_surat'] ?? 'keterangan');
+                            if (!in_array($jenis_surat, ['keterangan', 'undangan'], true)) {
+                              $jenis_surat = 'keterangan';
+                            }
                           ?>
 
                     <input type=hidden name="id_suratkeluar" value="<?php echo $id;?>">
@@ -130,6 +134,17 @@ include "login/ceksession.php";
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_surat">Jenis Surat <span
+                          class="required">*</span>
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <select id="jenis_surat" name="jenis_surat" required="required" class="form-control col-md-7 col-xs-12">
+                          <option value="keterangan" <?php echo $jenis_surat === 'keterangan' ? 'selected' : ''; ?>>Surat Keterangan</option>
+                          <option value="undangan" <?php echo $jenis_surat === 'undangan' ? 'selected' : ''; ?>>Surat Undangan</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nomor Surat <span
                           class="required">*</span>
                       </label>
@@ -151,7 +166,7 @@ include "login/ceksession.php";
                           class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display: none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tempat_acara">Tempat Acara
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -160,7 +175,7 @@ include "login/ceksession.php";
                           class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display: none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kegiatan">Tanggal Kegiatan
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
@@ -171,6 +186,14 @@ include "login/ceksession.php";
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
                         </div>
+                      </div>
+                    </div>
+                    <div class="form-group undangan-field" style="display: none;">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jam_kegiatan">Jam Kegiatan
+                      </label>
+                      <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input value="<?php echo !empty($data['jam_kegiatan']) ? htmlspecialchars(substr($data['jam_kegiatan'], 0, 5), ENT_QUOTES, 'UTF-8') : ''; ?>" type="time" id="jam_kegiatan"
+                          name="jam_kegiatan" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
@@ -200,7 +223,7 @@ include "login/ceksession.php";
                       $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
                       if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
                     ?>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display: none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Absensi <span class="fa fa-upload" style="color: #3498db;"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php if (!empty($absensi_files)) { ?>
@@ -229,7 +252,7 @@ include "login/ceksession.php";
                         <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto tambahan</small>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group undangan-field" style="display: none;">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Notulen <span class="fa fa-upload" style="color: #3498db;"></span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php if (!empty($notulen_files)) { ?>
@@ -426,9 +449,39 @@ include "login/ceksession.php";
       file_notulen: [],
       file_dokumentasi: []
     };
+    const jenisSuratSelect = $('#jenis_surat');
+    const undanganFieldGroups = $('.undangan-field');
+    const tempatAcaraInput = $('#tempat_acara');
+    const tanggalKegiatanInput = $('#tanggal_kegiatan');
+    const jamKegiatanInput = $('#jam_kegiatan');
     const hasExistingFileSuratInitially = $('#has-existing-file-surat').val() === '1';
     const fileSuratArea = $('#upload-area-surat');
     const fileSuratRequiredMsg = $('#file-surat-required-edit');
+
+    function clearUndanganFile(fieldName) {
+      fileStorage[fieldName] = [];
+      updateFileInput(fieldName);
+      const previewContainer = $('#preview-' + fieldName.replace('file_', ''));
+      updatePreview(fieldName, previewContainer);
+    }
+
+    function toggleJenisSuratFields() {
+      const isUndangan = jenisSuratSelect.val() === 'undangan';
+
+      undanganFieldGroups.toggle(isUndangan);
+
+      tempatAcaraInput.prop('required', isUndangan);
+      tanggalKegiatanInput.prop('required', isUndangan);
+      jamKegiatanInput.prop('required', isUndangan);
+
+      if (!isUndangan) {
+        tempatAcaraInput.val('');
+        tanggalKegiatanInput.val('');
+        jamKegiatanInput.val('');
+        clearUndanganFile('file_absensi');
+        clearUndanganFile('file_notulen');
+      }
+    }
 
     function hasValidFileSurat() {
       const hasNewFile = fileStorage.file_surat.length > 0;
@@ -487,6 +540,9 @@ include "login/ceksession.php";
         handleFileSelect(this.files, fieldName, previewContainer);
       });
     });
+
+    toggleJenisSuratFields();
+    jenisSuratSelect.on('change', toggleJenisSuratFields);
 
     function handleFileSelect(files, fieldName, previewContainer) {
       if (singleFileFields.includes(fieldName)) {

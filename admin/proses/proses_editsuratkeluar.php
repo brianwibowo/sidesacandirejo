@@ -2,6 +2,18 @@
 
 include '../../koneksi/koneksi.php';
 
+function ensureColumnExists($db, $tableName, $columnName, $columnDefinition)
+{
+    $tableEsc = mysqli_real_escape_string($db, $tableName);
+    $columnEsc = mysqli_real_escape_string($db, $columnName);
+
+    $check = mysqli_query($db, "SHOW COLUMNS FROM `{$tableEsc}` LIKE '{$columnEsc}'");
+    if ($check && mysqli_num_rows($check) === 0) {
+        $alter = "ALTER TABLE `{$tableEsc}` ADD COLUMN {$columnDefinition}";
+        mysqli_query($db, $alter);
+    }
+}
+
 function uploadMultipleFiles($inputName, $allowedExtensions, $targetDir)
 {
     $uploaded = [];
@@ -50,11 +62,27 @@ $id = mysqli_real_escape_string($db, $_POST['id']);
 $No = mysqli_real_escape_string($db, $_POST['No']);
 $tgl_keluar = $_POST['tanggal_keluar'];
 $tanggal_kegiatan = isset($_POST['tanggal_kegiatan']) ? trim($_POST['tanggal_kegiatan']) : '';
+$jam_kegiatan = isset($_POST['jam_kegiatan']) ? trim($_POST['jam_kegiatan']) : '';
 $nomor_surat = mysqli_real_escape_string($db, $_POST['nomor_surat']);
 $penerima = mysqli_real_escape_string($db, $_POST['penerima']);
+$jenis_surat_raw = strtolower(trim($_POST['jenis_surat'] ?? 'keterangan'));
+$jenis_surat = in_array($jenis_surat_raw, ['keterangan', 'undangan'], true) ? $jenis_surat_raw : 'keterangan';
 $tempat_acara = isset($_POST['tempat_acara']) ? trim($_POST['tempat_acara']) : '';
 $perihal = mysqli_real_escape_string($db, $_POST['perihal']);
 $keterangan = isset($_POST['keterangan']) ? mysqli_real_escape_string($db, $_POST['keterangan']) : '';
+
+ensureColumnExists(
+    $db,
+    'tb_arsip_surat_keluar',
+    'jenis_surat',
+    "`jenis_surat` VARCHAR(20) NOT NULL DEFAULT 'keterangan' AFTER `penerima`"
+);
+ensureColumnExists(
+    $db,
+    'tb_arsip_surat_keluar',
+    'jam_kegiatan',
+    "`jam_kegiatan` TIME NULL AFTER `tanggal_kegiatan`"
+);
 
 $tanggal_keluar_db = date('Y-m-d', strtotime(str_replace('/', '-', $tgl_keluar)));
 
@@ -67,6 +95,14 @@ if ($tanggal_kegiatan !== '') {
     }
 } else {
     $tanggal_kegiatan_sql = "NULL";
+}
+
+$jam_kegiatan_sql = "NULL";
+if ($jam_kegiatan !== '') {
+    $timestamp_jam = strtotime($jam_kegiatan);
+    if ($timestamp_jam !== false) {
+        $jam_kegiatan_sql = "'" . date('H:i:s', $timestamp_jam) . "'";
+    }
 }
 
 if ($tempat_acara !== '') {
@@ -126,6 +162,16 @@ $new_absensi     = uploadMultipleFiles('file_absensi',     ['pdf', 'jpg', 'jpeg'
 $new_notulen     = uploadMultipleFiles('file_notulen',     ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif'], $lampiran_dir);
 $new_dokumentasi = uploadMultipleFiles('file_dokumentasi', ['jpg', 'jpeg', 'png', 'webp', 'gif'],        $lampiran_dir);
 
+if ($jenis_surat !== 'undangan') {
+    $tempat_acara_sql = "NULL";
+    $tanggal_kegiatan_sql = "NULL";
+    $jam_kegiatan_sql = "NULL";
+    $existing_absensi = [];
+    $existing_notulen = [];
+    $new_absensi = [];
+    $new_notulen = [];
+}
+
 $absensi_final = array_values(array_unique(array_merge($existing_absensi, $new_absensi)));
 $notulen_final = array_values(array_unique(array_merge($existing_notulen, $new_notulen)));
 $dokumentasi_final = array_values(array_unique(array_merge($existing_dokumentasi, $new_dokumentasi)));
@@ -174,8 +220,10 @@ if ($has_new_file_surat) {
                   tanggal_keluar = '$tanggal_keluar_db',
                   nomor_surat = '$nomor_surat',
                   penerima = '$penerima',
+                  jenis_surat = '$jenis_surat',
                   tempat_acara = $tempat_acara_sql,
                   tanggal_kegiatan = $tanggal_kegiatan_sql,
+                  jam_kegiatan = $jam_kegiatan_sql,
                   perihal = '$perihal',
                   keterangan = '$keterangan',
                   lampiran_absensi = $absensi_sql,
@@ -197,8 +245,10 @@ if ($has_new_file_surat) {
               tanggal_keluar = '$tanggal_keluar_db',
               nomor_surat = '$nomor_surat',
               penerima = '$penerima',
+              jenis_surat = '$jenis_surat',
               tempat_acara=$tempat_acara_sql,
               tanggal_kegiatan=$tanggal_kegiatan_sql,
+              jam_kegiatan=$jam_kegiatan_sql,
               perihal = '$perihal',
               keterangan = '$keterangan',
               lampiran_absensi = $absensi_sql,

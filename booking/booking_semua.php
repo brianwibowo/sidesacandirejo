@@ -178,6 +178,12 @@ function tglIndo($date) {
       padding: 0; transition: color 0.15s;
     }
     .link-tidakhadir:hover { color: #962d22; text-decoration: underline; }
+    .link-hapus {
+      font-size: 13px; font-weight: 500; color: #b71c1c;
+      text-decoration: none; cursor: pointer; background: none; border: none;
+      padding: 0; transition: color 0.15s;
+    }
+    .link-hapus:hover { color: #7f1010; text-decoration: underline; }
     .aksi-sep { color: #c8ddd4; font-size: 12px; }
 
     /* ── TABLE FOOTER ── */
@@ -304,6 +310,21 @@ function tglIndo($date) {
                     onclick="konfirmasiAksi(<?php echo $row['id']; ?>, 'tidak_hadir', '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
                     Tidak Hadir
                   </button>
+                  <span class="aksi-sep">|</span>
+                  <button
+                    type="button"
+                    class="link-hapus"
+                    onclick="konfirmasiHapus(<?php echo (int)$row['id']; ?>, '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
+                    Hapus
+                  </button>
+                  <?php elseif ($status === 'tidak_hadir'): ?>
+                  <span class="aksi-sep">|</span>
+                  <button
+                    type="button"
+                    class="link-hapus"
+                    onclick="konfirmasiHapus(<?php echo (int)$row['id']; ?>, '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
+                    Hapus
+                  </button>
                   <?php endif; ?>
                 </div>
               </td>
@@ -333,6 +354,10 @@ function tglIndo($date) {
 <form id="formAksi" action="proses/proses_checkin.php" method="POST" style="display:none;">
   <input type="hidden" name="id_booking" id="inputIdBooking">
   <input type="hidden" name="aksi" id="inputAksi">
+</form>
+<form id="formHapus" action="proses/proses_hapus_booking.php" method="POST" style="display:none;">
+  <input type="hidden" name="id_booking" id="inputIdHapus">
+  <input type="hidden" name="ref" value="booking_semua.php">
 </form>
 
 <script>
@@ -365,6 +390,25 @@ function konfirmasiAksi(id, aksi, nama) {
       document.getElementById('inputIdBooking').value = id;
       document.getElementById('inputAksi').value = aksi;
       document.getElementById('formAksi').submit();
+    }
+  });
+}
+
+function konfirmasiHapus(id, nama) {
+  Swal.fire({
+    title: 'Hapus Booking',
+    html: `<p style="font-size:15px;color:#555;">Hapus booking <strong>${nama}</strong>?</p><small style="color:#9ab5a8;">Aksi ini tidak bisa dibatalkan.</small>`,
+    icon: 'warning',
+    iconColor: '#c0392b',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Hapus',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#c0392b',
+    cancelButtonColor: '#aaa',
+  }).then(result => {
+    if (result.isConfirmed) {
+      document.getElementById('inputIdHapus').value = id;
+      document.getElementById('formHapus').submit();
     }
   });
 }

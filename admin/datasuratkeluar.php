@@ -185,9 +185,11 @@ include "login/ceksession.php";
                           <th width="12%">Nomor Surat</th>
                           <th width="8%">Tanggal Keluar</th>
                           <th width="10%">Penerima</th>
+                          <th width="8%">Jenis Surat</th>
                           <th width="10%">Perihal</th>
                           <th width="10%">Tempat Acara</th>
                           <th width="8%">Tanggal Kegiatan</th>
+                          <th width="7%">Jam Kegiatan</th>
                           <th width="7%">Absensi</th>
                           <th width="7%">Notulen</th>
                           <th width="8%">Dokumentasi</th>
@@ -255,9 +257,11 @@ include "login/ceksession.php";
                             <td>'.htmlspecialchars($data['nomor_surat']).'</td>
                             <td>'.htmlspecialchars($data['tanggal_keluar']).'</td>
                             <td>'.htmlspecialchars($data['penerima']).'</td>
+                            <td>'.htmlspecialchars(ucfirst($data['jenis_surat'] ?? 'keterangan')).'</td>
                             <td>'.htmlspecialchars($data['perihal']).'</td>
                             <td>'.(!empty($data['tempat_acara']) ? htmlspecialchars($data['tempat_acara']) : '-').'</td>
                             <td>'.(!empty($data['tanggal_kegiatan']) ? htmlspecialchars($data['tanggal_kegiatan']) : '-').'</td>
+                            <td>'.(!empty($data['jam_kegiatan']) ? htmlspecialchars(substr($data['jam_kegiatan'], 0, 5)) : '-').'</td>
                             <td>'.$absensi_cell.'</td>
                             <td>'.$notulen_cell.'</td>
                             <td>'.$dokumentasi_cell.'</td>

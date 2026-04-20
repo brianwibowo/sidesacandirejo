@@ -47,6 +47,20 @@ function uploadMultipleFiles($inputName, $allowedExtensions, $targetDir)
     return $uploaded;
 }
 
+function ensureColumnExists($db, $tableName, $columnName, $columnDefinition)
+{
+    $tableEsc = mysqli_real_escape_string($db, $tableName);
+    $columnEsc = mysqli_real_escape_string($db, $columnName);
+
+    $check = mysqli_query($db, "SHOW COLUMNS FROM `{$tableEsc}` LIKE '{$columnEsc}'");
+    if ($check && mysqli_num_rows($check) === 0) {
+        $alter = "ALTER TABLE `{$tableEsc}` ADD COLUMN {$columnDefinition}";
+        if (!mysqli_query($db, $alter)) {
+            redirectAlert('../datasuratkeluar.php', 'error', 'Gagal update struktur tabel: ' . mysqli_error($db));
+        }
+    }
+}
+
 // ── Cek method ────────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirectAlert('../datasuratkeluar.php', 'error', 'Akses tidak valid.');
@@ -56,10 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $tgl_keluar       = mysqli_real_escape_string($db, $_POST['tanggal_keluar']   ?? '');
 $nomor_surat      = mysqli_real_escape_string($db, $_POST['nomor_surat']      ?? '');
 $penerima         = mysqli_real_escape_string($db, $_POST['penerima']         ?? '');
+$jenis_surat_raw  = strtolower(trim($_POST['jenis_surat'] ?? ''));
+$jenis_surat      = in_array($jenis_surat_raw, ['keterangan', 'undangan'], true) ? $jenis_surat_raw : 'keterangan';
 $tempat_acara     = mysqli_real_escape_string($db, $_POST['tempat_acara']     ?? '');
 $tanggal_kegiatan = trim($_POST['tanggal_kegiatan'] ?? '');
+$jam_kegiatan     = trim($_POST['jam_kegiatan'] ?? '');
 $perihal          = mysqli_real_escape_string($db, $_POST['perihal']          ?? '');
 $keterangan       = mysqli_real_escape_string($db, $_POST['keterangan']       ?? '');
+
+if ($jenis_surat !== 'undangan') {
+    $tempat_acara = '';
+    $tanggal_kegiatan = '';
+    $jam_kegiatan = '';
+}
 
 // ── Format tanggal keluar ─────────────────────────────────────────────────
 $ts_keluar = strtotime(str_replace('/', '-', $tgl_keluar));
@@ -76,6 +99,14 @@ if ($tanggal_kegiatan !== '') {
         : "NULL";
 } else {
     $tanggal_kegiatan_sql = "NULL";
+}
+
+$jam_kegiatan_sql = "NULL";
+if ($jam_kegiatan !== '') {
+    $ts_jam = strtotime($jam_kegiatan);
+    if ($ts_jam !== false) {
+        $jam_kegiatan_sql = "'" . date('H:i:s', $ts_jam) . "'";
+    }
 }
 
 // ── Upload file surat utama (PDF, wajib) ──────────────────────────────────
@@ -106,6 +137,11 @@ $absensi_files     = uploadMultipleFiles('file_absensi',     $allowed_files,    
 $notulen_files     = uploadMultipleFiles('file_notulen',     $allowed_files,     $lampiran_dir);
 $dokumentasi_files = uploadMultipleFiles('file_dokumentasi', $allowed_foto_only, $lampiran_dir);
 
+if ($jenis_surat !== 'undangan') {
+    $absensi_files = [];
+    $notulen_files = [];
+}
+
 $absensi_sql     = !empty($absensi_files)
     ? "'" . mysqli_real_escape_string($db, json_encode($absensi_files)) . "'"
     : "NULL";
@@ -125,18 +161,32 @@ $next_no = ($row['last_no'] ?? 0) + 1;
 $nomor_surat_esc      = mysqli_real_escape_string($db, $nomor_surat);
 $penerima_esc         = mysqli_real_escape_string($db, $penerima);
 $tempat_acara_esc     = mysqli_real_escape_string($db, $tempat_acara);
+$jenis_surat_esc      = mysqli_real_escape_string($db, $jenis_surat);
 $perihal_esc          = mysqli_real_escape_string($db, $perihal);
 $keterangan_esc       = mysqli_real_escape_string($db, $keterangan);
 $nama_pdf_esc         = mysqli_real_escape_string($db, $nama_pdf);
 
+ensureColumnExists(
+    $db,
+    'tb_arsip_surat_keluar',
+    'jenis_surat',
+    "`jenis_surat` VARCHAR(20) NOT NULL DEFAULT 'keterangan' AFTER `penerima`"
+);
+ensureColumnExists(
+    $db,
+    'tb_arsip_surat_keluar',
+    'jam_kegiatan',
+    "`jam_kegiatan` TIME NULL AFTER `tanggal_kegiatan`"
+);
+
 // ── Insert ke database ────────────────────────────────────────────────────
 $query = "INSERT INTO tb_arsip_surat_keluar
-            (No, tanggal_keluar, nomor_surat, penerima, tempat_acara,
-             tanggal_kegiatan, perihal, keterangan,
+                        (No, tanggal_keluar, nomor_surat, penerima, jenis_surat, tempat_acara,
+                         tanggal_kegiatan, jam_kegiatan, perihal, keterangan,
              file_surat, lampiran_absensi, lampiran_notulen, dokumentasi_foto)
           VALUES
-            ('$next_no', '$tanggal_keluar_db', '$nomor_surat_esc', '$penerima_esc',
-             '$tempat_acara_esc', $tanggal_kegiatan_sql, '$perihal_esc', '$keterangan_esc',
+                        ('$next_no', '$tanggal_keluar_db', '$nomor_surat_esc', '$penerima_esc', '$jenis_surat_esc',
+                         '$tempat_acara_esc', $tanggal_kegiatan_sql, $jam_kegiatan_sql, '$perihal_esc', '$keterangan_esc',
              '$nama_pdf_esc', $absensi_sql, $notulen_sql, $dokumentasi_sql)";
 
 if (mysqli_query($db, $query)) {

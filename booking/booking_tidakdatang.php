@@ -137,6 +137,14 @@ function tglIndo($date) {
       text-decoration: none; transition: color 0.15s;
     }
     .link-detail:hover { color: #1e3a2f; text-decoration: underline; }
+    .btn-hapus {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #ffe9e9; color: #b71c1c; border: 1px solid #f0b0b0;
+      border-radius: 7px; padding: 6px 12px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background 0.15s, color 0.15s; white-space: nowrap;
+    }
+    .btn-hapus:hover { background: #b71c1c; color: #fff; border-color: #b71c1c; }
 
     /* ── TABLE FOOTER ── */
     .table-footer {
@@ -224,6 +232,12 @@ function tglIndo($date) {
               <td>
                 <div class="aksi-cell">
                   <a href="detail_booking.php?id=<?php echo $row['id']; ?>&ref=booking_tidakdatang.php" class="link-detail">Detail</a>
+                  <button
+                    type="button"
+                    class="btn-hapus"
+                    onclick="konfirmasiHapus(<?php echo (int)$row['id']; ?>, '<?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>')">
+                    Hapus
+                  </button>
                 </div>
               </td>
             </tr>
@@ -245,6 +259,11 @@ function tglIndo($date) {
   <div class="booking-footer">Apriansyah Wibowo. All Rights Reserved.</div>
 </main>
 
+<form id="formHapus" action="proses/proses_hapus_booking.php" method="POST" style="display:none;">
+  <input type="hidden" name="id_booking" id="inputIdHapus">
+  <input type="hidden" name="ref" value="booking_tidakdatang.php">
+</form>
+
 <script>
 document.getElementById('searchInput').addEventListener('keydown', function (e) {
   if (e.key === 'Enter') {
@@ -252,6 +271,25 @@ document.getElementById('searchInput').addEventListener('keydown', function (e) 
     document.getElementById('filterForm').submit();
   }
 });
+
+function konfirmasiHapus(id, nama) {
+  Swal.fire({
+    title: 'Hapus Booking',
+    html: `<p style="font-size:15px;color:#555;">Hapus booking <strong>${nama}</strong>?</p><small style="color:#9ab5a8;">Aksi ini tidak bisa dibatalkan.</small>`,
+    icon: 'warning',
+    iconColor: '#c0392b',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Hapus',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#c0392b',
+    cancelButtonColor: '#aaa',
+  }).then(result => {
+    if (result.isConfirmed) {
+      document.getElementById('inputIdHapus').value = id;
+      document.getElementById('formHapus').submit();
+    }
+  });
+}
 </script>
 </body>
 </html>

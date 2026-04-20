@@ -131,12 +131,20 @@ include "login/ceksession.php";
                           <td><?php echo htmlspecialchars($data['penerima']); ?></td>
                         </tr>
                         <tr>
+                          <td>Jenis Surat</td>
+                          <td><?php echo htmlspecialchars(ucfirst($data['jenis_surat'] ?? 'keterangan')); ?></td>
+                        </tr>
+                        <tr>
                           <td>Tempat Acara</td>
                           <td><?php echo !empty($data['tempat_acara']) ? htmlspecialchars($data['tempat_acara']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Tanggal Kegiatan</td>
                           <td><?php echo !empty($data['tanggal_kegiatan']) ? htmlspecialchars($data['tanggal_kegiatan']) : '-'; ?></td>
+                        </tr>
+                        <tr>
+                          <td>Jam Kegiatan</td>
+                          <td><?php echo !empty($data['jam_kegiatan']) ? htmlspecialchars(substr($data['jam_kegiatan'], 0, 5)) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Perihal</td>
