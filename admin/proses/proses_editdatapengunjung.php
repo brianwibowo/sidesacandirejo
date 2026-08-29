@@ -9,10 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $nama = trim($_POST['nama']);
-    $pax = (int)$_POST['pax'];
+    $pax = isset($_POST['pax']) ? (int)$_POST['pax'] : -1;
     
     // Validasi data wajib
-    if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax <= 0) {
+    if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax < 0) {
         echo "<script>alert('Data wajib tidak boleh kosong!'); window.history.back();</script>";
         exit;
     }

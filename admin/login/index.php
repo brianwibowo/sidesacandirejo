@@ -34,7 +34,7 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
-            <form action="proses_login.php" id="login" name="login" method="post">
+            <form action="/admin/login/proses_login.php" id="login" name="login" method="post">
               <h1>Login</h1>
               <div class="form-group has-feedback">
                 <input type="text" id="username" name="username_admin" class="form-control" autocomplete="off" maxlength="50" placeholder="Username" required="username" />

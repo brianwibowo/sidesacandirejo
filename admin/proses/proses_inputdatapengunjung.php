@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $kota = isset($_POST['kota']) ? $_POST['kota'] : null;
     $negara = isset($_POST['negara']) ? $_POST['negara'] : null;
     $nama = $_POST['nama'];
-    $pax = $_POST['pax'];
+    $pax = isset($_POST['pax']) ? (int)$_POST['pax'] : -1;
     $agen_wisata = isset($_POST['agen_wisata']) ? $_POST['agen_wisata'] : null;
     $driver_agent_guide = isset($_POST['driver_agent_guide']) ? $_POST['driver_agent_guide'] : null;
     $local_guide = isset($_POST['local_guide']) ? $_POST['local_guide'] : null;
@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Validation
+    if ($pax < 0) {
+        echo "<script>alert('Jumlah wisatawan (pax) tidak boleh kurang dari 0!'); window.history.back();</script>";
+        exit;
+    }
+
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
         echo "<script>alert('Kota harus diisi untuk wisatawan domestik!'); window.history.back();</script>";
         exit;
