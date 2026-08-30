@@ -1,0 +1,36 @@
+name: Deploy to Production (sidesacandirejo.com)
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Shared Hosting via SSH / Rsync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Server via SSH
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST || 'omahcrypto.com' }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER || 'omag8228' }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT || '22' }}
+          TARGET: "/home/omag8228/public_html/sidesacandirejo.com/"
+          SOURCE: "/"
+          ARGS: "-rlgoDzvc --delete"
+          EXCLUDE: |
+            /admin/uploads/
+            /.git/
+            /.github/
+            /*.sql
+            /.DS_Store
+            /.user.ini
+            /php.ini
+            /cgi-bin/

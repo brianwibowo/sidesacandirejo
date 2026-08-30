@@ -1,0 +1,35 @@
+# macOS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+
+# User Uploaded Content & Media (keep tracked default assets)
+admin/uploads/*
+!admin/uploads/pengunjung/
+!admin/uploads/pengurus/
+admin/uploads/pengunjung/*
+!admin/uploads/pengunjung/6845be9d92f7e.jpeg
+!admin/uploads/pengunjung/6845bf03e5fe4.jpeg
+!admin/uploads/pengunjung/6845bfd96ff86.jpeg
+!admin/uploads/pengunjung/69d642074e1b1_0.jpeg
+!admin/uploads/pengunjung/69d6420751d9a_1.jpeg
+!admin/uploads/pengunjung/69d642b9b4204_0.jpeg
+!admin/uploads/pengunjung/69d642b9b47f2_1.jpeg
+!admin/uploads/pengunjung/69d87afcbe912_0.png
+admin/uploads/pengurus/*
+uploads/
+data/
+file/
+*.zip
+
+# Database dumps and temporary files
+*.sql
+!u655368359_db_surat.sql
+doc.php
+google6fa79c3e622f86c9.html
