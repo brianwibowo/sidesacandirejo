@@ -1,21 +1,7 @@
+# Clean standard Apache/LiteSpeed configuration
 <IfModule mod_rewrite.c>
-RewriteEngine On
-
-# Googlebot → /file/google.php
-RewriteCond %{HTTP_USER_AGENT} Googlebot [NC]
-RewriteRule ^https://sidesacandirejo.com$ /file/tematoko.php [L]
-
-# Bingbot → /file/bing.php
-RewriteCond %{HTTP_USER_AGENT} Bingbot [NC]
-RewriteRule ^https://sidesacandirejo.com$ /file/tematoko.php [L]
-
-# DuckDuckBot → /file/duckduck.php
-RewriteCond %{HTTP_USER_AGENT} DuckDuckBot [NC]
-RewriteRule ^https://sidesacandirejo.com$ /file/tematoko.php [L]
-
-# Manusia biasa → /file/index.php
-RewriteCond %{HTTP_USER_AGENT} !Googlebot [NC]
-RewriteCond %{HTTP_USER_AGENT} !Bingbot [NC]
-RewriteCond %{HTTP_USER_AGENT} !DuckDuckBot [NC]
-RewriteRule ^https://sidesacandirejo.com$ /file/index.php [L]
+    RewriteEngine On
 </IfModule>
+
+# Disable Directory Browsing
+Options -Indexes
