@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/omag8228/public_html/sidesacandirejo.com/
+    - /bin/cp -R * $DEPLOYPATH
