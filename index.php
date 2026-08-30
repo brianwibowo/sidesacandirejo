@@ -19,11 +19,14 @@ include "koneksi/ceksession.php";
     <div class="container">
         <nav>
             <div class="logo">
-                <a href="index.html">
+                <a href="index.php">
                     <img src="./img/samarinda.png" alt="logo">
                 </a>
             </div>
-            <!-- <a href="admin/login" class="masuk-btn">Masuk <i class="hgi hgi-stroke hgi-arrow-right-02"></i></a> -->
+            <a href="admin/login/" class="masuk-btn" style="display:inline-flex;align-items:center;gap:6px;background:#83C024;color:#fff;padding:8px 18px;border-radius:20px;text-decoration:none;font-weight:600;font-size:14px;box-shadow:0 4px 12px rgba(131,192,36,0.3);transition:all 0.2s;">
+                <span>Masuk Admin</span>
+                <i class="hgi hgi-stroke hgi-arrow-right-02"></i>
+            </a>
         </nav>
 
         <!-- -maincontent -->
@@ -83,7 +86,7 @@ include "koneksi/ceksession.php";
                         <p>Didanai oleh DRTPM KEMDIKBUDRISTEK 2024 - FEB UNNES</p>
                     </div>
                     <div class="right-copyright">
-                        <p>© 2026 - Developed by</p><a href="https://www.instagram.com/vuriko.studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Vuriko Studio</a>
+                        <p>© <?php echo date("Y"); ?> - Developed by</p><a href="https://www.instagram.com/vuriko.studio" target="_blank">Vuriko Studio</a>
                     </div>
                 </div>
             </div>
