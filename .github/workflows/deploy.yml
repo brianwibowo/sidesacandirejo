@@ -19,18 +19,10 @@ jobs:
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST || 'omahcrypto.com' }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST || '103.247.9.165' }}
           REMOTE_USER: ${{ secrets.REMOTE_USER || 'omag8228' }}
           REMOTE_PORT: ${{ secrets.REMOTE_PORT || '22' }}
           TARGET: "/home/omag8228/public_html/sidesacandirejo.com/"
           SOURCE: "/"
           ARGS: "-rlgoDzvc --delete"
-          EXCLUDE: |
-            /admin/uploads/
-            /.git/
-            /.github/
-            /*.sql
-            /.DS_Store
-            /.user.ini
-            /php.ini
-            /cgi-bin/
+          EXCLUDE: "/admin/uploads/, /.git/, /.github/, /*.sql, /.DS_Store, /.user.ini, /php.ini, /cgi-bin/"
