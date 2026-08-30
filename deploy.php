@@ -14,10 +14,10 @@ if ($incoming_token !== $secret_token) {
     exit();
 }
 
-// Jalankan git pull di direktori project
+// Jalankan git fetch & reset --hard agar server selalu bersih dan sinkron dengan master
 $output = [];
 $return_var = 0;
-exec('git pull origin master 2>&1', $output, $return_var);
+exec('git fetch origin master 2>&1 && git reset --hard origin/master 2>&1', $output, $return_var);
 
 header('Content-Type: application/json');
 if ($return_var === 0) {
