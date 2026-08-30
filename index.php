@@ -34,6 +34,10 @@ include "koneksi/ceksession.php";
             <div class="home" id="home">
                 <div class="before-copyright">
                     <div class="hero-section-main-header">
+                        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(131,192,36,0.12);color:#4a7311;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:14px;border:1px solid rgba(131,192,36,0.3);">
+                            <span style="width:7px;height:7px;background:#83C024;border-radius:50%;display:inline-block;"></span>
+                            <span>Portal Resmi Desa Wisata Candirejo</span>
+                        </div>
                         <div class="hero-heading">
                             <span class="heading1">Sistem Informasi Terpadu</span>
                             <span class="heading2">Arsip Surat & Rekap Booking</span>
