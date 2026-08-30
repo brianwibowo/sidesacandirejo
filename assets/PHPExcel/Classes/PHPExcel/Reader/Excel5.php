@@ -5175,9 +5175,11 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
                 }
                 //imagepng($ih, 'image.png');
 
-                $drawing = new PHPExcel_Worksheet_Drawing();
-                $drawing->setPath($filename);
-                $drawing->setWorksheet($this->phpSheet);
+                if (isset($filename)) {
+                    $drawing = new PHPExcel_Worksheet_Drawing();
+                    $drawing->setPath($filename);
+                    $drawing->setWorksheet($this->phpSheet);
+                }
                 break;
             case 0x02: // Windows metafile or Macintosh PICT format
             case 0x0e: // native format
