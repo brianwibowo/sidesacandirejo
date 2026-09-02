@@ -2,112 +2,108 @@
 session_start();
 include '../../koneksi/koneksi.php';
 
-// Get and sanitize POST data
-$id = isset($_POST['id']) ? mysqli_real_escape_string($db, $_POST['id']) : '';
-$nama = isset($_POST['nama']) ? mysqli_real_escape_string($db, $_POST['nama']) : '';
-$no_ktp = isset($_POST['no_ktp']) ? mysqli_real_escape_string($db, $_POST['no_ktp']) : '';
-$jabatan = isset($_POST['jabatan']) ? mysqli_real_escape_string($db, $_POST['jabatan']) : '';
-$periode = isset($_POST['periode']) ? mysqli_real_escape_string($db, $_POST['periode']) : '';
-$alamat = isset($_POST['alamat']) ? mysqli_real_escape_string($db, $_POST['alamat']) : '';
-$no_telp = isset($_POST['no_telp']) ? mysqli_real_escape_string($db, $_POST['no_telp']) : '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo "<script>alert('Invalid request method.'); window.location='../datapengurus.php';</script>";
+    exit;
+}
 
-// Get current file names from database
-$query = "SELECT foto_ktp, pas_foto FROM tb_data_pengurus WHERE id = '$id'";
-$result = mysqli_query($db, $query);
-$data = mysqli_fetch_assoc($result);
+$id      = (int) $_POST['id'];
+$nama    = mysqli_real_escape_string($db, $_POST['nama']);
+$no_ktp  = mysqli_real_escape_string($db, $_POST['no_ktp']);
+$jabatan = mysqli_real_escape_string($db, $_POST['jabatan']);
+$periode = mysqli_real_escape_string($db, $_POST['periode']);
+$alamat  = mysqli_real_escape_string($db, $_POST['alamat']);
+$no_telp = mysqli_real_escape_string($db, $_POST['no_telp']);
 
-// Initialize file variables with current values
-$foto_ktp = $data['foto_ktp'];
-$pas_foto = $data['pas_foto'];
+// File dari hidden field:
+// - daftar_ktp_terupload     = nama file BARU (jika ada upload baru) ATAU file lama jika tidak diganti
+// - daftar_pasfoto_terupload = sama
+// Logika di editpengurus.php: hidden field diisi nilai lama saat load,
+// lalu diganti dengan nilai baru jika ada upload baru.
+$file_ktp_baru     = isset($_POST['daftar_ktp_terupload'])     ? trim($_POST['daftar_ktp_terupload'])     : '';
+$file_pasfoto_baru = isset($_POST['daftar_pasfoto_terupload']) ? trim($_POST['daftar_pasfoto_terupload']) : '';
 
-// Create upload directory if it doesn't exist
-$upload_dir = '../admin/uploads/pengurus/';
-if (!file_exists($upload_dir)) {
-    if (!mkdir($upload_dir, 0777, true)) {
-        echo "<script>alert('Gagal membuat direktori upload!'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
+if ($id <= 0) {
+    echo "<script>alert('ID tidak valid!'); window.location='../datapengurus.php';</script>";
+    exit;
+}
+
+// Helper hapus file fisik
+function hapusFileFisik($nama_file) {
+    if (empty(trim($nama_file))) return;
+    $bersih = preg_replace('#^(\.\./)+#', '', trim($nama_file));
+    $candidates = [
+        '../../uploads/pengurus/' . $bersih,
+        '../uploads/pengurus/' . $bersih,
+        $bersih,
+    ];
+    foreach ($candidates as $path) {
+        if (file_exists($path) && is_file($path)) {
+            @unlink($path);
+            return;
+        }
     }
 }
 
-// Handle Foto KTP upload
-if (isset($_FILES['foto_ktp']) && $_FILES['foto_ktp']['error'] == 0) {
-    // Delete old file if exists
-    if (!empty($foto_ktp) && file_exists($upload_dir . $foto_ktp)) {
-        unlink($upload_dir . $foto_ktp);
-    }
-    
-    // Generate new filename
-    $foto_ktp = time() . '_' . basename($_FILES['foto_ktp']['name']);
-    $target_file = $upload_dir . $foto_ktp;
-    
-    // Check file type
-    $allowed_types = array('jpg', 'jpeg', 'png');
-    $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    if (!in_array($file_type, $allowed_types)) {
-        echo "<script>alert('Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
-    
-    // Check file size (2MB max)
-    if ($_FILES['foto_ktp']['size'] > 2000000) {
-        echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
-    
-    // Move uploaded file
-    if (!move_uploaded_file($_FILES['foto_ktp']['tmp_name'], $target_file)) {
-        echo "<script>alert('Gagal mengupload Foto KTP! Error: " . error_get_last()['message'] . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
+// Update data utama
+$query = "UPDATE tb_data_pengurus SET
+    nama    = '$nama',
+    no_ktp  = '$no_ktp',
+    jabatan = '$jabatan',
+    periode = '$periode',
+    alamat  = '$alamat',
+    no_telp = '$no_telp'
+    WHERE id = '$id'";
+
+if (!mysqli_query($db, $query)) {
+    echo "<script>alert('Gagal update data: " . mysqli_error($db) . "'); window.location='../editpengurus.php?id=$id';</script>";
+    exit;
 }
 
-// Handle Pas Foto upload
-if (isset($_FILES['pas_foto']) && $_FILES['pas_foto']['error'] == 0) {
-    // Delete old file if exists
-    if (!empty($pas_foto) && file_exists($upload_dir . $pas_foto)) {
-        unlink($upload_dir . $pas_foto);
-    }
-    
-    // Generate new filename
-    $pas_foto = time() . '_' . basename($_FILES['pas_foto']['name']);
-    $target_file = $upload_dir . $pas_foto;
-    
-    // Check file type
-    $allowed_types = array('jpg', 'jpeg', 'png');
-    $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    if (!in_array($file_type, $allowed_types)) {
-        echo "<script>alert('Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
-    
-    // Check file size (2MB max)
-    if ($_FILES['pas_foto']['size'] > 2000000) {
-        echo "<script>alert('Ukuran file terlalu besar! Maksimal 2MB.'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
-    
-    // Move uploaded file
-    if (!move_uploaded_file($_FILES['pas_foto']['tmp_name'], $target_file)) {
-        echo "<script>alert('Gagal mengupload Pas Foto! Error: " . error_get_last()['message'] . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
-        exit();
-    }
-}
+// ---- Kelola Foto KTP ----
+$row_ktp = mysqli_fetch_assoc(mysqli_query($db, "SELECT id_foto, nama_file FROM tb_foto_pengurus WHERE id_pengurus = '$id' AND jenis_foto = 'KTP' LIMIT 1"));
 
-// Update data in database
-$query = "UPDATE tb_data_pengurus SET 
-          nama = '$nama',
-          no_ktp = '$no_ktp',
-          jabatan = '$jabatan',
-          periode = '$periode',
-          alamat = '$alamat',
-          no_telp = '$no_telp',
-          foto_ktp = '$foto_ktp',
-          pas_foto = '$pas_foto'
-          WHERE id = '$id'";
-
-if (mysqli_query($db, $query)) {
-    echo "<script>alert('Data berhasil diupdate!'); window.location='../datapengurus.php';</script>";
+if (empty($file_ktp_baru)) {
+    // Pengguna hapus foto KTP — hapus file fisik + record DB
+    if ($row_ktp) {
+        hapusFileFisik($row_ktp['nama_file']);
+        mysqli_query($db, "DELETE FROM tb_foto_pengurus WHERE id_foto = '" . $row_ktp['id_foto'] . "'");
+    }
 } else {
-    echo "<script>alert('Gagal mengupdate data! Error: " . mysqli_error($db) . "'); window.location='../editpengurus.php?id=" . $id . "';</script>";
+    $f = mysqli_real_escape_string($db, $file_ktp_baru);
+    if ($row_ktp) {
+        // Ada record lama
+        if ($row_ktp['nama_file'] !== $file_ktp_baru) {
+            // File diganti — hapus file lama, update record
+            hapusFileFisik($row_ktp['nama_file']);
+            mysqli_query($db, "UPDATE tb_foto_pengurus SET nama_file = '$f' WHERE id_foto = '" . $row_ktp['id_foto'] . "'");
+        }
+        // Jika sama, tidak perlu melakukan apa-apa
+    } else {
+        // Belum ada record — insert baru
+        mysqli_query($db, "INSERT INTO tb_foto_pengurus (id_pengurus, jenis_foto, nama_file) VALUES ('$id', 'KTP', '$f')");
+    }
 }
-?> 
+
+// ---- Kelola Pas Foto ----
+$row_pas = mysqli_fetch_assoc(mysqli_query($db, "SELECT id_foto, nama_file FROM tb_foto_pengurus WHERE id_pengurus = '$id' AND jenis_foto = 'Pas Foto' LIMIT 1"));
+
+if (empty($file_pasfoto_baru)) {
+    // Pengguna hapus pas foto
+    if ($row_pas) {
+        hapusFileFisik($row_pas['nama_file']);
+        mysqli_query($db, "DELETE FROM tb_foto_pengurus WHERE id_foto = '" . $row_pas['id_foto'] . "'");
+    }
+} else {
+    $f = mysqli_real_escape_string($db, $file_pasfoto_baru);
+    if ($row_pas) {
+        if ($row_pas['nama_file'] !== $file_pasfoto_baru) {
+            hapusFileFisik($row_pas['nama_file']);
+            mysqli_query($db, "UPDATE tb_foto_pengurus SET nama_file = '$f' WHERE id_foto = '" . $row_pas['id_foto'] . "'");
+        }
+    } else {
+        mysqli_query($db, "INSERT INTO tb_foto_pengurus (id_pengurus, jenis_foto, nama_file) VALUES ('$id', 'Pas Foto', '$f')");
+    }
+}
+
+echo "<script>alert('Data berhasil diupdate!'); window.location='../datapengurus.php';</script>";

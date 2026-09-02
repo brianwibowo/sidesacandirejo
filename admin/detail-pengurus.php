@@ -53,15 +53,11 @@ include "login/ceksession.php";
     <div class="main_container">
 
       <!-- Profile and Sidebarmenu -->
-      <?php
-        include("sidebarmenu.php");
-        ?>
+      <?php include("sidebarmenu.php"); ?>
       <!-- /Profile and Sidebarmenu -->
 
       <!-- top navigation -->
-      <?php
-        include("header.php");
-        ?>
+      <?php include("header.php"); ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -78,15 +74,32 @@ include "login/ceksession.php";
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
-                <div class="x_title">
-                  <h2>Data Pengurus ><small>Detail Data Pengurus</small></h2>
-                  <div class="clearfix"></div>
-                </div>
-                <?php include '../koneksi/koneksi.php';
-                     $id			= mysqli_real_escape_string($db,$_GET['id']);
-                     $sql  		= "SELECT * FROM tb_data_pengurus where id='".$id."'";                        
-                     $query  	= mysqli_query($db, $sql);
-                     $data 		= mysqli_fetch_array($query);?>
+                <?php 
+                include '../koneksi/koneksi.php';
+                $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+                // ✅ QUERY BARU — sinkron dengan editpengurus.php
+                $stmt = $db->prepare("
+                    SELECT 
+                        p.*, 
+                        ktp.nama_file AS file_ktp,
+                        pas.nama_file AS file_pas_foto
+                    FROM 
+                        tb_data_pengurus p
+                    LEFT JOIN 
+                        tb_foto_pengurus ktp ON p.id = ktp.id_pengurus AND ktp.jenis_foto = 'KTP'
+                    LEFT JOIN 
+                        tb_foto_pengurus pas ON p.id = pas.id_pengurus AND pas.jenis_foto = 'Pas Foto'
+                    WHERE 
+                        p.id = ?
+                ");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $data = $result->fetch_assoc();
+                $stmt->close();
+                ?>
+
                 <div class="x_content">
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="profile_title">
@@ -94,51 +107,54 @@ include "login/ceksession.php";
                         <h2>Detail Data Pengurus</h2>
                       </div>
                     </div>
-                    <div class="x_content">
-                    </div>
+
+                    <div class="x_content"></div>
+
                     <table class="table table-striped">
                       <tbody>
                         <tr>
                           <td width="200">Nama</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['nama']) ? $data['nama'] : '-'; ?></td>
+                          <td><?php echo !empty($data['nama']) ? htmlspecialchars($data['nama']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>No. KTP</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['no_ktp']) ? $data['no_ktp'] : '-'; ?></td>
+                          <td><?php echo !empty($data['no_ktp']) ? htmlspecialchars($data['no_ktp']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Jabatan</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['jabatan']) ? $data['jabatan'] : '-'; ?></td>
+                          <td><?php echo !empty($data['jabatan']) ? htmlspecialchars($data['jabatan']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Periode</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['periode']) ? $data['periode'] : '-'; ?></td>
+                          <td><?php echo !empty($data['periode']) ? htmlspecialchars($data['periode']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>Alamat</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['alamat']) ? $data['alamat'] : '-'; ?></td>
+                          <td><?php echo !empty($data['alamat']) ? htmlspecialchars($data['alamat']) : '-'; ?></td>
                         </tr>
                         <tr>
                           <td>No. Telepon</td>
                           <td>:</td>
-                          <td><?php echo !empty($data['no_telp']) ? $data['no_telp'] : '-'; ?></td>
+                          <td><?php echo !empty($data['no_telp']) ? htmlspecialchars($data['no_telp']) : '-'; ?></td>
                         </tr>
+
+                        <!-- ✅ FOTO KTP -->
                         <tr>
                           <td>Foto KTP</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['foto_ktp'])): ?>
+                            <?php if(!empty($data['file_ktp'])): ?>
                                 <div class="col-md-6">
                                     <div class="card mb-3">
-                                     
                                         <div class="card-body text-center">
-                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['foto_ktp']); ?>" 
-                                                 alt="Foto KTP" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
+                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['file_ktp']); ?>" 
+                                                 alt="Foto KTP" class="img-fluid" 
+                                                 style="max-width: 300px; max-height: 300px; object-fit: contain;">
                                         </div>
                                     </div>
                                 </div>
@@ -147,17 +163,19 @@ include "login/ceksession.php";
                             <?php endif; ?>
                           </td>
                         </tr>
+
+                        <!-- ✅ PAS FOTO -->
                         <tr>
                           <td>Pas Foto</td>
                           <td>:</td>
                           <td>
-                            <?php if(!empty($data['pas_foto'])): ?>
+                            <?php if(!empty($data['file_pas_foto'])): ?>
                                 <div class="col-md-6">
                                     <div class="card mb-3">
-                                     
                                         <div class="card-body text-center">
-                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['pas_foto']); ?>" 
-                                                 alt="Pas Foto" class="img-fluid" style="max-width: 300px; max-height: 300px; object-fit: contain;">
+                                            <img src="../admin/uploads/pengurus/<?php echo htmlspecialchars($data['file_pas_foto']); ?>" 
+                                                 alt="Pas Foto" class="img-fluid" 
+                                                 style="max-width: 300px; max-height: 300px; object-fit: contain;">
                                         </div>
                                     </div>
                                 </div>
@@ -168,31 +186,29 @@ include "login/ceksession.php";
                         </tr>
                       </tbody>
                     </table>
+
                     <div class="text-right">
-                      <a href="datapengurus.php" class="btn btn-success"><span
-                          class="glyphicon glyphicon-arrow-left"></span> Kembali</a>
+                      <a href="datapengurus.php" class="btn btn-success">
+                        <span class="glyphicon glyphicon-arrow-left"></span> Kembali
+                      </a>
                     </div>
 
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- /page content -->
+
+      <!-- footer content -->
+      <footer>
+        <div class="pull-right"></div>
+        <div class="clearfix"></div>
+      </footer>
+      <!-- /footer content -->
     </div>
-    <!-- /page content -->
-
-    <!-- footer content -->
-    <footer>
-      <div class="pull-right">
-
-      </div>
-      <div class="clearfix"></div>
-    </footer>
-    <!-- /footer content -->
-  </div>
   </div>
 
   <!-- jQuery -->
@@ -216,5 +232,5 @@ include "login/ceksession.php";
   <script src="../assets/build/js/custom.min.js"></script>
 
 </body>
-
 </html>
+d

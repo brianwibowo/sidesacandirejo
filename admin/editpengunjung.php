@@ -7,7 +7,15 @@ ob_start();
 // Ambil ID dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 if (empty($id)) {
-  echo "<script>alert('ID tidak valid!'); window.location='datapengunjung.php';</script>";
+  echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>body{font-family:"Poppins",sans-serif;background:#f4f6f9;}.swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;font-family:"Poppins",sans-serif!important;}</style>
+  </head><body>
+  <script>
+  Swal.fire({title:"ID Tidak Valid!",html:"<p style=\'color:#555;font-size:15px;\'>Parameter ID tidak ditemukan atau tidak valid.</p>",icon:"error",iconColor:"#e74c3c",confirmButtonText:"Kembali",background:"#fff",color:"#1a1a2e",customClass:{popup:"swal-custom-popup"}}).then(()=>{window.location.href="datapengunjung.php";});
+  </script></body></html>';
   exit;
 }
 
@@ -20,7 +28,15 @@ $result = mysqli_stmt_get_result($stmt);
 $data_pengunjung = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
 if (!$data_pengunjung) {
-  echo "<script>alert('Data tidak ditemukan!'); window.location='datapengunjung.php';</script>";
+  echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>body{font-family:"Poppins",sans-serif;background:#f4f6f9;}.swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;font-family:"Poppins",sans-serif!important;}</style>
+  </head><body>
+  <script>
+  Swal.fire({title:"Data Tidak Ditemukan!",html:"<p style=\'color:#555;font-size:15px;\'>Data pengunjung yang dicari tidak ditemukan di sistem.</p>",icon:"error",iconColor:"#e74c3c",confirmButtonText:"Kembali",background:"#fff",color:"#1a1a2e",customClass:{popup:"swal-custom-popup"}}).then(()=>{window.location.href="datapengunjung.php";});
+  </script></body></html>';
   exit;
 }
 
@@ -44,6 +60,9 @@ if (!$data_pengunjung) {
   <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="nav-md">
@@ -83,7 +102,7 @@ if (!$data_pengunjung) {
                         <div class='input-group date' id='myDatepicker6'>
                           <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required"
                             class="form-control" readonly="readonly"
-                            value="<?php echo htmlspecialchars(date('d-m-Y', strtotime($data_pengunjung['tanggal_kunjungan'] ?? ''))); ?>" />
+                            value="<?php echo htmlspecialchars($data_pengunjung['tanggal_kunjungan'] ?? ''); ?>" />
                           <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                       </div>
@@ -112,12 +131,13 @@ if (!$data_pengunjung) {
                           <option value="homestay" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
                           <option value="serenade" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
                           <option value="cooking_lesson" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cooking_lesson') ? 'selected' : ''; ?>>Cooking
-                            lesson with/without Tour</option>
+                            Lesson with/without Tour</option>
+                          <option value="gamelan_class" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'gamelan_class') ? 'selected' : ''; ?>>Gamelan Class with/without Lunch</option>
                           <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>
                             Village Experience</option>
-                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar
-                            Village
-                            Tour with/without Lunch</option>
+                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar Village Tour with/without Lunch</option>
+                          <option value="inspection" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'inspection') ? 'selected' : ''; ?>>Inspection</option>
+                          <option value="lainnya" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'lainnya') ? 'selected' : ''; ?>>Lainnya</option>
                         </select>
                       </div>
                     </div>
@@ -159,6 +179,17 @@ if (!$data_pengunjung) {
                           </option>
                           <option value="lesson_with_tour" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>
                             Lesson With Tour</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_gamelan_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_gamelan">Opsi Gamelan Class</label>
+                      <div class="col-md-9">
+                        <select id="opsi_gamelan" name="opsi_gamelan" class="form-control">
+                          <option value="">--</option>
+                          <option value="without_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
+                          <option value="with_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
                         </select>
                       </div>
                     </div>
@@ -251,12 +282,49 @@ if (!$data_pengunjung) {
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <?php if (!empty($data_pengunjung['foto'])): ?>
-                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data_pengunjung['foto']); ?>" 
-                               alt="Foto Pengunjung" style="max-width: 200px; margin-bottom: 10px;"><br>
+                        <?php
+                          // Foto baru (kolom foto JSON di tb_data_pengunjung)
+                          $foto_existing = [];
+                          if (!empty($data_pengunjung['foto'])) {
+                            $decoded = json_decode($data_pengunjung['foto'], true);
+                            $foto_existing = is_array($decoded) ? $decoded : [$data_pengunjung['foto']];
+                          }
+
+                          // Foto lama (dari tb_foto_pengunjung)
+                          $foto_lama = [];
+                          $stmt_foto = mysqli_prepare($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = ?");
+                          mysqli_stmt_bind_param($stmt_foto, "i", $id);
+                          mysqli_stmt_execute($stmt_foto);
+                          $result_foto = mysqli_stmt_get_result($stmt_foto);
+                          while ($row_foto = mysqli_fetch_assoc($result_foto)) {
+                            $foto_lama[] = $row_foto['nama_file'];
+                          }
+
+                          // Gabung keduanya
+                          $semua_foto = array_merge($foto_existing, $foto_lama);
+                        ?>
+                        <?php if (!empty($semua_foto)): ?>
+                          <!-- Sentinel: selalu ada, supaya PHP tahu field existing_foto sudah dikirim (walau semua foto dihapus) -->
+                          <input type="hidden" name="existing_foto_sent" value="1">
+                          <p style="margin-bottom:6px;font-size:13px;color:#555;">Foto saat ini <small class="text-muted">(klik ✕ untuk hapus foto)</small>:</p>
+                          <div id="existing-foto-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                          <?php foreach($semua_foto as $f): ?>
+                            <div style="position:relative;display:inline-block;" id="existing-<?php echo htmlspecialchars(md5($f)); ?>">
+                              <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" 
+                                   alt="Foto" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
+                              <div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars($f); ?></div>
+                              <!-- Hidden input untuk tandai foto ini masih dipertahankan -->
+                              <input type="hidden" name="existing_foto[]" value="<?php echo htmlspecialchars($f); ?>" id="input-<?php echo htmlspecialchars(md5($f)); ?>">
+                              <button type="button" 
+                                onclick="removeExistingFoto('<?php echo htmlspecialchars(md5($f)); ?>')"
+                                style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>
+                            </div>
+                          <?php endforeach; ?>
+                          </div>
                         <?php endif; ?>
-                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
+                        <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12" style="margin-top:6px;">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maks 2MB per foto). Bisa pilih lebih dari 1 foto — foto lama <strong>tidak</strong> akan terhapus kecuali diklik ✕.</small>
+                        <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                       </div>
                     </div>
 
@@ -303,6 +371,7 @@ if (!$data_pengunjung) {
       $('#opsi_makan_tour_group').hide();
       $('#jenis_makanan_paket_group').hide();
       $('#opsi_cooking_lesson_group').hide();
+      $('#opsi_gamelan_group').hide();
   
       // Show relevant fields based on selected package
       if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
@@ -314,6 +383,9 @@ if (!$data_pengunjung) {
       if (paket === 'cooking_lesson') {
         $('#opsi_cooking_lesson_group').show();
       }
+      if (paket === 'gamelan_class') {
+        $('#opsi_gamelan_group').show();
+      }
     }
   
     $('#pilihan_paket_wisata').change(function () {
@@ -324,6 +396,7 @@ if (!$data_pengunjung) {
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
+        $('#opsi_gamelan').val('');
       }
   
       showHideFields();
@@ -331,6 +404,100 @@ if (!$data_pengunjung) {
       // Set flag bahwa user sudah mengubah pilihan
       $(this).data('user-changed', true);
     });
+
+    // === MULTI-FILE UPLOAD: akumulasi file dari beberapa kali buka file manager ===
+    var selectedFiles = [];
+
+    function renderFotoPreview() {
+      var preview = $('#foto-preview');
+      preview.empty();
+      selectedFiles.forEach(function(file, idx) {
+        var reader = new FileReader();
+        reader.onload = (function(f, i) {
+          return function(e) {
+            preview.append(
+              '<div style="position:relative;display:inline-block;margin:4px;" id="fpreview-' + i + '">' +
+              '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
+              '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</div>' +
+              '<button type="button" onclick="removeSelectedFile(' + i + ')" ' +
+              'style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>' +
+              '</div>'
+            );
+          };
+        })(file, idx);
+        reader.readAsDataURL(file);
+      });
+
+      // Sync ke input file via DataTransfer supaya ter-submit
+      var dt = new DataTransfer();
+      selectedFiles.forEach(function(f) { dt.items.add(f); });
+      document.getElementById('foto').files = dt.files;
+    }
+
+    window.removeSelectedFile = function(index) {
+      selectedFiles.splice(index, 1);
+      renderFotoPreview();
+    };
+
+    // Hapus foto existing (yang sudah ada di DB) — hanya hide dari tampilan & hapus hidden input
+    window.removeExistingFoto = function(hash) {
+      var wrapper = document.getElementById('existing-' + hash);
+      var hiddenInput = document.getElementById('input-' + hash);
+      if (wrapper) wrapper.style.display = 'none';
+      if (hiddenInput) hiddenInput.disabled = true; // disabled = tidak ikut tersubmit
+    };
+
+    $('#foto').on('change', function() {
+      var newFiles = Array.from(this.files);
+      var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      var maxSize = 2 * 1024 * 1024; // 2 MB
+      var rejectedType = [];
+      var rejectedSize = [];
+
+      newFiles.forEach(function(newFile) {
+        // Validasi tipe
+        if (!allowedTypes.includes(newFile.type)) {
+          rejectedType.push(newFile.name);
+          return;
+        }
+        // Validasi ukuran
+        if (newFile.size > maxSize) {
+          rejectedSize.push(newFile.name);
+          return;
+        }
+        // Hindari duplikat
+        var isDuplicate = selectedFiles.some(function(f) {
+          return f.name === newFile.name && f.size === newFile.size;
+        });
+        if (!isDuplicate) {
+          selectedFiles.push(newFile);
+        }
+      });
+
+      // Tampilkan peringatan jika ada yang ditolak
+      if (rejectedType.length > 0 || rejectedSize.length > 0) {
+        var msg = '';
+        if (rejectedType.length > 0) {
+          msg += '<b>Format tidak didukung</b> (harus JPG/JPEG/PNG):<br>' + rejectedType.map(function(n){ return '• ' + n; }).join('<br>') + '<br><br>';
+        }
+        if (rejectedSize.length > 0) {
+          msg += '<b>Melebihi batas 2 MB:</b><br>' + rejectedSize.map(function(n){ return '• ' + n; }).join('<br>');
+        }
+        Swal.fire({
+          title: 'Foto Tidak Valid',
+          html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left;font-size:14px;color:#555;">' + msg + '</div>',
+          icon: 'warning',
+          iconColor: '#f39c12',
+          confirmButtonText: 'Mengerti',
+          background: '#fff',
+          color: '#1a1a2e',
+          customClass: { popup: 'swal-custom-popup', title: 'swal-custom-title' }
+        });
+      }
+
+      renderFotoPreview();
+    });
+    // === END MULTI-FILE UPLOAD ===
   
     $('#jenis_wisatawan').change(function () {
       const jenis = $(this).val();
@@ -365,4 +532,4 @@ if (!$data_pengunjung) {
 </body>
 
 </html>
-<?php ob_end_flush(); // Tambahkan ini ?>
+<?php ob_end_flush(); ?>

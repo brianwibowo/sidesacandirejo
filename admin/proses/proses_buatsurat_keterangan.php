@@ -9,55 +9,40 @@ use Dompdf\Options;
 
 if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis_keterangan_pendukung'])) {
 
-    $pdf_dir = '../uploads/'; // Ensure this directory exists and is writable
+    $pdf_dir = '../uploads/';
     $pdf_filename = "Surat_Keterangan_" . htmlspecialchars($_POST['nomor_surat']) . ".pdf";
-
-    // Prepare to save PDF in the directory
     $pdf_path = $pdf_dir . $pdf_filename;
-    // Direktori untuk menyimpan file gambar
+    
+    // Load dan encode gambar
     $target_dir = "../images/";
-
+    
+    // Kop surat
     $file_extension = pathinfo('../images/kopsurat.jpg', PATHINFO_EXTENSION);
     $target_file = "../images/kopsurat.jpg";
     $image_data = file_get_contents($target_file);
     $base64_image_kopsurat = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
-
+    
+    // Tanda tangan kepala desa
     $file_extension = pathinfo('../images/ttd_kepala_desa.png', PATHINFO_EXTENSION);
     $target_file = "../images/ttd_kepala_desa.png";
     $image_data = file_get_contents($target_file);
     $base64_image_kepala_desa = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
-
-    $file_extension = pathinfo('../images/ttd_sekretaris.png', PATHINFO_EXTENSION);
-    $target_file = "../images/ttd_sekretaris.png";
-    $image_data = file_get_contents($target_file);
-    $base64_image_sekretaris = 'data:image/' . $file_extension . ';base64,' . base64_encode($image_data);
 
     // Ambil data dari form
     $nomor_surat = htmlspecialchars($_POST['nomor_surat']);
     $nama = htmlspecialchars($_POST['nama']);
     $jenis_keterangan_pendukung = htmlspecialchars($_POST['jenis_keterangan_pendukung']);
     $keterangan_pendukung = htmlspecialchars($_POST['keterangan_pendukung']);
-    $tanggal = htmlspecialchars($_POST['tanggal']);
     $keterangan = htmlspecialchars($_POST['keterangan']);
     $tanggal = htmlspecialchars($_POST['tanggal']);
 
-    // Format tanggal
+    // Format tanggal Indonesia
     $bulan = [
-        1 => 'Januari',
-        2 => 'Februari',
-        3 => 'Maret',
-        4 => 'April',
-        5 => 'Mei',
-        6 => 'Juni',
-        7 => 'Juli',
-        8 => 'Agustus',
-        9 => 'September',
-        10 => 'Oktober',
-        11 => 'November',
-        12 => 'Desember'
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
     ];
 
-    // Format tanggal surat
     $date = DateTime::createFromFormat('Y-m-d', $tanggal);
     $bulan_angka = (int) $date->format('n');
     $tanggal_format = $date->format('d') . ' ' . $bulan[$bulan_angka] . ' ' . $date->format('Y');
@@ -68,7 +53,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
     $options->set('isRemoteEnabled', true);
     $dompdf = new Dompdf($options);
 
-    // Buat konten HTML untuk PDF
+    // Buat konten HTML untuk PDF - CSS yang diperbaiki
     $html = "
     <!DOCTYPE html>
 <html lang='id'>
@@ -80,7 +65,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
       
         body {
             font-family: 'Times New Roman', serif;
-            line-height: 1.6;
+            line-height: 1.15;
             font-size: 14px;
             margin: 0.5cm;
             background-color: #ffffff;
@@ -106,6 +91,7 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
             font-weight: bold;
             text-decoration: underline;
             font-size: 18px;
+            margin-bottom: 15px;
         }
         .nomor {
             text-align: center;
@@ -115,31 +101,46 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
         .content {
             margin: 20px 0;
             text-align: justify;
-            line-height: 1.8;
+            line-height: 1.15;
+        }
+        .pembuka {
+            margin-bottom: 10px;
+            text-indent: 30px;
         }
         .data-section {
-            margin: 20px 0;
+            margin: 15px 0;
             padding-left: 40px;
         }
-        .data-row {
-            display: flex;
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table td {
+            padding: 2px 0;
+            vertical-align: top;
         }
         .data-label {
-            width: 120px;
-            display: inline-block;
+            width: 150px;
+            font-weight: normal;
         }
         .data-colon {
             width: 20px;
-            display: inline-block;
+            text-align: left;
         }
         .data-value {
-            flex: 1;
+            width: auto;
+            font-weight: normal;
         }
         .isi-keterangan {
             text-align: justify;
+            margin: 15px 0;
+            text-indent: 30px;
+            line-height: 1.15;
         }
         .penutup {
-            margin: 30px 0;
+            margin: 20px 0;
+            text-indent: 30px;
+            text-align: justify;
         }
         .signature {
             margin-top: 40px;
@@ -150,11 +151,24 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
             display: inline-block;
             text-align: center;
         }
+        .signature-content p {
+            margin: 5px 0;
+            line-height: 1.15;
+        }
         .ttd-img {
             margin: 20px 0;
         }
-        p {
-            margin: 10px 0;
+        .ttd-img img {
+            height: 80px;
+            width: auto;
+        }
+        .nama-ttd {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 10px;
+        }
+        .jabatan-ttd {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -178,21 +192,23 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
             </div>
             
             <div class='data-section'>
-                <div class='data-row'>
-                    <span class='data-label'>Nama</span>
-                    <span class='data-colon'>:</span>
-                    <span class='data-value'>Tatak Sariawan</span>
-                </div>
-                <div class='data-row'>
-                    <span class='data-label'>Jabatan</span>
-                    <span class='data-colon'>:</span>
-                    <span class='data-value'>Ketua Koperasi Desa Wisata Candirejo</span>
-                </div>
-                <div class='data-row'>
-                    <span class='data-label'>Alamat</span>
-                    <span class='data-colon'>:</span>
-                    <span class='data-value'>Mangundadi Candirejo Borobudur – Magelang</span>
-                </div>
+                <table class='data-table'>
+                    <tr>
+                        <td class='data-label'>Nama</td>
+                        <td class='data-colon'>:</td>
+                        <td class='data-value'>Tatak Sariawan</td>
+                    </tr>
+                    <tr>
+                        <td class='data-label'>Jabatan</td>
+                        <td class='data-colon'>:</td>
+                        <td class='data-value'>Ketua Koperasi Desa Wisata Candirejo</td>
+                    </tr>
+                    <tr>
+                        <td class='data-label'>Alamat</td>
+                        <td class='data-colon'>:</td>
+                        <td class='data-value'>Mangundadi Candirejo Borobudur – Magelang</td>
+                    </tr>
+                </table>
             </div>
             
             <div class='pembuka'>
@@ -200,16 +216,18 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
             </div>
             
             <div class='data-section'>
-                <div class='data-row'>
-                    <span class='data-label'>Nama</span>
-                    <span class='data-colon'>:</span>
-                    <span class='data-value'>$nama</span>
-                </div>
-                <div class='data-row'>
-                    <span class='data-label'>$jenis_keterangan_pendukung</span>
-                    <span class='data-colon'>:</span>
-                    <span class='data-value'>$keterangan_pendukung</span>
-                </div>
+                <table class='data-table'>
+                    <tr>
+                        <td class='data-label'>Nama</td>
+                        <td class='data-colon'>:</td>
+                        <td class='data-value'>$nama</td>
+                    </tr>
+                    <tr>
+                        <td class='data-label'>$jenis_keterangan_pendukung</td>
+                        <td class='data-colon'>:</td>
+                        <td class='data-value'>$keterangan_pendukung</td>
+                    </tr>
+                </table>
             </div>
             
             <div class='isi-keterangan'>
@@ -227,40 +245,41 @@ if (isset($_POST['nomor_surat']) && isset($_POST['nama']) && isset($_POST['jenis
                 <p><strong>Pengurus</strong></p>
                 <p><strong>Koperasi Desa Wisata Candirejo</strong></p>
                 <div class='ttd-img'>
-                    <img src='$base64_image_kepala_desa' alt='Tanda Tangan' height='80px'>
+                    <img src='$base64_image_kepala_desa' alt='Tanda Tangan'>
                 </div>
-                <p><strong>Tatak Sariawan</strong></p>
-                <p><strong>Ketua</strong></p>
+                <p class='nama-ttd'>Tatak Sariawan</p>
+                <p class='jabatan-ttd'>Ketua</p>
             </div>
         </div>
     </div>
 </body>
 </html>";
 
+    // Generate PDF
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
 
-    // Save the file locally
+    // Simpan file PDF
     file_put_contents($pdf_path, $dompdf->output());
 
-    // Insert record into the database
+    // Insert ke database
     $query = "INSERT INTO tb_arsip_surat_keluar (tanggal_keluar, nomor_surat, penerima, perihal, kode, keterangan, file_surat) 
-              VALUES ('$tanggal', '$nomor_surat', '$nama', 'Surat Keterangan', '-','Dibuat dari fitur Buat surat keterangan' , '$pdf_path')";
+              VALUES ('$tanggal', '$nomor_surat', '$nama', 'Surat Keterangan', '-', 'Dibuat dari fitur Buat surat keterangan', '$pdf_path')";
 
     if (mysqli_query($db, $query)) {
-        // Header for downloading PDF
+        // Header untuk download PDF
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $pdf_filename . '"');
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: 0');
 
-        // Output PDF to browser
+        // Output PDF ke browser
         $dompdf->stream($pdf_filename, ["Attachment" => false]);
     } else {
         echo "Error: " . mysqli_error($db);
     }
 } else {
-    echo "Data tidak lengkap!";
+    echo "Data tidak lengkap! Pastikan semua field required telah diisi.";
 }
 ?>

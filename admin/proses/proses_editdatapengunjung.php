@@ -2,10 +2,62 @@
 session_start();
 include '../../koneksi/koneksi.php';
 
+// Helper function untuk SweetAlert2 response
+function swalResponse($title, $message, $icon, $redirect, $iconColor = null) {
+    $color = $iconColor ?? ($icon == 'success' ? '#4ade80' : ($icon == 'error' ? '#e74c3c' : '#f39c12'));
+    $timerScript = ($icon == 'success') ? '
+      didOpen: () => {
+        const bar = Swal.getTimerProgressBar();
+        if (bar) { bar.style.background = "linear-gradient(90deg,#4ade80,#22d3ee)"; bar.style.height = "5px"; }
+      },' : '';
+    $confirmBtn = ($icon == 'success') ? 'showConfirmButton: false, timer: 2500, timerProgressBar: true,' : 'confirmButtonText: "Kembali",';
+    $willClose = ($icon == 'success') ? 'willClose: () => { window.location.href = "' . $redirect . '"; }' : '';
+    $then = ($icon != 'success') ? '.then(() => { window.location.href = "' . $redirect . '"; })' : '';
+    
+    return '<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Proses Data</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<style>
+  body{font-family:"Poppins",sans-serif;background:#f4f6f9;}
+  .swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;box-shadow:0 25px 60px rgba(0,0,0,0.25)!important;font-family:"Poppins",sans-serif!important;animation:swalPopIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275)!important;}
+  @keyframes swalPopIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .swal-custom-title{font-family:"Poppins",sans-serif!important;font-weight:700!important;font-size:20px!important;color:#1a1a2e!important;}
+</style>
+<script>
+  Swal.fire({
+    title: "' . $title . '",
+    html: `<div style="font-family:\'Poppins\',sans-serif;"><p style="color:#555;font-size:15px;margin-bottom:6px;">' . $message . '</p></div>`,
+    icon: "' . $icon . '",
+    iconColor: "' . $color . '",
+    ' . $confirmBtn . '
+    background: "#fff",
+    color: "#1a1a2e",
+    customClass: { popup: "swal-custom-popup", title: "swal-custom-title" },
+    ' . $timerScript . '
+    ' . $willClose . '
+  })' . $then . ';
+</script>
+</body></html>';
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Convert date format if needed (from YYYY/MM/DD to YYYY-MM-DD)
     $id = (int)$_POST['id'];
-    $tanggal_kunjungan = $_POST['tanggal_kunjungan'];
+    // Format tanggal dari datepicker adalah YYYY-MM-DD, langsung validasi
+    $tanggal_raw = $_POST['tanggal_kunjungan'];
+    $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal_raw);
+    if (!$tanggal_obj) {
+        // Fallback: coba format d-m-Y jika datepicker mengirim format lama
+        $tanggal_obj = DateTime::createFromFormat('d-m-Y', $tanggal_raw);
+    }
+    $tanggal_kunjungan = $tanggal_obj ? $tanggal_obj->format('Y-m-d') : $tanggal_raw;
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $nama = trim($_POST['nama']);
@@ -13,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // Validasi data wajib
     if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax <= 0) {
-        echo "<script>alert('Data wajib tidak boleh kosong!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Data wajib tidak boleh kosong!', 'warning', 'javascript:history.back()');
         exit;
     }
     
@@ -42,14 +94,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $opsi_cooking_lesson = (isset($_POST['opsi_cooking_lesson']) && !empty($_POST['opsi_cooking_lesson'])) ? $_POST['opsi_cooking_lesson'] : null;
     }
 
+    $opsi_gamelan = null;
+    if ($pilihan_paket_wisata == 'gamelan_class') {
+        $opsi_gamelan = (isset($_POST['opsi_gamelan']) && !empty($_POST['opsi_gamelan'])) ? $_POST['opsi_gamelan'] : null;
+    }
+
     // Validation
     if ($jenis_wisatawan == 'Domestik' && empty($kota)) {
-        echo "<script>alert('Kota harus diisi untuk wisatawan domestik!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Kota harus diisi untuk wisatawan domestik!', 'warning', 'javascript:history.back()');
         exit;
     }
     
     if ($jenis_wisatawan == 'Mancanegara' && empty($negara)) {
-        echo "<script>alert('Negara harus diisi untuk wisatawan mancanegara!'); window.history.back();</script>";
+        echo swalResponse('Validasi Gagal!', 'Negara harus diisi untuk wisatawan mancanegara!', 'warning', 'javascript:history.back()');
         exit;
     }
 
@@ -60,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cek_result = $cek_stmt->get_result();
     
     if ($cek_result->num_rows == 0) {
-        echo "<script>alert('Data tidak ditemukan!'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Data Tidak Ditemukan!', 'Data pengunjung dengan ID tersebut tidak ditemukan.', 'error', '../datapengunjung.php');
         exit;
     }
     $cek_stmt->close();
@@ -76,50 +133,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 
-    // Handle file upload
-    $foto = $current_foto;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png'];
-        $filename = $_FILES['foto']['name'];
-        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
-        
-        if (in_array(strtolower($filetype), $allowed)) {
-            // Check file size (2MB max)
-            if ($_FILES['foto']['size'] <= 2 * 1024 * 1024) {
-                $new_filename = uniqid() . '.' . $filetype;
-                $upload_path = '../uploads/pengunjung/' . $new_filename;
-                
-                // Debug info
-                error_log("Uploading file: " . $filename);
-                error_log("New filename: " . $new_filename);
-                error_log("Upload path: " . $upload_path);
-                
-                // Create directory if it doesn't exist
-                if (!file_exists('../uploads/pengunjung/')) {
-                    mkdir('../uploads/pengunjung', 0777, true);
-                    error_log("Created upload directory");
-                }
-                
-                if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
-                    error_log("File successfully uploaded to: " . $upload_path);
-                    // Delete old foto if exists
-                    if ($current_foto && file_exists('../uploads/pengunjung/' . $current_foto)) {
-                        unlink('../uploads/pengunjung/' . $current_foto);
-                        error_log("Deleted old file: " . $current_foto);
-                    }
-                    $foto = $new_filename;
-                } else {
-                    error_log("Failed to move uploaded file. Error: " . error_get_last()['message']);
-                }
-            } else {
-                error_log("File too large: " . $_FILES['foto']['size']);
-            }
-        } else {
-            error_log("Invalid file type: " . $filetype);
-        }
-    } else if (isset($_FILES['foto'])) {
-        error_log("File upload error code: " . $_FILES['foto']['error']);
+    // Handle multiple file upload
+    // Ambil daftar foto yang sudah ada (dari database)
+    $existing_foto_list = [];
+    if (!empty($current_foto)) {
+        $decoded = json_decode($current_foto, true);
+        $existing_foto_list = is_array($decoded) ? $decoded : [$current_foto];
     }
+
+    // Gunakan sentinel untuk bedakan "tidak ada foto lama" vs "semua foto lama dihapus user"
+    // Jika existing_foto_sent ada → user memang sudah interaksi dengan bagian foto (pakai apa yang dikirim, bisa kosong)
+    // Jika tidak ada → form tidak punya section foto sama sekali (pertahankan semua)
+    if (isset($_POST['existing_foto_sent'])) {
+        $kept_existing = isset($_POST['existing_foto']) ? (array)$_POST['existing_foto'] : [];
+    } else {
+        $kept_existing = $existing_foto_list;
+    }
+
+    // Hapus dari disk foto lama yang sudah tidak dipakai (user hapus via tombol ✕)
+    foreach ($existing_foto_list as $old_f) {
+        if (!in_array($old_f, $kept_existing)) {
+            $old_path = '../uploads/pengunjung/' . $old_f;
+            if (file_exists($old_path)) unlink($old_path);
+        }
+    }
+
+    // Upload foto baru dan GABUNGKAN dengan foto lama yang dipertahankan
+    $new_foto_list = [];
+    if (isset($_FILES['foto']) && is_array($_FILES['foto']['name'])) {
+        $allowed = ['jpg', 'jpeg', 'png'];
+
+        if (!file_exists('../uploads/pengunjung/')) {
+            mkdir('../uploads/pengunjung', 0777, true);
+        }
+
+        for ($i = 0; $i < count($_FILES['foto']['name']); $i++) {
+            if ($_FILES['foto']['error'][$i] == 0) {
+                $filename = $_FILES['foto']['name'][$i];
+                $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                if (in_array($filetype, $allowed) && $_FILES['foto']['size'][$i] <= 2 * 1024 * 1024) {
+                    $new_filename = uniqid() . '_' . $i . '.' . $filetype;
+                    $upload_path = '../uploads/pengunjung/' . $new_filename;
+
+                    if (move_uploaded_file($_FILES['foto']['tmp_name'][$i], $upload_path)) {
+                        $new_foto_list[] = $new_filename;
+                    }
+                }
+            }
+        }
+    }
+
+    // Gabungkan: foto lama yang dipertahankan + foto baru yang diupload
+    $all_foto = array_merge($kept_existing, $new_foto_list);
+    $foto = !empty($all_foto) ? json_encode(array_values($all_foto)) : null;
 
     // Prepare statement untuk UPDATE
     $stmt = $db->prepare("UPDATE tb_data_pengunjung SET 
@@ -128,6 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       opsi_makan_tour = ?, 
       jenis_makanan_paket = ?, 
       opsi_cooking_lesson = ?, 
+      opsi_gamelan = ?,
       jenis_wisatawan = ?, 
       kota = ?, 
       negara = ?, 
@@ -140,16 +208,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       WHERE id = ?");
 
     if (!$stmt) {
-        echo "<script>alert('Error preparing statement: " . htmlspecialchars($db->error) . "'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Error!', 'Error preparing statement: ' . htmlspecialchars($db->error), 'error', '../datapengunjung.php');
         exit;
     }
 
-    $stmt->bind_param("sssssssssissssi", 
+    $stmt->bind_param("ssssssssssissssi", 
       $tanggal_kunjungan, 
       $pilihan_paket_wisata, 
       $opsi_makan_tour, 
       $jenis_makanan_paket, 
-      $opsi_cooking_lesson, 
+      $opsi_cooking_lesson,
+      $opsi_gamelan,
       $jenis_wisatawan, 
       $kota, 
       $negara, 
@@ -163,14 +232,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Data pengunjung berhasil diupdate!'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Berhasil Diupdate!', 'Data pengunjung berhasil diupdate. Mengalihkan ke halaman data pengunjung...', 'success', '../datapengunjung.php');
     } else {
-        echo "<script>alert('Terjadi kesalahan: " . htmlspecialchars($stmt->error) . "'); window.location='../datapengunjung.php';</script>";
+        echo swalResponse('Terjadi Kesalahan!', htmlspecialchars($stmt->error), 'error', '../datapengunjung.php');
     }
     
     $stmt->close();
 } else {
-    echo "<script>alert('Permintaan tidak valid.'); window.location='../datapengunjung.php';</script>";
+    echo swalResponse('Permintaan Tidak Valid!', 'Metode permintaan tidak diizinkan.', 'error', '../datapengunjung.php');
 }
 
 $db->close();

@@ -1,0 +1,296 @@
+<?php
+session_start();
+include "login/ceksession.php";
+include '../koneksi/koneksi.php';
+
+/* ── Label paket ─────────────────────────────────────────────────────────── */
+function labelPaket($kode) {
+    $map = [
+        'meal_only'                   => 'Breakfast/Lunch/Dinner Only',
+        'studi_banding'               => 'Studi Banding',
+        'fun_game'                    => 'Paket Fun Game',
+        'pelajar_live_in'             => 'Pelajar – Live In',
+        'pelajar_field_trip_one_day'  => 'Pelajar – Field Trip One Day',
+        'pelajar_field_trip_half_day' => 'Pelajar – Field Trip Half Day',
+        'cycling_tour'                => 'Cycling Village Tour',
+        'traditional_dance'           => 'Traditional Dance',
+        'walking_tour'                => 'Walking Around Village',
+        'homestay'                    => 'Homestay',
+        'serenade'                    => 'Serenade Menoreh',
+        'cooking_lesson'              => 'Cooking Lesson',
+        'gamelan_class'               => 'Gamelan Class',
+        'village_experience'          => 'Village Experience',
+        'dokar_tour'                  => 'Dokar Village Tour',
+        'inspection'                  => 'Inspection',
+        'lainnya'                     => 'Lainnya',
+    ];
+    return isset($map[$kode]) ? $map[$kode] : ucwords(str_replace('_', ' ', $kode));
+}
+
+/* ── Sub-opsi paket ──────────────────────────────────────────────────────── */
+function subOpsiPaket($row) {
+    $paket = $row['pilihan_paket_wisata'];
+    $makan_tour   = ['cycling_tour', 'dokar_tour', 'walking_tour'];
+    $jenis_makan  = ['meal_only'];
+    $cooking      = ['cooking_lesson'];
+    $gamelan      = ['gamelan_class'];
+    if (in_array($paket, $makan_tour)) {
+        $v = $row['opsi_makan_tour'];
+        if ($v === 'with_lunch')    return 'With Lunch';
+        if ($v === 'without_lunch') return 'Without Lunch';
+    } elseif (in_array($paket, $jenis_makan)) {
+        $v = $row['jenis_makanan_paket'];
+        if ($v === 'breakfast') return 'Breakfast';
+        if ($v === 'lunch')     return 'Lunch';
+        if ($v === 'dinner')    return 'Dinner';
+    } elseif (in_array($paket, $cooking)) {
+        $v = $row['opsi_cooking_lesson'];
+        if ($v === 'lesson_only')      return 'Lesson Only';
+        if ($v === 'lesson_with_tour') return 'Lesson with Tour';
+    } elseif (in_array($paket, $gamelan)) {
+        $v = $row['opsi_gamelan'];
+        if ($v === 'with_lunch')    return 'With Lunch';
+        if ($v === 'without_lunch') return 'Without Lunch';
+    }
+    return '';
+}
+
+/* ── Ambil data booking check-in ─────────────────────────────────────────── */
+$search  = isset($_GET['search'])  ? mysqli_real_escape_string($db, trim($_GET['search']))  : '';
+$tanggal = isset($_GET['tanggal']) ? mysqli_real_escape_string($db, trim($_GET['tanggal'])) : '';
+
+$where = "WHERE status = 'checkin'";
+if ($search !== '') {
+    $where .= " AND (agen_wisata LIKE '%$search%' OR pilihan_paket_wisata LIKE '%$search%')";
+}
+if ($tanggal !== '') {
+    $where .= " AND tanggal_kunjungan = '$tanggal'";
+}
+
+$sql_all  = "SELECT * FROM tb_booking $where ORDER BY tanggal_kunjungan ASC";
+$q_all    = mysqli_query($db, $sql_all);
+$bookings = [];
+while ($r = mysqli_fetch_assoc($q_all)) $bookings[] = $r;
+
+$bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function tglIndo($date) {
+    global $bulan_id;
+    if (!$date) return '-';
+    $ts = strtotime($date);
+    return date('j', $ts) . ' ' . $bulan_id[(int)date('n', $ts) - 1] . ' ' . date('Y', $ts);
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booking Check-in - Sistem Booking Desa Wisata Candirejo</title>
+  <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f7f5; color: #1e3a2f; min-height: 100vh;
+    }
+
+    /* ── LAYOUT ── */
+    .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
+    .booking-content.collapsed { margin-left: 60px; }
+    .content-inner { padding: 28px 28px 40px; }
+
+    /* ── PAGE TITLE ── */
+    .page-title { margin-bottom: 22px; }
+    .page-title h1 { font-size: 22px; font-weight: 600; color: #1e3a2f; margin-bottom: 2px; }
+    .page-title p  { font-size: 13.5px; color: #6b8f7e; }
+
+    /* ── CARD ── */
+    .card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; overflow: visible; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px; border-bottom: 1px solid #f0f5f2;
+      flex-wrap: wrap;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 380px; }
+    .search-wrap svg {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      color: #9ab5a8; pointer-events: none;
+    }
+    .search-input {
+      width: 100%; border: 1px solid #d6e6dc; border-radius: 8px;
+      padding: 9px 14px 9px 36px; font-size: 13.5px; color: #1e3a2f;
+      background: #fff; outline: none; transition: border-color 0.15s;
+    }
+    .search-input::placeholder { color: #aec9b8; }
+    .search-input:focus { border-color: #2e7d4f; }
+
+    .filter-date {
+      flex: 1; min-width: 160px;
+      border: 1px solid #d6e6dc; border-radius: 8px;
+      padding: 9px 14px; font-size: 13.5px; color: #1e3a2f;
+      background: #fff; outline: none; transition: border-color 0.15s;
+    }
+    .filter-date:focus { border-color: #2e7d4f; }
+
+    /* ── TABLE ── */
+    .table-wrapper { overflow-x: auto; border-radius: 0 0 12px 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: #f8fbf9; }
+    thead th {
+      padding: 11px 16px; text-align: left;
+      font-size: 12.5px; font-weight: 600; color: #4a6e5c;
+      letter-spacing: 0.03em; border-bottom: 1px solid #e8f0ec;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f0f5f2; transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafcfa; }
+    tbody td {
+      padding: 12px 16px; font-size: 13.5px; color: #1e3a2f;
+      vertical-align: middle;
+    }
+    .empty-row td { text-align: center; color: #9ab5a8; padding: 36px; font-size: 14px; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block; padding: 4px 11px; border-radius: 20px;
+      font-size: 12px; font-weight: 500; white-space: nowrap;
+    }
+    .badge-checkin { background: #e4f5ec; color: #2e7d4f; border: 1px solid #a8d8bc; }
+
+    /* ── AKSI ── */
+    .aksi-cell { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .link-detail {
+      font-size: 13px; font-weight: 500; color: #4a6e5c;
+      text-decoration: none; transition: color 0.15s;
+    }
+    .link-detail:hover { color: #1e3a2f; text-decoration: underline; }
+
+    /* ── TABLE FOOTER ── */
+    .table-footer {
+      padding: 12px 20px; border-top: 1px solid #f0f5f2;
+      font-size: 12.5px; color: #7a9e8e;
+    }
+
+    /* ── PAGE FOOTER ── */
+    .booking-footer {
+      margin-top: 40px; padding: 14px 28px;
+      font-size: 12px; color: #9ab5a8; border-top: 1px solid #e5ede8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<?php include 'booking_sidebar.php'; ?>
+
+<main class="booking-content" id="bookingContent">
+  <?php include 'booking_header.php'; ?>
+
+  <div class="content-inner">
+
+    <div class="page-title">
+      <h1>Booking Sudah Datang</h1>
+      <p>Daftar booking yang sudah melakukan check-in</p>
+    </div>
+
+    <div class="card">
+
+      <form method="GET" action="" id="filterForm">
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              name="search"
+              id="searchInput"
+              class="search-input"
+              placeholder="Cari nama travel / agen..."
+              value="<?php echo htmlspecialchars($search); ?>"
+              autocomplete="off"
+            >
+          </div>
+          <input
+            type="date"
+            name="tanggal"
+            id="filterTanggal"
+            class="filter-date"
+            value="<?php echo htmlspecialchars($tanggal); ?>"
+            onchange="document.getElementById('filterForm').submit()"
+          >
+        </div>
+      </form>
+
+      <div class="table-wrapper">
+        <table id="tabelCheckin">
+          <thead>
+            <tr>
+              <th>Nama Travel / Agen</th>
+              <th>Nama Wisatawan</th>
+              <th>Tanggal Kunjungan</th>
+              <th>Pax</th>
+              <th>Paket</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if (empty($bookings)): ?>
+            <tr class="empty-row">
+              <td colspan="7">Tidak ada data booking check-in</td>
+            </tr>
+            <?php else: foreach ($bookings as $row):
+              $tgl_display = tglIndo($row['tanggal_kunjungan'] ?? $row['created_at'] ?? null);
+            ?>
+            <tr class="data-row">
+              <td><?php echo htmlspecialchars($row['agen_wisata']); ?></td>
+              <td><?php echo htmlspecialchars($row['nama']); ?></td>
+              <td><?php echo $tgl_display; ?></td>
+              <td><?php echo (int)$row['pax']; ?></td>
+              <td>
+                <?php echo htmlspecialchars(labelPaket($row['pilihan_paket_wisata'])); ?>
+                <?php $sub = subOpsiPaket($row); if ($sub): ?>
+                  <br><small style="color:#6b8f7e;font-weight:400;"><?php echo htmlspecialchars($sub); ?></small>
+                <?php endif; ?>
+              </td>
+              <td><span class="badge badge-checkin">Check-in</span></td>
+              <td>
+                <div class="aksi-cell">
+                  <a href="detail_booking.php?id=<?php echo $row['id']; ?>&ref=booking_checkin.php" class="link-detail">Detail</a>
+                </div>
+              </td>
+            </tr>
+            <?php endforeach; endif; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <?php if (!empty($bookings)): ?>
+      <div class="table-footer">
+        Menampilkan <strong><?php echo count($bookings); ?></strong> data booking check-in
+      </div>
+      <?php endif; ?>
+
+    </div>
+
+  </div>
+
+  <div class="booking-footer">Apriansyah Wibowo. All Rights Reserved.</div>
+</main>
+
+<script>
+document.getElementById('searchInput').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('filterForm').submit();
+  }
+});
+</script>
+</body>
+</html>

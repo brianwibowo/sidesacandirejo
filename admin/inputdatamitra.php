@@ -11,44 +11,27 @@ include "login/ceksession.php";
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Arsip Surat Desa Candirejo Borobudur</title>
+  <title>Input Data Mitra - Desa Candirejo</title>
 
-  <!-- Bootstrap -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- iCheck -->
   <link href="../assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <!-- Select2 -->
   <link href="../assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-  <!-- bootstrap-daterangepicker -->
-  <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-  <!-- bootstrap-datetimepicker -->
-  <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
 
-  <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
 </head>
 
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
-      <!-- Profile and Sidebarmenu -->
       <?php
       include("sidebarmenu.php");
       ?>
-      <!-- /Profile and Sidebarmenu -->
-
-      <!-- top navigation -->
       <?php
       include("header.php");
       ?>
-      <!-- /top navigation -->
-
-      <!-- page content -->
       <div class="right_col" role="main">
         <div class="">
           <div class="clearfix"></div>
@@ -61,9 +44,8 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
-                  <form action="proses/proses_inputdatamitra.php" name="forminputdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"
-                    enctype="multipart/form-data">
+                  <form action="proses/proses_inputdatamitra.php" name="forminputdatamitra" method="post"
+                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_pemilik">Nama Pemilik<span
@@ -132,25 +114,27 @@ include "login/ceksession.php";
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">File Bukti Legalitas
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="bukti_legalitas" accept="application/pdf" type="file" id="bukti_legalitas"
-                          class="form-control" autocomplete="off" />
-                        (Maksimal 10 MB)
-                      </div>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">File Bukti Legalitas</label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div id="area-preview-legalitas" class="row"></div>
+                            <input type="file" id="input-legalitas" style="display: none;" accept="application/pdf,image/*">
+                            <button type="button" class="btn btn-default" id="tombol-pilih-legalitas"><i class="fa fa-plus"></i> Tambah File</button>
+                            <div id="pesan-upload-legalitas" style="margin-top:10px;"></div>
+                            <input type="hidden" name="daftar_legalitas_terupload" id="daftar_legalitas_terupload">
+                            <small class="text-muted">Upload satu per satu (bisa PDF/Gambar, Maksimal 10MB per file).</small>
+                        </div>
                     </div>
-
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto Kegiatan Usaha
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="foto_kegiatan[]" accept="image/*" type="file" id="foto_kegiatan"
-                          class="form-control" multiple />
-                        <small class="text-muted">Pilih satu atau lebih foto (Maksimal 2MB per foto)</small>
-                      </div>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto Kegiatan Usaha</label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div id="area-preview-kegiatan" class="row"></div>
+                            <input type="file" id="input-kegiatan" style="display: none;" accept="image/*" >
+                            <button type="button" class="btn btn-default" id="tombol-pilih-kegiatan"><i class="fa fa-plus"></i> Tambah Foto</button>
+                            <div id="pesan-upload-kegiatan" style="margin-top:10px;"></div>
+                            <input type="hidden" name="daftar_kegiatan_terupload" id="daftar_kegiatan_terupload">
+                            <small class="text-muted">Upload satu per satu (Maksimal 2MB per foto).</small>
+                        </div>
                     </div>
-
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -166,55 +150,127 @@ include "login/ceksession.php";
           </div>
         </div>
       </div>
-      <!-- /page content -->
-
-      <!-- footer content -->
       <footer>
         <div class="pull-right">
           Arsip Surat Desa Candirejo Borobudur
         </div>
         <div class="clearfix"></div>
       </footer>
-      <!-- /footer content -->
-    </div>
+      </div>
   </div>
 
-  <!-- jQuery -->
   <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap -->
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- FastClick -->
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- bootstrap-progressbar -->
-  <script src="../assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-  <!-- iCheck -->
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <!-- bootstrap-daterangepicker -->
-  <script src="../assets/vendors/moment/min/moment.min.js"></script>
-  <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <!-- bootstrap-datetimepicker -->
-  <script src="../assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-  <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
   $(document).ready(function() {
-    $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
+    
+    // --- FUNGSI GENERIC UNTUK UPLOAD ---
+    function setupAjaxUpload(config) {
+        $(config.buttonSelector).on('click', function() {
+            $(config.inputSelector).click();
+        });
+
+        $(config.inputSelector).on('change', function() {
+            if (this.files.length > 0) {
+                let file = this.files[0];
+                let formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', config.uploadType); // 'legalitas' atau 'kegiatan'
+
+                $(config.messageSelector).html('<i class="fa fa-spinner fa-spin"></i> Mengunggah...');
+
+                fetch('proses/ajax_upload_mitra.php', { // Ganti dengan nama file prosesor AJAX Anda
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sukses) {
+                        let namaFile = data.namaFile;
+                        let isImage = /\.(jpe?g|png|gif)$/i.test(namaFile);
+                        let previewHtml;
+
+                        if (isImage) {
+                             previewHtml = `
+                                <div class="col-md-3 col-sm-4 col-xs-6" data-namafile="${namaFile}" style="margin-bottom: 15px;">
+                                    <div style="position: relative;">
+                                        <img src="/admin/uploads/mitra/${namaFile}" style="width:100%; height: 100px; object-fit: cover; border-radius:5px; border: 1px solid #ddd;">
+                                        <button type="button" class="btn btn-danger btn-xs ${config.deleteClass}" style="position:absolute; top:5px; right:5px;"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>`;
+                        } else {
+                             previewHtml = `
+                                <div class="col-md-3 col-sm-4 col-xs-6" data-namafile="${namaFile}" style="margin-bottom: 15px;">
+                                    <div style="position: relative; border: 1px solid #ddd; border-radius: 5px; padding: 10px; height: 100px; display: flex; align-items: center; justify-content: center; background: #f8f8f8;">
+                                        <i class="fa fa-file-pdf-o fa-2x" style="color: #d9534f;"></i>
+                                        <p style="margin-left: 10px; word-break: break-all;">${namaFile}</p>
+                                        <button type="button" class="btn btn-danger btn-xs ${config.deleteClass}" style="position:absolute; top:5px; right:5px;"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>`;
+                        }
+                        
+                        $(config.previewAreaSelector).append(previewHtml);
+
+                        let daftarFile = $(config.hiddenListSelector).val();
+                        let arrayFile = daftarFile ? daftarFile.split(',').filter(n => n) : [];
+                        arrayFile.push(namaFile);
+                        $(config.hiddenListSelector).val(arrayFile.join(','));
+                        
+                        $(config.messageSelector).html('<span style="color:green;">Upload berhasil!</span>');
+                    } else {
+                        $(config.messageSelector).html('<span style="color:red;">Error: ' + data.pesan + '</span>');
+                    }
+                })
+                .catch(error => {
+                    $(config.messageSelector).html('<span style="color:red;">Terjadi kesalahan jaringan.</span>');
+                    console.error('Error:', error);
+                });
+                
+                $(this).val('');
+            }
+        });
+
+        $(document).on('click', '.' + config.deleteClass, function() {
+            let itemDihapus = $(this).closest('.col-md-3');
+            let namaFileDihapus = itemDihapus.data('namafile');
+
+            let daftarFile = $(config.hiddenListSelector).val();
+            let arrayFile = daftarFile.split(',');
+            let arrayBaru = arrayFile.filter(nama => nama !== namaFileDihapus);
+            $(config.hiddenListSelector).val(arrayBaru.join(','));
+
+            itemDihapus.remove();
+        });
+    }
+
+    // --- Inisialisasi untuk BUKTI LEGALITAS ---
+    setupAjaxUpload({
+        buttonSelector: '#tombol-pilih-legalitas',
+        inputSelector: '#input-legalitas',
+        previewAreaSelector: '#area-preview-legalitas',
+        messageSelector: '#pesan-upload-legalitas',
+        hiddenListSelector: '#daftar_legalitas_terupload',
+        deleteClass: 'hapus-legalitas',
+        uploadType: 'legalitas' // Tipe untuk backend
     });
+
+    // --- Inisialisasi untuk FOTO KEGIATAN ---
+    setupAjaxUpload({
+        buttonSelector: '#tombol-pilih-kegiatan',
+        inputSelector: '#input-kegiatan',
+        previewAreaSelector: '#area-preview-kegiatan',
+        messageSelector: '#pesan-upload-kegiatan',
+        hiddenListSelector: '#daftar_kegiatan_terupload',
+        deleteClass: 'hapus-kegiatan',
+        uploadType: 'kegiatan' // Tipe untuk backend
+    });
+
   });
   </script>
-</body>
+  </body>
 
 </html>

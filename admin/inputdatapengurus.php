@@ -4,64 +4,23 @@ session_start();
 include "login/ceksession.php";
 ?>
 <html lang="en">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!-- Meta, title, CSS, favicons, etc. -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Input Data Pengurus - Arsip Desa Candirejo</title>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="../img/icon.ico">
-  <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
-  <link rel="icon" type="image/png" href="../img/icon.ico">
-  <link rel="apple-touch-icon" href="../img/icon.ico">
-
-  <!-- Bootstrap -->
+  <title>Input Data Pengurus - Desa Candirejo</title>
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- iCheck -->
-  <link href="../assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <!-- bootstrap-wysiwyg -->
-  <link href="../assets/vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-  <!-- Select2 -->
-  <link href="../assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-  <!-- Switchery -->
-  <link href="../assets/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-  <!-- bootstrap-daterangepicker -->
-  <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-  <!-- bootstrap-datetimepicker -->
-  <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
-  <!-- starrr -->
-  <link href="../assets/vendors/starrr/dist/starrr.css" rel="stylesheet">
-  <link rel="shortcut icon" href="../img/icon.ico">
-
-  <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <link rel="shortcut icon" href="../img/icon.ico">
 </head>
-
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
-      <!-- Profile and Sidebarmenu -->
-      <?php
-      include("sidebarmenu.php");
-      ?>
-      <!-- /Profile and Sidebarmenu -->
-
-      <!-- top navigation -->
-      <?php
-      include("header.php");
-      ?>
-      <!-- /top navigation -->
-
-      <!-- page content -->
+      <?php include("sidebarmenu.php"); ?>
+      <?php include("header.php"); ?>
       <div class="right_col" role="main">
         <div class="">
           <div class="clearfix"></div>
@@ -74,97 +33,47 @@ include "login/ceksession.php";
                 </div>
                 <div class="x_content">
                   <br />
-                  <form action="proses/proses_inputpengurus.php" method="post" enctype="multipart/form-data" id="demo-form2"
-                    data-parsley-validate class="form-horizontal form-label-left">
+                  <form action="proses/proses_inputpengurus.php" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama">Nama <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><input type="text" id="nama" name="nama" required="required" maxlength="100" placeholder="Masukkan Nama Lengkap" class="form-control"></div></div>
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="no_ktp">No. KTP <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><input type="text" id="no_ktp" name="no_ktp" required="required" maxlength="20" placeholder="Masukkan Nomor KTP" class="form-control"></div></div>
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="jabatan">Jabatan <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><input type="text" id="jabatan" name="jabatan" required="required" maxlength="50" placeholder="Masukkan Jabatan" class="form-control"></div></div>
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="periode">Periode <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><input type="text" id="periode" name="periode" required="required" maxlength="20" placeholder="Contoh: 2022-2025" class="form-control"></div></div>
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="alamat">Alamat <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><textarea id="alamat" name="alamat" required="required" class="form-control" rows="3" placeholder="Masukkan Alamat Lengkap"></textarea></div></div>
+                    <div class="form-group"><label class="control-label col-md-3 col-sm-3 col-xs-12" for="no_telp">No. Telepon <span class="required">*</span></label><div class="col-md-9 col-sm-9 col-xs-12"><input type="text" id="no_telp" name="no_telp" required="required" maxlength="15" placeholder="Masukkan Nomor Telepon" class="form-control"></div></div>
+
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama">Nama <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nama" name="nama" required="required" maxlength="100"
-                          placeholder="Masukkan Nama Lengkap" class="form-control col-md-7 col-xs-12">
-                      </div>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto KTP</label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div id="area-preview-ktp" class="row"></div>
+                            <input type="file" id="input-ktp" style="display: none;" accept="image/*">
+                            <button type="button" class="btn btn-default" id="tombol-pilih-ktp"><i class="fa fa-plus"></i> Tambah Foto KTP</button>
+                            <div id="pesan-upload-ktp" style="margin-top:10px;"></div>
+                            <input type="hidden" name="daftar_ktp_terupload" id="daftar_ktp_terupload">
+                            <small class="text-muted">Upload 1 foto KTP (Maksimal 2MB).</small>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="no_ktp">No. KTP <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="no_ktp" name="no_ktp" required="required" maxlength="20"
-                          placeholder="Masukkan Nomor KTP" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jabatan">Jabatan <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="jabatan" name="jabatan" required="required" maxlength="50"
-                          placeholder="Masukkan Jabatan" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="periode">Periode <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="periode" name="periode" required="required" maxlength="20"
-                          placeholder="Contoh: 2022-2025" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="alamat">Alamat <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="alamat" name="alamat" required="required" class="form-control" rows="3"
-                          placeholder="Masukkan Alamat Lengkap"></textarea>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="no_telp">No. Telepon <span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="no_telp" name="no_telp" required="required" maxlength="15"
-                          placeholder="Masukkan Nomor Telepon" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Foto KTP
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="foto_ktp" accept="image/*" type="file" id="foto_ktp" class="form-control" />
-                        <small class="text-muted">Upload foto KTP (Maksimal 2MB)</small>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Pas Foto
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input name="pas_foto" accept="image/*" type="file" id="pas_foto" class="form-control" />
-                        <small class="text-muted">Upload pas foto (Maksimal 2MB)</small>
-                      </div>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Pas Foto</label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <div id="area-preview-pasfoto" class="row"></div>
+                            <input type="file" id="input-pasfoto" style="display: none;" accept="image/*" >
+                            <button type="button" class="btn btn-default" id="tombol-pilih-pasfoto"><i class="fa fa-plus"></i> Tambah Pas Foto</button>
+                            <div id="pesan-upload-pasfoto" style="margin-top:10px;"></div>
+                            <input type="hidden" name="daftar_pasfoto_terupload" id="daftar_pasfoto_terupload">
+                            <small class="text-muted">Upload 1 pas foto (Maksimal 2MB).</small>
+                        </div>
                     </div>
 
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <a href="datapengurus.php" class="btn btn-success"><span
-                            class="glyphicon glyphicon-arrow-left"></span> Batal</a>
-                        <button type="submit" name="submit" value="Submit" class="btn btn-primary"><i
-                            class="glyphicon glyphicon-plus"></i> Simpan</button>
+                        <a href="datapengurus.php" class="btn btn-primary">Batal</a>
+                        <button type="submit" class="btn btn-success">Submit</button>
                       </div>
                     </div>
-
                   </form>
                 </div>
               </div>
@@ -172,55 +81,89 @@ include "login/ceksession.php";
           </div>
         </div>
       </div>
-      <!-- /page content -->
-
-      <!-- footer content -->
-      <footer>
-        <div class="pull-right">
-       
-        </div>
-        <div class="clearfix"></div>
-      </footer>
-      <!-- /footer content -->
+      <footer><div class="pull-right"></div><div class="clearfix"></div></footer>
     </div>
   </div>
 
-  <!-- jQuery -->
   <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap -->
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- FastClick -->
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- bootstrap-progressbar -->
-  <script src="../assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-  <!-- iCheck -->
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <!-- bootstrap-daterangepicker -->
-  <script src="../assets/vendors/moment/min/moment.min.js"></script>
-  <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <!-- bootstrap-wysiwyg -->
-  <script src="../assets/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-  <script src="../assets/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-  <script src="../assets/vendors/google-code-prettify/src/prettify.js"></script>
-  <!-- jQuery Tags Input -->
-  <script src="../assets/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-  <!-- Switchery -->
-  <script src="../assets/vendors/switchery/dist/switchery.min.js"></script>
-  <!-- Select2 -->
-  <script src="../assets/vendors/select2/dist/js/select2.full.min.js"></script>
-  <!-- Parsley -->
-  <script src="../assets/vendors/parsleyjs/dist/parsley.min.js"></script>
-  <!-- Autosize -->
-  <script src="../assets/vendors/autosize/dist/autosize.min.js"></script>
-  <!-- jQuery autocomplete -->
-  <script src="../assets/vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-  <!-- starrr -->
-  <script src="../assets/vendors/starrr/dist/starrr.js"></script>
-  <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
-</body>
+  <script>
+  $(document).ready(function() {
+    function setupAjaxUpload(config) {
+        $(config.buttonSelector).on('click', function() {
+            $(config.inputSelector).click();
+        });
 
-</html> 
+        $(config.inputSelector).on('change', function() {
+            if (this.files.length > 0) {
+                let file = this.files[0];
+                let formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', config.uploadType);
+
+                $(config.messageSelector).html('<i class="fa fa-spinner fa-spin"></i> Mengunggah...');
+
+                fetch('proses/ajax_upload_pengurus.php', { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sukses) {
+                        let namaFile = data.namaFile;
+                        let previewHtml = `
+                            <div class="col-md-3 col-sm-4 col-xs-6" data-namafile="${namaFile}" style="margin-bottom: 15px;">
+                                <div style="position: relative;">
+                                    <img src="/admin/uploads/pengurus/${namaFile}" style="width:100%; height: 100px; object-fit: cover; border-radius:5px; border: 1px solid #ddd;">
+                                    <button type="button" class="btn btn-danger btn-xs ${config.deleteClass}" style="position:absolute; top:5px; right:5px;"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>`;
+                        
+                        $(config.previewAreaSelector).html(previewHtml); // Ganti .append() dengan .html() agar hanya ada 1 file
+                        $(config.hiddenListSelector).val(namaFile);
+                        $(config.buttonSelector).hide(); // Sembunyikan tombol tambah setelah berhasil
+                        $(config.messageSelector).html('<span style="color:green;">Upload berhasil!</span>');
+                    } else {
+                        $(config.messageSelector).html('<span style="color:red;">Error: ' + data.pesan + '</span>');
+                    }
+                })
+                .catch(error => {
+                    $(config.messageSelector).html('<span style="color:red;">Terjadi kesalahan jaringan.</span>');
+                });
+                $(this).val('');
+            }
+        });
+
+        $(document).on('click', '.' + config.deleteClass, function() {
+            $(this).closest('.col-md-3').remove();
+            $(config.hiddenListSelector).val('');
+            $(config.buttonSelector).show(); // Tampilkan lagi tombol tambah
+        });
+    }
+
+    // --- Inisialisasi untuk FOTO KTP ---
+    setupAjaxUpload({
+        buttonSelector: '#tombol-pilih-ktp',
+        inputSelector: '#input-ktp',
+        previewAreaSelector: '#area-preview-ktp',
+        messageSelector: '#pesan-upload-ktp',
+        hiddenListSelector: '#daftar_ktp_terupload',
+        deleteClass: 'hapus-ktp',
+        uploadType: 'ktp'
+    });
+
+    // --- Inisialisasi untuk PAS FOTO ---
+    setupAjaxUpload({
+        buttonSelector: '#tombol-pilih-pasfoto',
+        inputSelector: '#input-pasfoto',
+        previewAreaSelector: '#area-preview-pasfoto',
+        messageSelector: '#pesan-upload-pasfoto',
+        hiddenListSelector: '#daftar_pasfoto_terupload',
+        deleteClass: 'hapus-pasfoto',
+        uploadType: 'pasfoto'
+    });
+  });
+  </script>
+</body>
+</html>

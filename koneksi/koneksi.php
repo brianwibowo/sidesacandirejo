@@ -1,8 +1,8 @@
 <?php
 $server   = "localhost";
-$username = "root";
-$password = "";
-$database = "u655368359_db_surat";
+$username = "u346430374_sidesacandirej";
+$password = "Brianscottkennedy120404";
+$database = "u346430374_db_surat";
 
 // Koneksi ke database
 $db = mysqli_connect($server, $username, $password, $database);

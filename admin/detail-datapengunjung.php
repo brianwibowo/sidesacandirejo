@@ -1,8 +1,9 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -54,6 +55,22 @@ include "login/ceksession.php";
                 </div>
                 <?php
                   include '../koneksi/koneksi.php';
+
+                  function getFotoList($db, $id_pengunjung, $kolom_foto) {
+                      if (!empty($kolom_foto)) {
+                          $decoded = json_decode($kolom_foto, true);
+                          if (is_array($decoded) && count($decoded) > 0) return $decoded;
+                          if (!empty(trim($kolom_foto))) return [trim($kolom_foto)];
+                      }
+                      $pid = (int)$id_pengunjung;
+                      $res = mysqli_query($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = $pid ORDER BY id_foto ASC");
+                      $list = [];
+                      while ($r = mysqli_fetch_assoc($res)) {
+                          if (!empty($r['nama_file'])) $list[] = $r['nama_file'];
+                      }
+                      return $list;
+                  }
+
                   $id = mysqli_real_escape_string($db, $_GET['id']);
                   $sql = "SELECT * FROM tb_data_pengunjung WHERE id='$id'";
                   $query = mysqli_query($db, $sql);
@@ -62,18 +79,33 @@ include "login/ceksession.php";
       
                   ?>
                 <div class="x_content">
+                  <?php
+                    // Gunakan helper — support data baru (JSON) dan data lama (tb_foto_pengunjung)
+                    $foto_semua  = getFotoList($db, $data['id'], $data['foto'] ?? null);
+                    $foto_avatar = !empty($foto_semua) ? $foto_semua[0] : null;
+                  ?>
                   <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                     <div class="profile_img">
                       <div id="crop-avatar">
-                        <!-- Current avatar -->
-                        <?php if (!empty($data['foto'])): ?>
+                        <?php if ($foto_avatar): ?>
                         <img class="img-responsive avatar-view"
-                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($data['foto']); ?>" alt="Avatar">
+                          src="uploads/pengunjung/<?php echo htmlspecialchars($foto_avatar); ?>" alt="Avatar">
                         <?php else: ?>
                         <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
                         <?php endif; ?>
                       </div>
                     </div>
+                    <?php if (count($foto_semua) > 1): ?>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px;">
+                      <?php foreach(array_slice($foto_semua, 1) as $idx => $f): ?>
+                        <a href="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                          <img src="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                            style="width:50px;height:50px;object-fit:cover;border-radius:5px;border:1px solid #ddd;"
+                            title="Foto <?php echo $idx+2; ?>">
+                        </a>
+                      <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                     <h3 align="center"><?php echo isset($data['nama']) ? $data['nama'] : 'N/A'; ?></h3>
                     <br />
                   </div>
@@ -126,8 +158,32 @@ include "login/ceksession.php";
                             <td>Local Guide</td>
                             <td><?php echo isset($data['local_guide']) ? $data['local_guide'] : 'N/A'; ?></td>
                           </tr>
+                          <?php if (!empty($data['opsi_gamelan'])): ?>
                           <tr>
-                            
+                            <td>Opsi Gamelan Class</td>
+                            <td><?php echo ($data['opsi_gamelan'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch'; ?></td>
+                          </tr>
+                          <?php endif; ?>
+                          <tr>
+                            <td>Foto</td>
+                            <td>
+                              <?php if (!empty($foto_semua)): ?>
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                                <?php foreach ($foto_semua as $idx => $f): ?>
+                                  <div style="text-align:center;">
+                                    <a href="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                                      <img src="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                                        style="width:100px;height:100px;object-fit:cover;border-radius:6px;border:1px solid #ddd;"
+                                        title="Foto <?php echo $idx+1; ?>">
+                                    </a>
+                                    <div style="font-size:11px;color:#555;">Foto <?php echo $idx+1; ?></div>
+                                  </div>
+                                <?php endforeach; ?>
+                                </div>
+                              <?php else: ?>
+                                <span class="text-muted">Tidak ada foto</span>
+                              <?php endif; ?>
+                            </td>
                           </tr>
                         </tbody>
                       </table>

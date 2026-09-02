@@ -1,8 +1,9 @@
-<!DOCTYPE html>
 <?php
 session_start();
 include "login/ceksession.php";
 ?>
+<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -31,6 +32,9 @@ include "login/ceksession.php";
 
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="nav-md">
@@ -62,7 +66,7 @@ include "login/ceksession.php";
                 <div class="x_content">
                   <br />
                   <form action="proses/proses_inputdatapengunjung.php" name="forminputdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
 
                     <div class="form-group">
@@ -88,17 +92,19 @@ include "login/ceksession.php";
                         <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
                           class="form-control col-md-7 col-xs-12">
                           <option value="">--</option>
-                          <option value="meal_only">Breakfast/Lunch/Diner Only</option>
+                          <option value="meal_only">Breakfast/Lunch/Dinner Only</option>
                           <option value="studi_banding">Studi Banding</option>
                           <option value="fun_game">Paket Fun Game</option>
                           <option value="pelajar_live_in">Paket Pelajar - Live In Candirejo</option>
-                          <option value="pelajar_field_trip">Paket Pelajar – Field Trip</option>
+                          <option value="pelajar_field_trip_one_day">Paket Pelajar – Field Trip One Day</option>
+                          <option value="pelajar_field_trip_half_day">Paket Pelajar – Field Trip Half Day</option>
                           <option value="cycling_tour">Cycling Village Tour with/without Lunch</option>
                           <option value="traditional_dance">Traditional Dance</option>
                           <option value="walking_tour">Walking Around Village with/without Lunch</option>
                           <option value="homestay">Stay At Local House In Candirejo Village (Homestay)</option>
                           <option value="serenade">Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="cooking_lesson">Cooking lesson with/without Tour</option>
+                          <option value="cooking_lesson">Cooking Lesson with/without Tour</option>
+                          <option value="gamelan_class">Gamelan Class with/without Lunch</option>
                           <option value="village_experience">Village Experience</option>
                           <option value="dokar_tour">Dokar Village Tour with/without Lunch</option>
                           <option value="inspection">Inspection</option>
@@ -137,6 +143,17 @@ include "login/ceksession.php";
                           <option value="">--</option>
                           <option value="lesson_only">Lesson Only</option>
                           <option value="lesson_with_tour">Lesson With Tour</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="opsi_gamelan_group" style="display:none;">
+                      <label class="control-label col-md-3" for="opsi_gamelan">Opsi Gamelan Class</label>
+                      <div class="col-md-9">
+                        <select id="opsi_gamelan" name="opsi_gamelan" class="form-control">
+                          <option value="">--</option>
+                          <option value="without_lunch">Without Lunch</option>
+                          <option value="with_lunch">With Lunch</option>
                         </select>
                       </div>
                     </div>
@@ -224,8 +241,9 @@ include "login/ceksession.php";
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="file" id="foto" name="foto" accept="image/*" class="form-control col-md-7 col-xs-12">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB)</small>
+                        <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12">
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maksimal 2MB per foto). Bisa pilih lebih dari 1 foto.</small>
+                        <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                       </div>
                     </div>
 
@@ -234,6 +252,7 @@ include "login/ceksession.php";
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="submit" class="btn btn-success">Submit</button>
                         <button type="reset" class="btn btn-primary">Reset</button>
+                        <a href="datapengunjung.php" class="btn btn-danger">Kembali</a>
                       </div>
                     </div>
 
@@ -292,11 +311,13 @@ include "login/ceksession.php";
         $('#opsi_makan_tour_group').hide();
         $('#jenis_makanan_paket_group').hide();
         $('#opsi_cooking_lesson_group').hide();
+        $('#opsi_gamelan_group').hide();
         
         // Reset values
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
+        $('#opsi_gamelan').val('');
         
         // Show relevant fields based on selected package
         if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
@@ -308,7 +329,102 @@ include "login/ceksession.php";
         if (paket === 'cooking_lesson') {
             $('#opsi_cooking_lesson_group').show();
         }
+        if (paket === 'gamelan_class') {
+            $('#opsi_gamelan_group').show();
+        }
     });
+
+    // === MULTI-FILE UPLOAD: akumulasi file dari beberapa kali buka file manager ===
+    var selectedFiles = [];
+
+    function renderFotoPreview() {
+        var preview = $('#foto-preview');
+        preview.empty();
+        selectedFiles.forEach(function(file, idx) {
+            var reader = new FileReader();
+            reader.onload = (function(f, i) {
+                return function(e) {
+                    preview.append(
+                        '<div style="position:relative;display:inline-block;margin:4px;" id="fpreview-' + i + '">' +
+                        '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
+                        '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</div>' +
+                        '<button type="button" onclick="removeSelectedFile(' + i + ')" ' +
+                        'style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>' +
+                        '</div>'
+                    );
+                };
+            })(file, idx);
+            reader.readAsDataURL(file);
+        });
+
+        // Sync ke input file via DataTransfer supaya ter-submit
+        var dt = new DataTransfer();
+        selectedFiles.forEach(function(f) { dt.items.add(f); });
+        document.getElementById('foto').files = dt.files;
+    }
+
+    window.removeSelectedFile = function(index) {
+        selectedFiles.splice(index, 1);
+        renderFotoPreview();
+    };
+
+    $('#foto').on('change', function() {
+        var newFiles = Array.from(this.files);
+        var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        var maxSize = 2 * 1024 * 1024; // 2 MB
+        var rejectedType = [];
+        var rejectedSize = [];
+
+        newFiles.forEach(function(newFile) {
+            // Validasi tipe
+            if (!allowedTypes.includes(newFile.type)) {
+                rejectedType.push(newFile.name);
+                return;
+            }
+            // Validasi ukuran
+            if (newFile.size > maxSize) {
+                rejectedSize.push(newFile.name);
+                return;
+            }
+            // Hindari duplikat
+            var isDuplicate = selectedFiles.some(function(f) {
+                return f.name === newFile.name && f.size === newFile.size;
+            });
+            if (!isDuplicate) {
+                selectedFiles.push(newFile);
+            }
+        });
+
+        // Tampilkan peringatan jika ada yang ditolak
+        if (rejectedType.length > 0 || rejectedSize.length > 0) {
+            var msg = '';
+            if (rejectedType.length > 0) {
+                msg += '<b>Format tidak didukung</b> (harus JPG/JPEG/PNG):<br>' + rejectedType.map(function(n){ return '• ' + n; }).join('<br>') + '<br><br>';
+            }
+            if (rejectedSize.length > 0) {
+                msg += '<b>Melebihi batas 2 MB:</b><br>' + rejectedSize.map(function(n){ return '• ' + n; }).join('<br>');
+            }
+            Swal.fire({
+                title: 'Foto Tidak Valid',
+                html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left;font-size:14px;color:#555;">' + msg + '</div>',
+                icon: 'warning',
+                iconColor: '#f39c12',
+                confirmButtonText: 'Mengerti',
+                background: '#fff',
+                color: '#1a1a2e',
+                customClass: { popup: 'swal-custom-popup', title: 'swal-custom-title' }
+            });
+        }
+
+        renderFotoPreview();
+    });
+
+    // Reset selectedFiles saat tombol Reset diklik
+    $('button[type="reset"]').on('click', function() {
+        selectedFiles = [];
+        $('#foto-preview').empty();
+    });
+    // === END MULTI-FILE UPLOAD ===
 
     $('#jenis_wisatawan').change(function() {
         const jenis = $(this).val();
