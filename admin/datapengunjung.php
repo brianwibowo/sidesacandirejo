@@ -659,8 +659,11 @@ include "login/ceksession.php";
 
       <!-- footer content -->
       <footer>
-        <div class="pull-right">
-          Supported by DRTPM
+        <div class="pull-left text-muted" style="font-size:12px;">
+          © <?php echo date("Y"); ?> Desa Wisata Candirejo Borobudur
+        </div>
+        <div class="pull-right text-muted" style="font-size:12px;">
+          Supported by DRTPM KEMDIKBUDRISTEK
         </div>
         <div class="clearfix"></div>
       </footer>
@@ -778,6 +781,15 @@ include "login/ceksession.php";
       $('#datatable').wrap('<div class="table-scroll-wrapper"></div>');
     }
 
+    function adjustContentHeight() {
+      var windowH = $(window).height();
+      var leftH = $('.left_col').outerHeight() || 0;
+      var navH = $('.nav_menu').outerHeight() || $('.top_nav').outerHeight() || 50;
+      var footerH = $('footer').outerHeight() || 40;
+      var minH = Math.max(windowH, leftH) - navH - footerH;
+      $('.right_col').css('min-height', minH > 200 ? minH : windowH);
+    }
+
     // Destroy inisialisasi dari custom.min.js lalu re-init dengan order DESC
     if ($.fn.DataTable.isDataTable('#datatable')) {
       $('#datatable').DataTable().destroy();
@@ -801,8 +813,15 @@ include "login/ceksession.php";
           "next": "Berikutnya",
           "previous": "Sebelumnya"
         }
+      },
+      "drawCallback": function() {
+        adjustContentHeight();
       }
     });
+
+    // Sesuaikan tinggi setelah DataTable selesai render
+    adjustContentHeight();
+    setTimeout(adjustContentHeight, 200);
   });
   </script>
 
