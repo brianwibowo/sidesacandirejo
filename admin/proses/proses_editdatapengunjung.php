@@ -61,10 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pilihan_paket_wisata = $_POST['pilihan_paket_wisata'];
     $jenis_wisatawan = $_POST['jenis_wisatawan'];
     $nama = trim($_POST['nama']);
-    $pax = isset($_POST['pax']) ? (int)$_POST['pax'] : -1;
+    $pax = (int)$_POST['pax'];
     
     // Validasi data wajib
-    if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax < 0) {
+    if (empty($id) || empty($tanggal_kunjungan) || empty($pilihan_paket_wisata) || empty($jenis_wisatawan) || empty($nama) || $pax <= 0) {
         echo swalResponse('Validasi Gagal!', 'Data wajib tidak boleh kosong!', 'warning', 'javascript:history.back()');
         exit;
     }
@@ -134,12 +134,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 
     // Handle multiple file upload
-    $foto = $current_foto; // keep existing (JSON string or old single filename)
+    // Ambil daftar foto yang sudah ada (dari database)
+    $existing_foto_list = [];
+    if (!empty($current_foto)) {
+        $decoded = json_decode($current_foto, true);
+        $existing_foto_list = is_array($decoded) ? $decoded : [$current_foto];
+    }
+
+    // Gunakan sentinel untuk bedakan "tidak ada foto lama" vs "semua foto lama dihapus user"
+    // Jika existing_foto_sent ada → user memang sudah interaksi dengan bagian foto (pakai apa yang dikirim, bisa kosong)
+    // Jika tidak ada → form tidak punya section foto sama sekali (pertahankan semua)
+    if (isset($_POST['existing_foto_sent'])) {
+        $kept_existing = isset($_POST['existing_foto']) ? (array)$_POST['existing_foto'] : [];
+    } else {
+        $kept_existing = $existing_foto_list;
+    }
+
+    // Hapus dari disk foto lama yang sudah tidak dipakai (user hapus via tombol ✕)
+    foreach ($existing_foto_list as $old_f) {
+        if (!in_array($old_f, $kept_existing)) {
+            $old_path = '../uploads/pengunjung/' . $old_f;
+            if (file_exists($old_path)) unlink($old_path);
+        }
+    }
+
+    // Upload foto baru dan GABUNGKAN dengan foto lama yang dipertahankan
+    $new_foto_list = [];
     if (isset($_FILES['foto']) && is_array($_FILES['foto']['name'])) {
         $allowed = ['jpg', 'jpeg', 'png'];
-        $new_foto_list = [];
 
-        // Create directory if needed
         if (!file_exists('../uploads/pengunjung/')) {
             mkdir('../uploads/pengunjung', 0777, true);
         }
@@ -159,24 +182,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
-
-        if (!empty($new_foto_list)) {
-            // Hapus foto lama
-            if (!empty($current_foto)) {
-                $old_list = json_decode($current_foto, true);
-                if (is_array($old_list)) {
-                    foreach ($old_list as $old_f) {
-                        $old_path = '../uploads/pengunjung/' . $old_f;
-                        if (file_exists($old_path)) unlink($old_path);
-                    }
-                } else {
-                    $old_path = '../uploads/pengunjung/' . $current_foto;
-                    if (file_exists($old_path)) unlink($old_path);
-                }
-            }
-            $foto = json_encode($new_foto_list);
-        }
     }
+
+    // Gabungkan: foto lama yang dipertahankan + foto baru yang diupload
+    $all_foto = array_merge($kept_existing, $new_foto_list);
+    $foto = !empty($all_foto) ? json_encode(array_values($all_foto)) : null;
 
     // Prepare statement untuk UPDATE
     $stmt = $db->prepare("UPDATE tb_data_pengunjung SET 

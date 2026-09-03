@@ -33,8 +33,6 @@ include "login/ceksession.php";
   <link rel="shortcut icon" href="../img/icon.ico">
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
-  <!-- SweetAlert2 CSS only -->
-
 
   <style>
     /* Override agresif agar card scroll tidak diblokir template */
@@ -60,6 +58,8 @@ include "login/ceksession.php";
       margin-bottom: 4px;
       position: relative;
       overflow: hidden;
+      height: 120px;
+      box-sizing: border-box;
     }
     .card-total-kunjungan::before {
       content: '';
@@ -120,6 +120,119 @@ include "login/ceksession.php";
       font-size: 10px;
       opacity: 0.75;
       margin-top: 3px;
+    }
+
+    /* ===== CARD JENIS WISATAWAN (LAYOUT NYAMPING) ===== */
+    .card-jenis-wisatawan {
+      background: linear-gradient(135deg, #1a6b4a 0%, #2e9e6e 100%);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(30, 120, 80, 0.28);
+      position: relative;
+      overflow: hidden;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      height: 120px;
+      box-sizing: border-box;
+    }
+    .card-jenis-wisatawan::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 110px; height: 110px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .card-jenis-wisatawan::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 40px;
+      width: 150px; height: 150px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .card-jenis-wisatawan .card-jenis-header {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .card-jenis-wisatawan .jenis-cols {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      min-height: 0;
+    }
+    .card-jenis-wisatawan .jenis-col {
+      flex: 1;
+      background: rgba(255,255,255,0.10);
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .card-jenis-wisatawan .jenis-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      background: rgba(255,255,255,0.20);
+      margin-bottom: 2px;
+      flex-shrink: 0;
+    }
+    .card-jenis-wisatawan .jenis-label {
+      font-size: 9px;
+      font-weight: 700;
+      opacity: 0.80;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      line-height: 1;
+    }
+    .card-jenis-wisatawan .jenis-count {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+    .card-jenis-wisatawan .jenis-count span {
+      font-size: 10px;
+      font-weight: 400;
+      opacity: 0.80;
+      margin-left: 2px;
+    }
+    .card-jenis-wisatawan .jenis-sub {
+      font-size: 9px;
+      opacity: 0.70;
+    }
+    .card-jenis-wisatawan .jenis-bar-wrap {
+      margin-top: 3px;
+      height: 3px;
+      background: rgba(255,255,255,0.20);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .card-jenis-wisatawan .jenis-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.75);
+    }
+    .card-jenis-wisatawan .jenis-pct {
+      font-size: 15px;
+      font-weight: 800;
+      opacity: 0.95;
+      margin-top: 2px;
+      letter-spacing: -0.3px;
     }
 
     /* ===== TOGGLE SWITCH ===== */
@@ -224,6 +337,42 @@ include "login/ceksession.php";
       margin-right: 6px;
       color: #667eea;
     }
+
+    /* ===== TABLE AREA ===== */
+    .x_content {
+      overflow: visible !important;
+    }
+    .table-scroll-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+    }
+    #datatable thead tr th:last-child,
+    #datatable tbody tr td:last-child {
+      position: sticky;
+      right: 0;
+      background-color: #fff;
+      z-index: 2;
+      box-shadow: -3px 0 6px rgba(0,0,0,0.08);
+    }
+    #datatable thead tr th:last-child {
+      background-color: #f5f5f5;
+      z-index: 3;
+    }
+    #datatable thead tr th:nth-child(2),
+    #datatable tbody tr td:nth-child(2) {
+      max-width: 130px;
+      min-width: 100px;
+      white-space: normal;
+      word-break: break-word;
+    }
+    #datatable thead tr th:nth-child(9),
+    #datatable tbody tr td:nth-child(9) {
+      max-width: 100px;
+      min-width: 80px;
+      white-space: normal;
+      word-break: break-word;
+    }
   </style>
 </head>
 
@@ -231,15 +380,11 @@ include "login/ceksession.php";
   <div class="container body">
     <div class="main_container">
       <!-- Profile and Sidebar menu -->
-      <?php
-      include("sidebarmenu.php");
-      ?>
+      <?php include("sidebarmenu.php"); ?>
       <!-- /Profile and Sidebar menu -->
 
       <!-- top navigation -->
-      <?php
-      include("header.php");
-      ?>
+      <?php include("header.php"); ?>
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -250,6 +395,27 @@ include "login/ceksession.php";
 
           <?php
           include '../koneksi/koneksi.php';
+
+          /**
+           * getFotoList: ambil daftar nama file foto pengunjung.
+           * Data lama → foto ada di tb_foto_pengunjung (kolom nama_file).
+           * Data baru → foto ada di kolom foto (JSON) di tb_data_pengunjung.
+           * Return array of filename strings.
+           */
+          function getFotoList($db, $id_pengunjung, $kolom_foto) {
+              if (!empty($kolom_foto)) {
+                  $decoded = json_decode($kolom_foto, true);
+                  if (is_array($decoded) && count($decoded) > 0) return $decoded;
+                  if (!empty(trim($kolom_foto))) return [trim($kolom_foto)];
+              }
+              $pid = (int)$id_pengunjung;
+              $res = mysqli_query($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = $pid ORDER BY id_foto ASC");
+              $list = [];
+              while ($r = mysqli_fetch_assoc($res)) {
+                  if (!empty($r['nama_file'])) $list[] = $r['nama_file'];
+              }
+              return $list;
+          }
 
           // Tahun card default 2026
           $tahun_card = isset($_GET['tahun_card']) && is_numeric($_GET['tahun_card']) ? (int)$_GET['tahun_card'] : 2026;
@@ -264,8 +430,19 @@ include "login/ceksession.php";
           // Total per tahun card
           $r_pax  = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as v FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card'"));
           $r_sesi = mysqli_fetch_assoc(mysqli_query($db, "SELECT COUNT(*) as v FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card'"));
-          $total_pax      = $r_pax['v']  ?? 0;
-          $total_kunjungan= $r_sesi['v'] ?? 0;
+          $total_pax       = $r_pax['v']  ?? 0;
+          $total_kunjungan = $r_sesi['v'] ?? 0;
+
+          // Domestik vs Mancanegara per tahun card
+          $r_dom = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as pax, COUNT(*) as sesi FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card' AND jenis_wisatawan='Domestik'"));
+          $r_mnc = mysqli_fetch_assoc(mysqli_query($db, "SELECT SUM(pax) as pax, COUNT(*) as sesi FROM tb_data_pengunjung WHERE YEAR(tanggal_kunjungan)='$tahun_card' AND jenis_wisatawan='Mancanegara'"));
+          $dom_pax  = (int)($r_dom['pax']  ?? 0);
+          $dom_sesi = (int)($r_dom['sesi'] ?? 0);
+          $mnc_pax  = (int)($r_mnc['pax']  ?? 0);
+          $mnc_sesi = (int)($r_mnc['sesi'] ?? 0);
+          $total_jenis_pax = $dom_pax + $mnc_pax;
+          $dom_pct = $total_jenis_pax > 0 ? round($dom_pax / $total_jenis_pax * 100) : 0;
+          $mnc_pct = $total_jenis_pax > 0 ? round($mnc_pax / $total_jenis_pax * 100) : 0;
 
           // Filter aktif
           $filter_aktif = !empty($_GET['bulan']) || !empty($_GET['tahun']);
@@ -284,12 +461,12 @@ include "login/ceksession.php";
           }
           ?>
 
-          <!-- CARD TOTAL KUNJUNGAN -->
-          <div id="card-area-wrap" style="width:100%;margin-bottom:4px;">
+          <!-- CARD AREA -->
+          <div id="card-area-wrap" style="width:100%;margin-bottom:16px;">
             <div id="card-scroll-inner" style="overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding-bottom:6px;">
-              <div style="display:table;white-space:nowrap;border-spacing:14px 0;padding:0 0 0 0;">
+              <div style="display:table;white-space:nowrap;border-spacing:14px 0;padding:0;">
 
-                <!-- Card Utama -->
+                <!-- Card Utama: Total Kunjungan -->
                 <div style="display:table-cell;vertical-align:top;width:290px;">
                   <div class="card-total-kunjungan">
                     <div id="mode-pax" style="display:flex;align-items:flex-start;gap:14px;width:100%;">
@@ -361,6 +538,45 @@ include "login/ceksession.php";
                 </div>
                 <?php endif; ?>
 
+                <!-- Card Asal Wisatawan (layout 2 kolom nyamping) -->
+                <div style="display:table-cell;vertical-align:top;width:280px;">
+                  <div class="card-jenis-wisatawan">
+                    <div class="card-jenis-header">
+                      <i class="fa fa-globe"></i>
+                      Asal Wisatawan <?php echo $tahun_card; ?>
+                    </div>
+                    <div class="jenis-cols">
+
+                      <!-- Mancanegara -->
+                      <div class="jenis-col">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                          <div class="jenis-icon"><i class="fa fa-plane"></i></div>
+                          <div class="jenis-label">Mancanegara</div>
+                        </div>
+                        <div class="jenis-count">
+                          <?php echo number_format($mnc_pax,0,',','.'); ?>
+                          <span>orang</span>
+                        </div>
+                        <div class="jenis-sub"><?php echo $mnc_sesi; ?> sesi</div>
+                      </div>
+
+                      <!-- Domestik -->
+                      <div class="jenis-col">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                          <div class="jenis-icon"><i class="fa fa-map-marker"></i></div>
+                          <div class="jenis-label">Domestik</div>
+                        </div>
+                        <div class="jenis-count">
+                          <?php echo number_format($dom_pax,0,',','.'); ?>
+                          <span>orang</span>
+                        </div>
+                        <div class="jenis-sub"><?php echo $dom_sesi; ?> sesi</div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
               </div><!-- end table -->
             </div><!-- end scroll -->
           </div><!-- end card area -->
@@ -395,10 +611,6 @@ include "login/ceksession.php";
                   <div class="clearfix"></div>
                 </div>
 
-                <?php
-                // koneksi & variabel sudah di-include di atas
-                ?>
-
                 <!-- FILTER PANEL -->
                 <div class="filter-panel" style="margin: 0 15px 15px 15px;">
                   <div class="filter-title"><i class="fa fa-filter"></i> Filter Data</div>
@@ -426,7 +638,6 @@ include "login/ceksession.php";
                       <select name="tahun" class="form-control input-sm">
                         <option value="">Pilih Tahun</option>
                         <?php
-                        // Ambil tahun terkecil dari database secara dinamis
                         $sql_tahun_min = "SELECT YEAR(MIN(tanggal_kunjungan)) as tahun_min FROM tb_data_pengunjung";
                         $res_tahun_min = mysqli_query($db, $sql_tahun_min);
                         $row_tahun_min = mysqli_fetch_assoc($res_tahun_min);
@@ -478,7 +689,6 @@ include "login/ceksession.php";
 
                 <div class="x_content">
                   <?php
-                  // Terapkan filter dari GET
                   $where = "WHERE 1=1";
                   if (!empty($_GET['bulan'])) {
                     $filter_bulan = mysqli_real_escape_string($db, $_GET['bulan']);
@@ -511,118 +721,64 @@ include "login/ceksession.php";
                         <th>Aksi</th>
                       </tr>
                     </thead>
-
                     <tbody>
                       <?php
                         while ($data = mysqli_fetch_array($query1)) {
-                          // Format nama paket wisata
                           $paket_display = '';
                           switch($data['pilihan_paket_wisata']) {
-                            case 'meal_only':
-                              $paket_display = 'Breakfast/Lunch/Dinner Only';
-                              break;
-                            case 'studi_banding':
-                              $paket_display = 'Studi Banding';
-                              break;
-                            case 'fun_game':
-                              $paket_display = 'Paket Fun Game';
-                              break;
-                            case 'pelajar_live_in':
-                              $paket_display = 'Paket Pelajar - Live In Candirejo';
-                              break;
-                            case 'pelajar_field_trip_one_day':
-                              $paket_display = 'Paket Pelajar – Field Trip One Day';
-                              break;
-                            case 'pelajar_field_trip_half_day':
-                              $paket_display = 'Paket Pelajar – Field Trip Half Day';
-                              break;
-                            case 'cycling_tour':
-                              $paket_display = 'Cycling Village Tour Candirejo';
-                              break;
-                            case 'traditional_dance':
-                              $paket_display = 'Traditional Dance';
-                              break;
-                            case 'walking_tour':
-                              $paket_display = 'Walking Around Village';
-                              break;
-                            case 'homestay':
-                              $paket_display = 'Stay At Local House In Candirejo Village (Homestay)';
-                              break;
-                            case 'serenade':
-                              $paket_display = 'Serenade At The Foot Of Menoreh Hill';
-                              break;
-                            case 'cooking_lesson':
-                              $paket_display = 'Cooking Lesson';
-                              break;
-                            case 'gamelan_class':
-                              $paket_display = 'Gamelan Class';
-                              break;
-                            case 'village_experience':
-                              $paket_display = 'Village Experience';
-                              break;
-                            case 'dokar_tour':
-                              $paket_display = 'Dokar Village Tour Candirejo';
-                              break;
-                            default:
-                              $paket_display = htmlspecialchars($data['pilihan_paket_wisata']);
+                            case 'meal_only':              $paket_display = 'Breakfast/Lunch/Dinner Only'; break;
+                            case 'studi_banding':          $paket_display = 'Studi Banding'; break;
+                            case 'fun_game':               $paket_display = 'Paket Fun Game'; break;
+                            case 'pelajar_live_in':        $paket_display = 'Paket Pelajar - Live In Candirejo'; break;
+                            case 'pelajar_field_trip_one_day':  $paket_display = 'Paket Pelajar – Field Trip One Day'; break;
+                            case 'pelajar_field_trip_half_day': $paket_display = 'Paket Pelajar – Field Trip Half Day'; break;
+                            case 'cycling_tour':           $paket_display = 'Cycling Village Tour Candirejo'; break;
+                            case 'traditional_dance':      $paket_display = 'Traditional Dance'; break;
+                            case 'walking_tour':           $paket_display = 'Walking Around Village'; break;
+                            case 'homestay':               $paket_display = 'Stay At Local House In Candirejo Village (Homestay)'; break;
+                            case 'serenade':               $paket_display = 'Serenade At The Foot Of Menoreh Hill'; break;
+                            case 'cooking_lesson':         $paket_display = 'Cooking Lesson'; break;
+                            case 'gamelan_class':          $paket_display = 'Gamelan Class'; break;
+                            case 'village_experience':     $paket_display = 'Village Experience'; break;
+                            case 'dokar_tour':             $paket_display = 'Dokar Village Tour Candirejo'; break;
+                            default:                       $paket_display = htmlspecialchars($data['pilihan_paket_wisata']);
                           }
 
-                          // Format detail paket
                           $detail_paket = '';
-                          $paket_utama = $data['pilihan_paket_wisata'];
-
+                          $paket_utama  = $data['pilihan_paket_wisata'];
                           if (in_array($paket_utama, ['cycling_tour', 'dokar_tour', 'walking_tour']) && !empty($data['opsi_makan_tour'])) {
                             $detail_paket = ($data['opsi_makan_tour'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
                           } elseif ($paket_utama == 'meal_only' && !empty($data['jenis_makanan_paket'])) {
-                            $makanan_map = [
-                              'breakfast' => 'Breakfast',
-                              'lunch'     => 'Lunch',
-                              'dinner'    => 'Dinner'
-                            ];
+                            $makanan_map  = ['breakfast' => 'Breakfast', 'lunch' => 'Lunch', 'dinner' => 'Dinner'];
                             $detail_paket = $makanan_map[$data['jenis_makanan_paket']] ?? $data['jenis_makanan_paket'];
                           } elseif ($paket_utama == 'cooking_lesson' && !empty($data['opsi_cooking_lesson'])) {
                             $detail_paket = ($data['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'Cooking Lesson + Tour' : 'Cooking Lesson Saja';
                           } elseif ($paket_utama == 'gamelan_class' && !empty($data['opsi_gamelan'])) {
                             $detail_paket = ($data['opsi_gamelan'] == 'with_lunch') ? 'With Lunch' : 'Without Lunch';
                           }
-
-                          if (empty($detail_paket)) {
-                            $detail_paket = '-';
-                          }
+                          if (empty($detail_paket)) $detail_paket = '-';
 
                           $lokasi = ($data['jenis_wisatawan'] == 'Domestik') ? $data['kota'] : $data['negara'];
 
-                          // Badge Jenis Wisatawan
-                          $jenis = htmlspecialchars($data['jenis_wisatawan']);
+                          $jenis       = htmlspecialchars($data['jenis_wisatawan']);
                           $jenis_lower = strtolower($jenis);
-                          if (strpos($jenis_lower, 'mancanegara') !== false) {
-                            $badge_class = 'badge-mancanegara';
-                          } elseif (strpos($jenis_lower, 'domestik') !== false) {
-                            $badge_class = 'badge-domestik';
-                          } elseif (strpos($jenis_lower, 'pelajar') !== false) {
-                            $badge_class = 'badge-pelajar';
-                          } else {
-                            $badge_class = 'badge-lainnya';
-                          }
+                          if (strpos($jenis_lower, 'mancanegara') !== false)      $badge_class = 'badge-mancanegara';
+                          elseif (strpos($jenis_lower, 'domestik') !== false)     $badge_class = 'badge-domestik';
+                          elseif (strpos($jenis_lower, 'pelajar') !== false)      $badge_class = 'badge-pelajar';
+                          else                                                     $badge_class = 'badge-lainnya';
                           $jenis_badge = '<span class="badge-jenis ' . $badge_class . '">' . $jenis . '</span>';
 
-                          // Badge Pax
-                          $pax_val = htmlspecialchars($data['pax']);
+                          $pax_val   = htmlspecialchars($data['pax']);
                           $pax_badge = '<span class="badge-pax">' . $pax_val . ' orang</span>';
 
-                          // Foto (support multiple / JSON)
+                          $foto_arr  = getFotoList($db, $data['id'], $data['foto']);
                           $foto_html = '-';
-                          if (!empty($data['foto'])) {
-                            $foto_arr = json_decode($data['foto'], true);
-                            if (is_array($foto_arr)) {
-                              $foto_html = '';
-                              foreach (array_slice($foto_arr, 0, 3) as $idx => $f) {
-                                $foto_html .= '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($f) . '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin:1px;" title="Foto ' . ($idx+1) . '">';
-                              }
-                              if (count($foto_arr) > 3) $foto_html .= '<span style="font-size:11px;color:#888;">+' . (count($foto_arr)-3) . '</span>';
-                            } else {
-                              $foto_html = '<img src="../admin/uploads/pengunjung/' . htmlspecialchars($data['foto']) . '" style="max-width:60px;max-height:60px;border-radius:6px;">';
+                          if (!empty($foto_arr)) {
+                            $foto_html = '';
+                            foreach (array_slice($foto_arr, 0, 3) as $idx => $f) {
+                              $foto_html .= '<img src="uploads/pengunjung/' . htmlspecialchars($f) . '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin:1px;" title="Foto ' . ($idx+1) . '">';
                             }
+                            if (count($foto_arr) > 3) $foto_html .= '<span style="font-size:11px;color:#888;">+' . (count($foto_arr)-3) . '</span>';
                           }
 
                           echo '<tr>
@@ -644,10 +800,9 @@ include "login/ceksession.php";
                               </td>
                           </tr>';
                         }
-                        ?>
+                      ?>
                     </tbody>
                   </table>
-
                   <?php } ?>
                 </div>
               </div>
@@ -723,51 +878,8 @@ include "login/ceksession.php";
   <script src="../assets/vendors/jszip/dist/jszip.min.js"></script>
   <script src="../assets/vendors/pdfmake/build/pdfmake.min.js"></script>
   <script src="../assets/vendors/pdfmake/build/vfs_fonts.js"></script>
-
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
-
-  <style>
-    /* Hilangkan overflow dari x_content agar tidak muncul 2 scrollbar */
-    .x_content {
-      overflow: visible !important;
-    }
-    /* Bungkus tabel dengan satu scrollbar saja */
-    .table-scroll-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      width: 100%;
-    }
-    /* Freeze kolom Aksi (kolom terakhir) pakai sticky */
-    #datatable thead tr th:last-child,
-    #datatable tbody tr td:last-child {
-      position: sticky;
-      right: 0;
-      background-color: #fff;
-      z-index: 2;
-      box-shadow: -3px 0 6px rgba(0,0,0,0.08);
-    }
-    #datatable thead tr th:last-child {
-      background-color: #f5f5f5;
-      z-index: 3;
-    }
-    /* Sempitkan kolom Paket Wisata (kolom ke-2) */
-    #datatable thead tr th:nth-child(2),
-    #datatable tbody tr td:nth-child(2) {
-      max-width: 130px;
-      min-width: 100px;
-      white-space: normal;
-      word-break: break-word;
-    }
-    /* Sempitkan kolom Driver/Guide (kolom ke-9) */
-    #datatable thead tr th:nth-child(9),
-    #datatable tbody tr td:nth-child(9) {
-      max-width: 100px;
-      min-width: 80px;
-      white-space: normal;
-      word-break: break-word;
-    }
-  </style>
 
   <script type="text/javascript">
   function konfirmasiHapus(id) {
@@ -776,7 +888,6 @@ include "login/ceksession.php";
   }
 
   $(document).ready(function() {
-    // Bungkus tabel dengan div scroll wrapper supaya cukup 1 scrollbar
     if (!$('#datatable').closest('.table-scroll-wrapper').length) {
       $('#datatable').wrap('<div class="table-scroll-wrapper"></div>');
     }
@@ -790,7 +901,6 @@ include "login/ceksession.php";
       $('.right_col').css('min-height', minH > 200 ? minH : windowH);
     }
 
-    // Destroy inisialisasi dari custom.min.js lalu re-init dengan order DESC
     if ($.fn.DataTable.isDataTable('#datatable')) {
       $('#datatable').DataTable().destroy();
     }
@@ -819,7 +929,6 @@ include "login/ceksession.php";
       }
     });
 
-    // Sesuaikan tinggi setelah DataTable selesai render
     adjustContentHeight();
     setTimeout(adjustContentHeight, 200);
   });

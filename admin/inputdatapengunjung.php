@@ -205,7 +205,7 @@ include "login/ceksession.php";
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="pax" name="pax" required="required" min="0" placeholder="Masukkan Jumlah Pax"
+                        <input type="number" id="pax" name="pax" required="required" min="1" placeholder="Masukkan Jumlah Pax"
                           class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
@@ -334,24 +334,97 @@ include "login/ceksession.php";
         }
     });
 
-    // Preview foto multiple
-    $('#foto').change(function() {
+    // === MULTI-FILE UPLOAD: akumulasi file dari beberapa kali buka file manager ===
+    var selectedFiles = [];
+
+    function renderFotoPreview() {
         var preview = $('#foto-preview');
         preview.empty();
-        var files = this.files;
-        for (var i = 0; i < files.length; i++) {
+        selectedFiles.forEach(function(file, idx) {
             var reader = new FileReader();
-            reader.onload = (function(file) {
+            reader.onload = (function(f, i) {
                 return function(e) {
-                    preview.append('<div style="position:relative;display:inline-block;">' +
+                    preview.append(
+                        '<div style="position:relative;display:inline-block;margin:4px;" id="fpreview-' + i + '">' +
                         '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
-                        '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + file.name + '</div>' +
-                        '</div>');
+                        '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</div>' +
+                        '<button type="button" onclick="removeSelectedFile(' + i + ')" ' +
+                        'style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>' +
+                        '</div>'
+                    );
                 };
-            })(files[i]);
-            reader.readAsDataURL(files[i]);
+            })(file, idx);
+            reader.readAsDataURL(file);
+        });
+
+        // Sync ke input file via DataTransfer supaya ter-submit
+        var dt = new DataTransfer();
+        selectedFiles.forEach(function(f) { dt.items.add(f); });
+        document.getElementById('foto').files = dt.files;
+    }
+
+    window.removeSelectedFile = function(index) {
+        selectedFiles.splice(index, 1);
+        renderFotoPreview();
+    };
+
+    $('#foto').on('change', function() {
+        var newFiles = Array.from(this.files);
+        var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        var maxSize = 2 * 1024 * 1024; // 2 MB
+        var rejectedType = [];
+        var rejectedSize = [];
+
+        newFiles.forEach(function(newFile) {
+            // Validasi tipe
+            if (!allowedTypes.includes(newFile.type)) {
+                rejectedType.push(newFile.name);
+                return;
+            }
+            // Validasi ukuran
+            if (newFile.size > maxSize) {
+                rejectedSize.push(newFile.name);
+                return;
+            }
+            // Hindari duplikat
+            var isDuplicate = selectedFiles.some(function(f) {
+                return f.name === newFile.name && f.size === newFile.size;
+            });
+            if (!isDuplicate) {
+                selectedFiles.push(newFile);
+            }
+        });
+
+        // Tampilkan peringatan jika ada yang ditolak
+        if (rejectedType.length > 0 || rejectedSize.length > 0) {
+            var msg = '';
+            if (rejectedType.length > 0) {
+                msg += '<b>Format tidak didukung</b> (harus JPG/JPEG/PNG):<br>' + rejectedType.map(function(n){ return '• ' + n; }).join('<br>') + '<br><br>';
+            }
+            if (rejectedSize.length > 0) {
+                msg += '<b>Melebihi batas 2 MB:</b><br>' + rejectedSize.map(function(n){ return '• ' + n; }).join('<br>');
+            }
+            Swal.fire({
+                title: 'Foto Tidak Valid',
+                html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left;font-size:14px;color:#555;">' + msg + '</div>',
+                icon: 'warning',
+                iconColor: '#f39c12',
+                confirmButtonText: 'Mengerti',
+                background: '#fff',
+                color: '#1a1a2e',
+                customClass: { popup: 'swal-custom-popup', title: 'swal-custom-title' }
+            });
         }
+
+        renderFotoPreview();
     });
+
+    // Reset selectedFiles saat tombol Reset diklik
+    $('button[type="reset"]').on('click', function() {
+        selectedFiles = [];
+        $('#foto-preview').empty();
+    });
+    // === END MULTI-FILE UPLOAD ===
 
     $('#jenis_wisatawan').change(function() {
         const jenis = $(this).val();

@@ -55,6 +55,22 @@ include "login/ceksession.php";
                 </div>
                 <?php
                   include '../koneksi/koneksi.php';
+
+                  function getFotoList($db, $id_pengunjung, $kolom_foto) {
+                      if (!empty($kolom_foto)) {
+                          $decoded = json_decode($kolom_foto, true);
+                          if (is_array($decoded) && count($decoded) > 0) return $decoded;
+                          if (!empty(trim($kolom_foto))) return [trim($kolom_foto)];
+                      }
+                      $pid = (int)$id_pengunjung;
+                      $res = mysqli_query($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = $pid ORDER BY id_foto ASC");
+                      $list = [];
+                      while ($r = mysqli_fetch_assoc($res)) {
+                          if (!empty($r['nama_file'])) $list[] = $r['nama_file'];
+                      }
+                      return $list;
+                  }
+
                   $id = mysqli_real_escape_string($db, $_GET['id']);
                   $sql = "SELECT * FROM tb_data_pengunjung WHERE id='$id'";
                   $query = mysqli_query($db, $sql);
@@ -64,26 +80,16 @@ include "login/ceksession.php";
                   ?>
                 <div class="x_content">
                   <?php
-                    // Decode foto (support JSON multiple atau string lama)
-                    $foto_avatar = null;
-                    $foto_semua = [];
-                    if (!empty($data['foto'])) {
-                        $decoded = json_decode($data['foto'], true);
-                        if (is_array($decoded)) {
-                            $foto_semua = $decoded;
-                            $foto_avatar = $decoded[0]; // foto pertama sebagai avatar
-                        } else {
-                            $foto_avatar = $data['foto'];
-                            $foto_semua = [$data['foto']];
-                        }
-                    }
+                    // Gunakan helper — support data baru (JSON) dan data lama (tb_foto_pengunjung)
+                    $foto_semua  = getFotoList($db, $data['id'], $data['foto'] ?? null);
+                    $foto_avatar = !empty($foto_semua) ? $foto_semua[0] : null;
                   ?>
                   <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                     <div class="profile_img">
                       <div id="crop-avatar">
                         <?php if ($foto_avatar): ?>
                         <img class="img-responsive avatar-view"
-                          src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($foto_avatar); ?>" alt="Avatar">
+                          src="uploads/pengunjung/<?php echo htmlspecialchars($foto_avatar); ?>" alt="Avatar">
                         <?php else: ?>
                         <img class="img-responsive avatar-view" src="../img/default-avatar.png" alt="Default Avatar">
                         <?php endif; ?>
@@ -92,8 +98,8 @@ include "login/ceksession.php";
                     <?php if (count($foto_semua) > 1): ?>
                     <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px;">
                       <?php foreach(array_slice($foto_semua, 1) as $idx => $f): ?>
-                        <a href="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
-                          <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                        <a href="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                          <img src="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
                             style="width:50px;height:50px;object-fit:cover;border-radius:5px;border:1px solid #ddd;"
                             title="Foto <?php echo $idx+2; ?>">
                         </a>
@@ -165,8 +171,8 @@ include "login/ceksession.php";
                                 <div style="display:flex;flex-wrap:wrap;gap:8px;">
                                 <?php foreach ($foto_semua as $idx => $f): ?>
                                   <div style="text-align:center;">
-                                    <a href="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
-                                      <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
+                                    <a href="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" target="_blank">
+                                      <img src="uploads/pengunjung/<?php echo htmlspecialchars($f); ?>"
                                         style="width:100px;height:100px;object-fit:cover;border-radius:6px;border:1px solid #ddd;"
                                         title="Foto <?php echo $idx+1; ?>">
                                     </a>

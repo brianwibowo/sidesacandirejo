@@ -135,9 +135,9 @@ if (!$data_pengunjung) {
                           <option value="gamelan_class" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'gamelan_class') ? 'selected' : ''; ?>>Gamelan Class with/without Lunch</option>
                           <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>
                             Village Experience</option>
-                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar
-                            Village
-                            Tour with/without Lunch</option>
+                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar Village Tour with/without Lunch</option>
+                          <option value="inspection" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'inspection') ? 'selected' : ''; ?>>Inspection</option>
+                          <option value="lainnya" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'lainnya') ? 'selected' : ''; ?>>Lainnya</option>
                         </select>
                       </div>
                     </div>
@@ -242,7 +242,7 @@ if (!$data_pengunjung) {
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span
                           class="required">*</span></label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="pax" name="pax" required="required" min="0"
+                        <input type="number" id="pax" name="pax" required="required" min="1"
                           placeholder="Masukkan Jumlah Pax" class="form-control col-md-7 col-xs-12"
                           value="<?php echo htmlspecialchars($data_pengunjung['pax'] ?? ''); ?>">
                       </div>
@@ -283,31 +283,47 @@ if (!$data_pengunjung) {
                       </label>
                       <div class="col-md-9 col-sm-9 col-xs-12">
                         <?php
-                          // Cek apakah foto berformat JSON (multiple) atau string lama (single)
+                          // Foto baru (kolom foto JSON di tb_data_pengunjung)
                           $foto_existing = [];
                           if (!empty($data_pengunjung['foto'])) {
                             $decoded = json_decode($data_pengunjung['foto'], true);
-                            if (is_array($decoded)) {
-                              $foto_existing = $decoded;
-                            } else {
-                              $foto_existing = [$data_pengunjung['foto']];
-                            }
+                            $foto_existing = is_array($decoded) ? $decoded : [$data_pengunjung['foto']];
                           }
+
+                          // Foto lama (dari tb_foto_pengunjung)
+                          $foto_lama = [];
+                          $stmt_foto = mysqli_prepare($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = ?");
+                          mysqli_stmt_bind_param($stmt_foto, "i", $id);
+                          mysqli_stmt_execute($stmt_foto);
+                          $result_foto = mysqli_stmt_get_result($stmt_foto);
+                          while ($row_foto = mysqli_fetch_assoc($result_foto)) {
+                            $foto_lama[] = $row_foto['nama_file'];
+                          }
+
+                          // Gabung keduanya
+                          $semua_foto = array_merge($foto_existing, $foto_lama);
                         ?>
-                        <?php if (!empty($foto_existing)): ?>
-                          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-                          <?php foreach($foto_existing as $f): ?>
-                            <div style="text-align:center;">
+                        <?php if (!empty($semua_foto)): ?>
+                          <!-- Sentinel: selalu ada, supaya PHP tahu field existing_foto sudah dikirim (walau semua foto dihapus) -->
+                          <input type="hidden" name="existing_foto_sent" value="1">
+                          <p style="margin-bottom:6px;font-size:13px;color:#555;">Foto saat ini <small class="text-muted">(klik ✕ untuk hapus foto)</small>:</p>
+                          <div id="existing-foto-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                          <?php foreach($semua_foto as $f): ?>
+                            <div style="position:relative;display:inline-block;" id="existing-<?php echo htmlspecialchars(md5($f)); ?>">
                               <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" 
                                    alt="Foto" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
-                              <div style="font-size:10px;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars($f); ?></div>
+                              <div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars($f); ?></div>
+                              <!-- Hidden input untuk tandai foto ini masih dipertahankan -->
+                              <input type="hidden" name="existing_foto[]" value="<?php echo htmlspecialchars($f); ?>" id="input-<?php echo htmlspecialchars(md5($f)); ?>">
+                              <button type="button" 
+                                onclick="removeExistingFoto('<?php echo htmlspecialchars(md5($f)); ?>')"
+                                style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>
                             </div>
                           <?php endforeach; ?>
                           </div>
-                          <small class="text-muted">Foto saat ini (upload baru akan <strong>menggantikan</strong> semua foto lama)</small><br>
                         <?php endif; ?>
                         <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12" style="margin-top:6px;">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maks 2MB per foto). Bisa pilih lebih dari 1 foto.</small>
+                        <small class="text-muted">Format: JPG, PNG, JPEG (Maks 2MB per foto). Bisa pilih lebih dari 1 foto — foto lama <strong>tidak</strong> akan terhapus kecuali diklik ✕.</small>
                         <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
                       </div>
                     </div>
@@ -389,24 +405,99 @@ if (!$data_pengunjung) {
       $(this).data('user-changed', true);
     });
 
-    // Preview foto multiple
-    $('#foto').change(function() {
+    // === MULTI-FILE UPLOAD: akumulasi file dari beberapa kali buka file manager ===
+    var selectedFiles = [];
+
+    function renderFotoPreview() {
       var preview = $('#foto-preview');
       preview.empty();
-      var files = this.files;
-      for (var i = 0; i < files.length; i++) {
+      selectedFiles.forEach(function(file, idx) {
         var reader = new FileReader();
-        reader.onload = (function(file) {
+        reader.onload = (function(f, i) {
           return function(e) {
-            preview.append('<div style="text-align:center;">' +
+            preview.append(
+              '<div style="position:relative;display:inline-block;margin:4px;" id="fpreview-' + i + '">' +
               '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
-              '<div style="font-size:10px;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + file.name + '</div>' +
-              '</div>');
+              '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</div>' +
+              '<button type="button" onclick="removeSelectedFile(' + i + ')" ' +
+              'style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>' +
+              '</div>'
+            );
           };
-        })(files[i]);
-        reader.readAsDataURL(files[i]);
+        })(file, idx);
+        reader.readAsDataURL(file);
+      });
+
+      // Sync ke input file via DataTransfer supaya ter-submit
+      var dt = new DataTransfer();
+      selectedFiles.forEach(function(f) { dt.items.add(f); });
+      document.getElementById('foto').files = dt.files;
+    }
+
+    window.removeSelectedFile = function(index) {
+      selectedFiles.splice(index, 1);
+      renderFotoPreview();
+    };
+
+    // Hapus foto existing (yang sudah ada di DB) — hanya hide dari tampilan & hapus hidden input
+    window.removeExistingFoto = function(hash) {
+      var wrapper = document.getElementById('existing-' + hash);
+      var hiddenInput = document.getElementById('input-' + hash);
+      if (wrapper) wrapper.style.display = 'none';
+      if (hiddenInput) hiddenInput.disabled = true; // disabled = tidak ikut tersubmit
+    };
+
+    $('#foto').on('change', function() {
+      var newFiles = Array.from(this.files);
+      var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      var maxSize = 2 * 1024 * 1024; // 2 MB
+      var rejectedType = [];
+      var rejectedSize = [];
+
+      newFiles.forEach(function(newFile) {
+        // Validasi tipe
+        if (!allowedTypes.includes(newFile.type)) {
+          rejectedType.push(newFile.name);
+          return;
+        }
+        // Validasi ukuran
+        if (newFile.size > maxSize) {
+          rejectedSize.push(newFile.name);
+          return;
+        }
+        // Hindari duplikat
+        var isDuplicate = selectedFiles.some(function(f) {
+          return f.name === newFile.name && f.size === newFile.size;
+        });
+        if (!isDuplicate) {
+          selectedFiles.push(newFile);
+        }
+      });
+
+      // Tampilkan peringatan jika ada yang ditolak
+      if (rejectedType.length > 0 || rejectedSize.length > 0) {
+        var msg = '';
+        if (rejectedType.length > 0) {
+          msg += '<b>Format tidak didukung</b> (harus JPG/JPEG/PNG):<br>' + rejectedType.map(function(n){ return '• ' + n; }).join('<br>') + '<br><br>';
+        }
+        if (rejectedSize.length > 0) {
+          msg += '<b>Melebihi batas 2 MB:</b><br>' + rejectedSize.map(function(n){ return '• ' + n; }).join('<br>');
+        }
+        Swal.fire({
+          title: 'Foto Tidak Valid',
+          html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left;font-size:14px;color:#555;">' + msg + '</div>',
+          icon: 'warning',
+          iconColor: '#f39c12',
+          confirmButtonText: 'Mengerti',
+          background: '#fff',
+          color: '#1a1a2e',
+          customClass: { popup: 'swal-custom-popup', title: 'swal-custom-title' }
+        });
       }
+
+      renderFotoPreview();
     });
+    // === END MULTI-FILE UPLOAD ===
   
     $('#jenis_wisatawan').change(function () {
       const jenis = $(this).val();
@@ -441,4 +532,4 @@ if (!$data_pengunjung) {
 </body>
 
 </html>
-<?php ob_end_flush(); // Tambahkan ini ?>
+<?php ob_end_flush(); ?>
