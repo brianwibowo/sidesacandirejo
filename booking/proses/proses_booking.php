@@ -13,7 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$is_ajax = !empty($_POST['is_ajax']) || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+
 function redir($url, $msg, $detail = '') {
+    global $is_ajax;
+    if ($is_ajax) {
+        $status = ($msg === 'gagal' || $msg === 'tidak_bisa_edit') ? 'error' : 'success';
+        if ($status === 'error') http_response_code(400);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['status' => $status, 'message' => $detail ?: $msg]);
+        exit;
+    }
     $q = '?msg=' . urlencode($msg);
     if ($detail) $q .= '&detail=' . urlencode($detail);
     header("Location: $url$q");
@@ -43,10 +53,19 @@ $nama     = san($_POST['nama'] ?? '', 100);
 $jenis_w  = inEnum($_POST['jenis_wisatawan'] ?? '', ['Domestik','Mancanegara']);
 $kota     = san($_POST['kota'] ?? '', 100);
 $negara   = san($_POST['negara'] ?? '', 100);
-$pax      = max(1, (int)($_POST['pax'] ?? 1));
+$pax      = max(0, (int)($_POST['pax'] ?? 0));
+
+// Agen, driver, dan local guide bersifat opsional, jika kosong default ke 'Belum Ada'
 $agen     = san($_POST['agen_wisata'] ?? '', 100);
-$driver   = san($_POST['driver_agent_guide'] ?? 'Belum Ada', 100);
-$lg       = san($_POST['local_guide'] ?? 'Belum Ada', 100);
+if ($agen === '') $agen = 'Belum Ada';
+
+$driver   = san($_POST['driver_agent_guide'] ?? '', 100);
+if ($driver === '') $driver = 'Belum Ada';
+
+$lg       = san($_POST['local_guide'] ?? '', 100);
+if ($lg === '') $lg = 'Belum Ada';
+
+$catatan  = trim($_POST['catatan'] ?? '');
 
 $opsi_makan  = inEnum($_POST['opsi_makan_tour'] ?? '', ['without_lunch','with_lunch']);
 $jns_makanan = inEnum($_POST['jenis_makanan_paket'] ?? '', ['breakfast','lunch','dinner']);
@@ -79,18 +98,31 @@ if ($aksi === 'tambah') {
         INSERT INTO tb_booking
             (tanggal_kunjungan, pilihan_paket_wisata, opsi_makan_tour, jenis_makanan_paket,
              opsi_cooking_lesson, opsi_gamelan, jenis_wisatawan, kota, negara,
-             nama, pax, agen_wisata, driver_agent_guide, local_guide, status, created_at)
+             nama, pax, agen_wisata, driver_agent_guide, local_guide, catatan, status, created_at)
         VALUES (
             '$tanggal', '$paket',
             " . sqlStr($opsi_makan) . ", " . sqlStr($jns_makanan) . ",
             " . sqlStr($opsi_cook)  . ", " . sqlStr($opsi_gml)    . ",
             '$jenis_w', " . sqlStr($kota) . ", " . sqlStr($negara) . ",
             '$nama', $pax, " . sqlStr($agen) . ", '$driver', '$lg',
+            " . sqlStr($catatan) . ",
             'pending', NOW()
         )
     ";
     if (mysqli_query($db, $sql)) {
-        redir('../booking_dashboard.php', 'sukses_tambah');
+        if ($is_ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'status'  => 'success',
+                'message' => 'Data booking baru berhasil disimpan.',
+                'id'      => mysqli_insert_id($db)
+            ]);
+            exit;
+        }
+        $ref = !empty($_POST['ref']) ? trim($_POST['ref']) : '';
+        $safe_pages = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php'];
+        $target_tambah = (in_array(basename($ref), $safe_pages)) ? '../' . basename($ref) : '../booking_dashboard.php';
+        redir($target_tambah, 'sukses_tambah');
     } else {
         redir($back_tambah, 'gagal', 'DB error: ' . mysqli_error($db));
     }
@@ -101,11 +133,24 @@ if ($aksi === 'tambah') {
 ══════════════════════════════ */
 elseif ($aksi === 'edit') {
     $id = (int)($_POST['id'] ?? 0);
-    if ($id <= 0) redir('../booking_dashboard.php', 'gagal', 'ID tidak valid.');
+    if ($id <= 0) {
+        if ($is_ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['status' => 'error', 'message' => 'ID booking tidak valid.']);
+            exit;
+        }
+        redir('../booking_semua.php', 'gagal', 'ID tidak valid.');
+    }
 
     $cek = mysqli_fetch_assoc(mysqli_query($db, "SELECT id, status FROM tb_booking WHERE id=$id LIMIT 1"));
-    if (!$cek) redir('../booking_dashboard.php', 'gagal', 'Booking tidak ditemukan.');
-    if ($cek['status'] !== 'pending') redir('../booking_dashboard.php', 'tidak_bisa_edit');
+    if (!$cek) {
+        if ($is_ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['status' => 'error', 'message' => 'Data booking tidak ditemukan.']);
+            exit;
+        }
+        redir('../booking_semua.php', 'gagal', 'Booking tidak ditemukan.');
+    }
 
     $sql = "
         UPDATE tb_booking SET
@@ -122,12 +167,30 @@ elseif ($aksi === 'edit') {
             pax                  = $pax,
             agen_wisata          = " . sqlStr($agen) . ",
             driver_agent_guide   = '$driver',
-            local_guide          = '$lg'
-        WHERE id = $id AND status = 'pending'
+            local_guide          = '$lg',
+            catatan              = " . sqlStr($catatan) . "
+        WHERE id = $id
     ";
     if (mysqli_query($db, $sql)) {
-        redir('../booking_dashboard.php', 'sukses_edit');
+        if ($is_ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'status'  => 'success',
+                'message' => 'Perubahan data booking berhasil diperbarui.',
+                'id'      => $id
+            ]);
+            exit;
+        }
+        $ref = !empty($_POST['ref']) ? trim($_POST['ref']) : '';
+        $safe_pages = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php'];
+        $target_edit = (in_array(basename($ref), $safe_pages)) ? '../' . basename($ref) : '../booking_semua.php';
+        redir($target_edit, 'sukses_edit');
     } else {
+        if ($is_ajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['status' => 'error', 'message' => 'DB error: ' . mysqli_error($db)]);
+            exit;
+        }
         redir("../edit_booking.php?id=$id", 'gagal', 'DB error: ' . mysqli_error($db));
     }
 }

@@ -38,6 +38,8 @@ include "login/ceksession.php";
   <!-- bootstrap-daterangepicker -->
   <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
+  <!-- Flatpickr Date Picker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -173,185 +175,257 @@ include "login/ceksession.php";
 
       <!-- page content -->
       <div class="right_col" role="main">
-        <div class="">
-          <div class="clearfix"></div>
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Tambah Surat Keluar</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                  <br />
-                  <form action="proses/proses_inputsuratkeluar.php" name="formsuratkeluar" method="post"
-                    enctype="multipart/form-data" id="demo-form2"
-                    class="form-horizontal form-label-left" novalidate>
-                    <?php
-                    include '../koneksi/koneksi.php';
-                    // Get the last No from database
-                    $query = "SELECT MAX(No) as last_no FROM tb_arsip_surat_keluar";
-                    $result = mysqli_query($db, $query);
-                    $row = mysqli_fetch_assoc($result);
-                    $next_no = $row['last_no'] + 1;
-                    ?>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nomor Urut <span class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" value="<?php echo $next_no; ?>" id="No" name="No" required="required" maxlength="4"
-                          placeholder="Nomor Urut" class="form-control col-md-7 col-xs-12" readonly>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_surat">Jenis Surat <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_surat" name="jenis_surat" required="required" class="form-control col-md-7 col-xs-12">
-                          <option value="">-- Pilih Jenis Surat --</option>
-                          <option value="keterangan">Surat Keterangan</option>
-                          <option value="undangan">Surat Undangan</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_keluar">Tanggal Keluar <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date' id='myDatepicker4'>
-                          <input type='text' id="tanggal_keluar" name="tanggal_keluar" required="required"
-                            class="form-control" readonly="readonly" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nomor_surat">Nomor Surat <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nomor_surat" name="nomor_surat" required="required" maxlength="50"
-                          placeholder="Masukkan Nomor Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="penerima">Penerima <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="penerima" name="penerima" required="required"
-                          placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group undangan-field" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tempat_acara">Tempat Acara <span
-                          class="required"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="tempat_acara" name="tempat_acara" maxlength="150"
-                          placeholder="Masukkan Tempat Acara" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group undangan-field" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kegiatan">Tanggal Kegiatan <span
-                          class="required"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date' id='myDatepicker5'>
-                          <input type='text' id="tanggal_kegiatan" name="tanggal_kegiatan"
-                            class="form-control" />
-                          <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group undangan-field" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jam_kegiatan">Jam Kegiatan <span
-                          class="required"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="time" id="jam_kegiatan" name="jam_kegiatan" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="perihal">Perihal <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="perihal" name="perihal" required="required"
-                          placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="keterangan">Keterangan <span
-                          class="required"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="keterangan" name="keterangan" class="form-control" rows="3"
-                          placeholder="Masukkan Keterangan Surat"></textarea>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload File Surat <span class="fa fa-upload" style="color: #3498db;"></span> <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-surat" data-field="file_surat">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">PDF (1 file wajib)</small>
-                        </div>
-                        <input type="file" name="file_surat" id="file_surat" accept="application/pdf" class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-surat"></div>
-                        <div id="file-surat-required" class="upload-required-message">File Surat wajib diisi.</div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Wajib. Format PDF, max 10mb</small>
-                      </div>
-                    </div>
-                    <div class="form-group undangan-field" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Absensi <span class="fa fa-upload" style="color: #3498db;"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-absensi" data-field="file_absensi">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">PDF, JPG, PNG (Bisa lebih dari 1 file)</small>
-                        </div>
-                        <input type="file" name="file_absensi[]" id="file_absensi" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-absensi"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto</small>
-                      </div>
-                    </div>
-                    <div class="form-group undangan-field" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Notulen <span class="fa fa-upload" style="color: #3498db;"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-notulen" data-field="file_notulen">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">PDF, JPG, PNG (Bisa lebih dari 1 file)</small>
-                        </div>
-                        <input type="file" name="file_notulen[]" id="file_notulen" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-notulen"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload PDF atau foto</small>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Foto/Dokumentasi <span class="fa fa-upload" style="color: #3498db;"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-dokumentasi" data-field="file_dokumentasi">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">JPG, PNG, WebP, GIF (Bisa lebih dari 1 file)</small>
-                        </div>
-                        <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-dokumentasi"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Upload foto/dokumentasi kegiatan (JPG, PNG, WebP, GIF)</small>
-                      </div>
-                    </div>
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                        <button type="reset" class="btn btn-primary">Reset</button>
-                        <button type="button" class="btn btn-danger" onclick="kembaliPage()"><i class="fa fa-arrow-left"></i> Kembali</button>
-                      </div>
-                    </div>
-                  </form>
+        <div class="page-title-modern">
+          <div class="page-title-left">
+            <h1>Tambah Surat Keluar</h1>
+            <p>Isi formulir pencatatan arsip surat keluar baru Desa Wisata Candirejo</p>
+          </div>
+          <a href="datasuratkeluar.php" class="btn-back-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Kembali ke Data Surat Keluar
+          </a>
+        </div>
+
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-header-left">
+              <div class="hicon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              </div>
+              <h2>Formulir Surat Keluar Baru</h2>
+            </div>
+          </div>
+
+          <div class="form-card-body">
+            <form action="proses/proses_inputsuratkeluar.php" name="formsuratkeluar" method="post"
+              enctype="multipart/form-data" id="demo-form2" novalidate>
+              <?php
+              include '../koneksi/koneksi.php';
+              $query = "SELECT MAX(No) as last_no FROM tb_arsip_surat_keluar";
+              $result = mysqli_query($db, $query);
+              $row = mysqli_fetch_assoc($result);
+              $next_no = ($row['last_no'] ?? 0) + 1;
+              ?>
+
+              <!-- INFORMASI SURAT -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Informasi Surat
+              </div>
+
+              <!-- Nomor Urut -->
+              <div class="form-row form-group">
+                <label class="form-label">Nomor Urut <span class="req">*</span>
+                  <small>Nomor urut otomatis</small>
+                </label>
+                <div>
+                  <input type="text" value="<?php echo $next_no; ?>" id="No" name="No" required="required" maxlength="4"
+                    placeholder="Nomor Urut" class="form-input input-sm" readonly>
                 </div>
               </div>
-            </div>
+
+              <!-- Jenis Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Jenis Surat <span class="req">*</span>
+                  <small>Keterangan atau Undangan</small>
+                </label>
+                <div>
+                  <select id="jenis_surat" name="jenis_surat" required="required" class="form-select input-md">
+                    <option value="">-- Pilih Jenis Surat --</option>
+                    <option value="keterangan">Surat Keterangan</option>
+                    <option value="undangan">Surat Undangan</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Tanggal Keluar -->
+              <div class="form-row form-group">
+                <label class="form-label">Tanggal Keluar <span class="req">*</span>
+                  <small>Tanggal penerbitan surat keluar</small>
+                </label>
+                <div>
+                  <div class="input-group-modern">
+                    <input type="text" id="tanggal_keluar" name="tanggal_keluar" required="required"
+                      class="form-input datepicker" placeholder="Pilih Tanggal Keluar" autocomplete="off" readonly />
+                    <span class="input-group-addon-modern" onclick="document.getElementById('tanggal_keluar')._flatpickr.open()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nomor Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Nomor Surat <span class="req">*</span>
+                  <small>Nomor resmi surat keluar</small>
+                </label>
+                <div>
+                  <input type="text" id="nomor_surat" name="nomor_surat" required="required" maxlength="50"
+                    placeholder="Masukkan Nomor Surat" class="form-input">
+                </div>
+              </div>
+
+              <!-- Penerima -->
+              <div class="form-row form-group">
+                <label class="form-label">Penerima <span class="req">*</span>
+                  <small>Tujuan pihak atau instansi penerima</small>
+                </label>
+                <div>
+                  <input type="text" id="penerima" name="penerima" required="required"
+                    placeholder="Masukkan Nama Penerima" class="form-input">
+                </div>
+              </div>
+
+              <!-- DETAIL KEGIATAN (UNDANGAN ONLY) -->
+              <div class="form-row form-group undangan-field" style="display:none;">
+                <label class="form-label">Tempat Acara <span class="req">*</span>
+                  <small>Lokasi pelaksanaan acara/undangan</small>
+                </label>
+                <div>
+                  <input type="text" id="tempat_acara" name="tempat_acara" maxlength="150"
+                    placeholder="Masukkan Tempat Acara" class="form-input">
+                </div>
+              </div>
+
+              <div class="form-row form-group undangan-field" style="display:none;">
+                <label class="form-label">Tanggal Kegiatan <span class="req">*</span>
+                  <small>Tanggal waktu pelaksanaan acara</small>
+                </label>
+                <div>
+                  <div class="input-group-modern">
+                    <input type="text" id="tanggal_kegiatan" name="tanggal_kegiatan"
+                      class="form-input datepicker" placeholder="Pilih Tanggal Kegiatan" autocomplete="off" readonly />
+                    <span class="input-group-addon-modern" onclick="document.getElementById('tanggal_kegiatan')._flatpickr.open()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row form-group undangan-field" style="display:none;">
+                <label class="form-label">Jam Kegiatan <span class="req">*</span>
+                  <small>Waktu mulai kegiatan</small>
+                </label>
+                <div>
+                  <input type="time" id="jam_kegiatan" name="jam_kegiatan" class="form-input input-sm">
+                </div>
+              </div>
+
+              <!-- PERIHAL & KETERANGAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Perihal &amp; Keterangan
+              </div>
+
+              <!-- Perihal -->
+              <div class="form-row form-group">
+                <label class="form-label">Perihal <span class="req">*</span>
+                  <small>Ringkasan maksud isi surat</small>
+                </label>
+                <div>
+                  <input type="text" id="perihal" name="perihal" required="required"
+                    placeholder="Masukkan Perihal Surat" class="form-input">
+                </div>
+              </div>
+
+              <!-- Keterangan -->
+              <div class="form-row form-group">
+                <label class="form-label">Keterangan
+                  <small>Catatan tambahan (opsional)</small>
+                </label>
+                <div>
+                  <textarea id="keterangan" name="keterangan" class="form-input" rows="3"
+                    style="resize:vertical;min-height:75px;" placeholder="Masukkan Keterangan Surat"></textarea>
+                </div>
+              </div>
+
+              <!-- BERKAS & LAMPIRAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                Berkas &amp; Dokumen Lampiran
+              </div>
+
+              <!-- Upload File Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Upload File Surat <span class="req">*</span>
+                  <small>Berkas surat keluar (PDF wajib)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-surat" data-field="file_surat">
+                    <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                    <div class="upload-text-main">Drag file PDF ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">Format PDF, maksimal ukuran 10 MB (1 file wajib)</div>
+                  </div>
+                  <input type="file" name="file_surat" id="file_surat" accept="application/pdf" class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-surat"></div>
+                  <div id="file-surat-required" class="upload-required-message">File Surat wajib diisi.</div>
+                </div>
+              </div>
+
+              <!-- Upload Absensi (undangan only) -->
+              <div class="form-row form-group undangan-field" style="display:none;">
+                <label class="form-label">Upload Absensi
+                  <small>Daftar hadir kegiatan (opsional)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-absensi" data-field="file_absensi">
+                    <div class="upload-icon"><i class="fa fa-list-alt"></i></div>
+                    <div class="upload-text-main">Drag berkas absensi ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">PDF, JPG, PNG (Bisa lebih dari 1 file)</div>
+                  </div>
+                  <input type="file" name="file_absensi[]" id="file_absensi" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-absensi"></div>
+                </div>
+              </div>
+
+              <!-- Upload Notulen (undangan only) -->
+              <div class="form-row form-group undangan-field" style="display:none;">
+                <label class="form-label">Upload Notulen
+                  <small>Notulensi hasil pertemuan (opsional)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-notulen" data-field="file_notulen">
+                    <div class="upload-icon"><i class="fa fa-file-text-o"></i></div>
+                    <div class="upload-text-main">Drag berkas notulen ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">PDF, JPG, PNG (Bisa lebih dari 1 file)</div>
+                  </div>
+                  <input type="file" name="file_notulen[]" id="file_notulen" accept=".pdf,image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-notulen"></div>
+                </div>
+              </div>
+
+              <!-- Upload Foto/Dokumentasi -->
+              <div class="form-row form-group">
+                <label class="form-label">Upload Foto / Dokumentasi
+                  <small>Dokumentasi kegiatan (opsional)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-dokumentasi" data-field="file_dokumentasi">
+                    <div class="upload-icon"><i class="fa fa-camera"></i></div>
+                    <div class="upload-text-main">Drag foto ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">JPG, PNG, WebP, GIF (Maks. 2 MB/foto, bisa lebih dari 1 file)</div>
+                  </div>
+                  <input type="file" name="file_dokumentasi[]" id="file_dokumentasi" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-dokumentasi"></div>
+                </div>
+              </div>
+
+              <!-- Tombol Aksi -->
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  Simpan Surat
+                </button>
+                <button type="reset" class="btn-reset">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Reset
+                </button>
+                <button type="button" class="btn-cancel" onclick="kembaliPage()" style="margin-left:auto;">
+                  Batal
+                </button>
+              </div>
+
+            </form>
           </div>
         </div>
       </div>
@@ -376,42 +450,26 @@ include "login/ceksession.php";
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
   <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- bootstrap-daterangepicker -->
-  <script src="../assets/vendors/moment/min/moment.min.js"></script>
-  <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <!-- bootstrap-datetimepicker -->
-  <script src="../assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-  <!-- iCheck -->
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <!-- bootstrap-wysiwyg -->
-  <script src="../assets/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
-  <script src="../assets/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
-  <script src="../assets/vendors/google-code-prettify/src/prettify.js"></script>
-  <!-- jQuery Tags Input -->
-  <script src="../assets/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-  <!-- Switchery -->
-  <script src="../assets/vendors/switchery/dist/switchery.min.js"></script>
-  <!-- Select2 -->
-  <script src="../assets/vendors/select2/dist/js/select2.full.min.js"></script>
+  <!-- Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
-  <!-- Moment.js -->
   <script src="../assets/vendors/moment/min/moment.min.js"></script>
   <script>
-    $(document).ready(function() {
-      $('#myDatepicker4').datetimepicker({
-        ignoreReadonly: true,
-        allowInputToggle: true,
-        format: 'YYYY-MM-DD'
-      });
+    // Flatpickr for date fields
+    flatpickr(".datepicker", {
+      locale: "id",
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d F Y",
+      allowInput: false,
+      disableMobile: false
+    });
 
-      $('#myDatepicker5').datetimepicker({
-        ignoreReadonly: true,
-        allowInputToggle: true,
-        format: 'YYYY-MM-DD'
-      });
+    $(document).ready(function() {
 
       // Multi-file upload handler dengan preview dan drag-drop
       const uploadFields = ['file_surat', 'file_absensi', 'file_notulen', 'file_dokumentasi'];

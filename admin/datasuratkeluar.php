@@ -1,18 +1,70 @@
 <?php
 session_start();
 include "login/ceksession.php";
+include "../koneksi/koneksi.php";
+
+/* ── Filter & Search Parameters ──────────────────────────────────────────── */
+$search = isset($_GET['search']) ? mysqli_real_escape_string($db, trim($_GET['search'])) : '';
+$bulan  = isset($_GET['bulan'])  ? mysqli_real_escape_string($db, trim($_GET['bulan']))  : '';
+$tahun  = isset($_GET['tahun'])  ? mysqli_real_escape_string($db, trim($_GET['tahun']))  : '';
+
+$where_sk = "WHERE 1=1";
+if ($search !== '') {
+    $where_sk .= " AND (nomor_surat LIKE '%$search%' OR penerima LIKE '%$search%' OR perihal LIKE '%$search%' OR jenis_surat LIKE '%$search%' OR tempat_acara LIKE '%$search%' OR keterangan LIKE '%$search%')";
+}
+if (!empty($bulan)) {
+    $where_sk .= " AND MONTH(tanggal_keluar) = '$bulan'";
+}
+if (!empty($tahun)) {
+    $where_sk .= " AND YEAR(tanggal_keluar) = '$tahun'";
+}
+
+/* ── Pagination (Default 10 baris, opsi: 10, 15, 25, 50) ────────────────── */
+$allowed_per_page = [10, 15, 25, 50];
+$per_page = isset($_GET['per_page']) && in_array((int)$_GET['per_page'], $allowed_per_page) ? (int)$_GET['per_page'] : 10;
+
+$count_query = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_arsip_surat_keluar $where_sk");
+$count_row   = mysqli_fetch_assoc($count_query);
+$total_data  = (int)($count_row['total'] ?? 0);
+
+$total_pages = max(1, (int)ceil($total_data / $per_page));
+$page        = isset($_GET['page']) ? max(1, min($total_pages, (int)$_GET['page'])) : 1;
+$offset      = ($page - 1) * $per_page;
+
+$sql_sk   = "SELECT * FROM tb_arsip_surat_keluar $where_sk ORDER BY tanggal_keluar DESC, No DESC LIMIT $per_page OFFSET $offset";
+$query_sk = mysqli_query($db, $sql_sk);
+$surat_keluars = [];
+while ($r = mysqli_fetch_assoc($query_sk)) {
+    $surat_keluars[] = $r;
+}
+
+if (!function_exists('getPageUrl')) {
+    function getPageUrl($p) {
+        $params = $_GET;
+        $params['page'] = $p;
+        return '?' . http_build_query($params);
+    }
+}
+
+$bulan_list_sk = [
+    '01'=>'Januari','02'=>'Februari','03'=>'Maret','04'=>'April',
+    '05'=>'Mei','06'=>'Juni','07'=>'Juli','08'=>'Agustus',
+    '09'=>'September','10'=>'Oktober','11'=>'November','12'=>'Desember'
+];
+
+$row_tmin_sk = mysqli_fetch_assoc(mysqli_query($db, "SELECT YEAR(MIN(tanggal_keluar)) as tmin FROM tb_arsip_surat_keluar"));
+$tmin_sk = !empty($row_tmin_sk['tmin']) ? (int)$row_tmin_sk['tmin'] : 2020;
+$tmax_sk = (int)date('Y') + 1;
 ?>
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="id">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Arsip Surat Desa Candirejo Borobudur</title>
+  <title>Arsip Surat Keluar - Desa Candirejo Borobudur</title>
 
   <!-- Bootstrap -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,282 +72,311 @@ include "login/ceksession.php";
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <!-- NProgress -->
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- iCheck -->
-  <link href="../assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <!-- Datatables -->
-  <link href="../assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
-  <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="shortcut icon" href="../img/icon.ico">
   <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
-
-  <style>
-    /* ── Wrapper scroll horizontal ──────────────────────────────────── */
-    .table-responsive-custom {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-
-    /* ── Sticky kolom Aksi (kolom terakhir) ─────────────────────────── */
-    #datatable thead tr th:last-child,
-    #datatable tbody tr td:last-child {
-      position: sticky;
-      right: 0;
-      z-index: 2;
-      background-color: #fff;
-      box-shadow: -3px 0 6px -2px rgba(0, 0, 0, 0.15);
-      white-space: nowrap;
-    }
-
-    /* Zebra stripe tetap jalan pada sticky cell */
-    #datatable tbody tr.odd  td:last-child { background-color: #f9f9f9; }
-    #datatable tbody tr.even td:last-child { background-color: #ffffff; }
-
-    /* Hover row */
-    #datatable tbody tr:hover td:last-child { background-color: #f0faf8; }
-
-    /* Header sticky */
-    #datatable thead tr th:last-child {
-      background-color: #f2f2f2;
-      z-index: 3;
-    }
-
-    /* ── Thumbnail dokumentasi ──────────────────────────────────────── */
-    .foto-thumb {
-      display: inline-block;
-      margin: 2px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .foto-thumb img {
-      width: 48px;
-      height: 48px;
-      object-fit: cover;
-      display: block;
-      transition: opacity .2s;
-    }
-    .foto-thumb img:hover { opacity: .75; }
-
-    /* Badge jumlah foto jika lebih dari 3 */
-    .foto-more {
-      display: inline-block;
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
-      text-align: center;
-      background: #31708f;
-      color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      border-radius: 4px;
-      vertical-align: top;
-      margin: 2px;
-      cursor: default;
-    }
-  </style>
+  <!-- Modern Admin Design System -->
+  <link href="css/modern_admin.css?v=2.3" rel="stylesheet">
+  <link href="css/tabel_modern.css?v=2.3" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
+      <!-- Profile and Sidebar menu -->
       <?php include("sidebarmenu.php"); ?>
+      <!-- /Profile and Sidebar menu -->
+
+      <!-- top navigation -->
       <?php include("header.php"); ?>
+      <!-- /top navigation -->
 
       <!-- page content -->
       <div class="right_col" role="main">
         <div class="">
+
           <div class="clearfix"></div>
 
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Data Surat Keluar</h2>
-                  <div class="clearfix"></div>
-                </div>
+          <!-- Notification status -->
+          <?php if (isset($_GET['status'])): ?>
+            <?php if ($_GET['status'] === 'success'): ?>
+              <div class="alert alert-success alert-dismissible" role="alert" style="margin-bottom:14px; border-radius:8px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-check-circle"></i> <strong>Berhasil!</strong> Operasi berhasil dilakukan.
+              </div>
+            <?php elseif ($_GET['status'] === 'deleted'): ?>
+              <div class="alert alert-success alert-dismissible" role="alert" style="margin-bottom:14px; border-radius:8px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-check-circle"></i> <strong>Dihapus!</strong> Data surat keluar berhasil dihapus.
+              </div>
+            <?php elseif ($_GET['status'] === 'error'): ?>
+              <div class="alert alert-danger alert-dismissible" role="alert" style="margin-bottom:14px; border-radius:8px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-times-circle"></i> <strong>Gagal!</strong> <?php echo htmlspecialchars($_GET['msg'] ?? 'Terjadi kesalahan.'); ?>
+              </div>
+            <?php endif; ?>
+          <?php endif; ?>
 
-                <form action="datasuratkeluar.php" method="get" style="margin-bottom:15px;">
-                  <div class="row" style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; padding:0 15px;">
-                    <div style="width:160px;">
-                      <select name="bulan" class="select2_single form-control" tabindex="-1">
-                        <option value="">Pilih Bulan</option>
-                        <?php
-                        $bulan_list_sk = ['01'=>'Januari','02'=>'Februari','03'=>'Maret','04'=>'April','05'=>'Mei','06'=>'Juni','07'=>'Juli','08'=>'Agustus','09'=>'September','10'=>'Oktober','11'=>'November','12'=>'Desember'];
-                        foreach ($bulan_list_sk as $val => $nama) {
-                          $sel = (isset($_GET['bulan']) && $_GET['bulan'] == $val) ? 'selected' : '';
-                          echo '<option value="'.$val.'" '.$sel.'>'.$nama.'</option>';
-                        }
-                        ?>
-                      </select>
-                    </div>
-                    <div style="width:110px;">
-                      <select name="tahun" class="select2_single form-control" tabindex="-1">
-                        <option value="">Pilih Tahun</option>
-                        <?php
-                        include '../koneksi/koneksi.php';
-                        $row_tmin = mysqli_fetch_assoc(mysqli_query($db, "SELECT YEAR(MIN(tanggal_keluar)) as tmin FROM tb_arsip_surat_keluar"));
-                        $tmin_sk = !empty($row_tmin['tmin']) ? (int)$row_tmin['tmin'] : (int)date('Y');
-                        for ($t = $tmin_sk; $t <= (int)date('Y') + 1; $t++) {
-                          $sel = (isset($_GET['tahun']) && $_GET['tahun'] == $t) ? 'selected' : '';
-                          echo '<option value="'.$t.'" '.$sel.'>'.$t.'</option>';
-                        }
-                        ?>
-                      </select>
-                    </div>
-                    <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-search"></i> Filter</button>
-                    <a href="datasuratkeluar.php" class="btn btn-warning btn-sm"><i class="fa fa-refresh"></i> Reset</a>
-                    <div style="flex:1;"></div>
-                    <a href="export/export_surat_keluar.php" class="btn btn-danger btn-sm"><i class="fa fa-download"></i> Unduh PDF</a>
-                    <a href="export/exportExcel_surat_keluar.php" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Unduh Excel</a>
-                    <a href="inputsuratkeluar.php" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambah Surat Keluar</a>
-                  </div>
-                </form>
-
-                <div class="x_content">
-                  <div class="x_content">
-                    <?php
-                    $where_sk = "WHERE 1=1";
-                    if (!empty($_GET['bulan'])) {
-                      $fb_sk = mysqli_real_escape_string($db, $_GET['bulan']);
-                      $where_sk .= " AND MONTH(tanggal_keluar) = '$fb_sk'";
-                    }
-                    if (!empty($_GET['tahun'])) {
-                      $ft_sk = mysqli_real_escape_string($db, $_GET['tahun']);
-                      $where_sk .= " AND YEAR(tanggal_keluar) = '$ft_sk'";
-                    }
-                    $sql1   = "SELECT * FROM tb_arsip_surat_keluar $where_sk ORDER BY nomor_surat ASC";
-                    $query1 = mysqli_query($db, $sql1);
-                    $total  = mysqli_num_rows($query1);
-                    if ($total == 0) {
-                      echo "<center><h2>Belum Ada Data Surat Keluar</h2></center>";
-                    } else { ?>
-                    <div class="table-responsive-custom">
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th width="5%">No</th>
-                          <th width="12%">Nomor Surat</th>
-                          <th width="8%">Tanggal Keluar</th>
-                          <th width="10%">Penerima</th>
-                          <th width="8%">Jenis Surat</th>
-                          <th width="10%">Perihal</th>
-                          <th width="10%">Tempat Acara</th>
-                          <th width="8%">Tanggal Kegiatan</th>
-                          <th width="7%">Jam Kegiatan</th>
-                          <th width="7%">Absensi</th>
-                          <th width="7%">Notulen</th>
-                          <th width="8%">Dokumentasi</th>
-                          <th width="10%">Keterangan</th>
-                          <th width="5%">Aksi</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php
-                        while ($data = mysqli_fetch_array($query1)) {
-
-                          $absensi_files    = json_decode($data['lampiran_absensi']  ?? '[]', true);
-                          if (!is_array($absensi_files))    $absensi_files    = [];
-                          $notulen_files    = json_decode($data['lampiran_notulen']  ?? '[]', true);
-                          if (!is_array($notulen_files))    $notulen_files    = [];
-                          $dokumentasi_files = json_decode($data['dokumentasi_foto'] ?? '[]', true);
-                          if (!is_array($dokumentasi_files)) $dokumentasi_files = [];
-
-                          // ── Absensi: tombol download ────────────────────
-                          $absensi_cell = '-';
-                          if (count($absensi_files) > 0) {
-                            $absensi_cell = '';
-                            foreach ($absensi_files as $idx => $file_name) {
-                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                              $file_url  = 'uploads/' . rawurlencode($file_name);
-                              $absensi_cell .= '<a href="'.$file_url.'" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="'.$safe_name.'"><i class="fa fa-download"></i> File '.($idx+1).'</a>';
-                            }
-                          }
-
-                          // ── Notulen: tombol download ────────────────────
-                          $notulen_cell = '-';
-                          if (count($notulen_files) > 0) {
-                            $notulen_cell = '';
-                            foreach ($notulen_files as $idx => $file_name) {
-                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                              $file_url  = 'uploads/' . rawurlencode($file_name);
-                              $notulen_cell .= '<a href="'.$file_url.'" class="btn btn-xs btn-primary" style="display:block;margin-bottom:4px;" download title="'.$safe_name.'"><i class="fa fa-download"></i> File '.($idx+1).'</a>';
-                            }
-                          }
-
-                          // ── Dokumentasi: tampil thumbnail foto ─────────
-                          // Klik thumbnail → buka foto penuh di tab baru
-                          // Jika > 3 foto → tampilkan 3 + badge "+N lagi"
-                          $dokumentasi_cell = '-';
-                          if (count($dokumentasi_files) > 0) {
-                            $dokumentasi_cell = '';
-                            $max_thumb = 3;
-                            $total_dok = count($dokumentasi_files);
-                            foreach ($dokumentasi_files as $idx => $file_name) {
-                              if ($idx >= $max_thumb) break;
-                              $safe_name = htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8');
-                              $file_url  = 'uploads/' . rawurlencode($file_name);
-                              $dokumentasi_cell .= '<a href="'.$file_url.'" target="_blank" class="foto-thumb" title="'.$safe_name.'">'
-                                                 . '<img src="'.$file_url.'" alt="'.$safe_name.'" loading="lazy">'
-                                                 . '</a>';
-                            }
-                            if ($total_dok > $max_thumb) {
-                              $sisa = $total_dok - $max_thumb;
-                              $dokumentasi_cell .= '<span class="foto-more">+'.$sisa.'</span>';
-                            }
-                          }
-
-                          echo '<tr>
-                            <td>'.htmlspecialchars($data['No']).'</td>
-                            <td>'.htmlspecialchars($data['nomor_surat']).'</td>
-                            <td>'.htmlspecialchars($data['tanggal_keluar']).'</td>
-                            <td>'.htmlspecialchars($data['penerima']).'</td>
-                            <td>'.htmlspecialchars(ucfirst($data['jenis_surat'] ?? 'keterangan')).'</td>
-                            <td>'.htmlspecialchars($data['perihal']).'</td>
-                            <td>'.(!empty($data['tempat_acara']) ? htmlspecialchars($data['tempat_acara']) : '-').'</td>
-                            <td>'.(!empty($data['tanggal_kegiatan']) ? htmlspecialchars($data['tanggal_kegiatan']) : '-').'</td>
-                            <td>'.(!empty($data['jam_kegiatan']) ? htmlspecialchars(substr($data['jam_kegiatan'], 0, 5)) : '-').'</td>
-                            <td>'.$absensi_cell.'</td>
-                            <td>'.$notulen_cell.'</td>
-                            <td>'.$dokumentasi_cell.'</td>
-                            <td>'.htmlspecialchars($data['keterangan']).'</td>
-                            <td style="text-align:center; white-space:nowrap;">
-                              <a href="uploads/'.htmlspecialchars(basename($data['file_surat'])).'" class="btn btn-success btn-xs" title="Unduh File"><i class="fa fa-download"></i></a><br>
-                              <a href="detail-suratkeluar.php?id='.htmlspecialchars($data['No']).'" class="btn btn-info btn-xs" title="Detail"><i class="fa fa-file-image-o"></i></a><br>
-                              <a href="editsuratkeluar.php?id='.htmlspecialchars($data['No']).'" class="btn btn-warning btn-xs" title="Edit"><i class="fa fa-edit"></i></a><br>
-                              <button type="button" title="Hapus" class="btn btn-danger btn-xs"
-                                onclick="konfirmasiHapus('.htmlspecialchars($data['No']).')">
-                                <i class="fa fa-trash-o"></i>
-                              </button>
-                            </td>
-                          </tr>';
-                        }
-                        ?>
-                      </tbody>
-                    </table>
-                    </div><!-- /.table-responsive-custom -->
-                    <?php } ?>
-                  </div>
-                </div>
-
+          <!-- Card Modern Table Container -->
+          <div class="card booking-card">
+            <!-- Card Header (Judul & Subtitle di dalam Card Modern) -->
+            <div class="card-header-table">
+              <div>
+                <h1>Arsip Surat Keluar</h1>
+                <p>Kelola data arsip surat keluar, kegiatan, dan notulensi Pemerintah Desa Candirejo</p>
               </div>
             </div>
-          </div>
+
+            <!-- Filter Bar -->
+            <form method="GET" action="datasuratkeluar.php" id="filterFormSuratKeluar">
+              <div class="filter-bar">
+                <!-- Search Live Input -->
+                <div class="search-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                  </svg>
+                  <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Cari nomor, penerima, perihal..."
+                    value="<?php echo htmlspecialchars($search); ?>"
+                    autocomplete="off"
+                  >
+                </div>
+
+                <!-- Filter Bulan -->
+                <select name="bulan" id="filterBulan" class="filter-select" style="min-width:130px;" onchange="document.getElementById('filterFormSuratKeluar').submit()">
+                  <option value="">Semua Bulan</option>
+                  <?php foreach ($bulan_list_sk as $val => $nama): ?>
+                    <option value="<?php echo $val; ?>" <?php echo $bulan === $val ? 'selected' : ''; ?>><?php echo $nama; ?></option>
+                  <?php endforeach; ?>
+                </select>
+
+                <!-- Filter Tahun -->
+                <select name="tahun" id="filterTahun" class="filter-select" style="min-width:110px;" onchange="document.getElementById('filterFormSuratKeluar').submit()">
+                  <option value="">Semua Tahun</option>
+                  <?php for ($t = $tmin_sk; $t <= $tmax_sk; $t++): ?>
+                    <option value="<?php echo $t; ?>" <?php echo $tahun == $t ? 'selected' : ''; ?>><?php echo $t; ?></option>
+                  <?php endfor; ?>
+                </select>
+
+                <!-- Rows per page (Default 10) -->
+                <select name="per_page" id="perPage" class="filter-select" style="min-width:115px;" onchange="document.getElementById('filterFormSuratKeluar').submit()">
+                  <option value="10" <?php echo $per_page === 10 ? 'selected' : ''; ?>>10 baris</option>
+                  <option value="15" <?php echo $per_page === 15 ? 'selected' : ''; ?>>15 baris</option>
+                  <option value="25" <?php echo $per_page === 25 ? 'selected' : ''; ?>>25 baris</option>
+                  <option value="50" <?php echo $per_page === 50 ? 'selected' : ''; ?>>50 baris</option>
+                </select>
+
+                <!-- Submit filter icon -->
+                <button type="submit" class="btn-filter" title="Terapkan Filter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M3 4h18M7 9h10M11 14h2M13 19h-2"/>
+                  </svg>
+                </button>
+
+                <?php if ($search !== '' || !empty($bulan) || !empty($tahun)): ?>
+                <a href="datasuratkeluar.php" class="btn-reset-filter" title="Reset Filter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                  Reset
+                </a>
+                <?php endif; ?>
+
+                <!-- Right Action Buttons -->
+                <div class="filter-bar-right">
+                  <a href="export/export_surat_keluar.php<?php echo !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : ''; ?>" class="btn-export-outline" title="Unduh PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    PDF
+                  </a>
+                  <a href="export/exportExcel_surat_keluar.php<?php echo !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : ''; ?>" class="btn-export-outline" title="Unduh Excel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Excel
+                  </a>
+                  <a href="inputsuratkeluar.php" class="btn-tambah">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+                    Tambah Surat Keluar
+                  </a>
+                </div>
+              </div>
+            </form>
+
+            <!-- Table Wrapper -->
+            <div class="table-wrapper">
+              <table class="tabel-booking" id="tabelSuratKeluar">
+                <thead>
+                  <tr>
+                    <th>NOMOR &amp; TGL SURAT</th>
+                    <th>PENERIMA &amp; JENIS</th>
+                    <th>PERIHAL &amp; KEGIATAN</th>
+                    <th>LAMPIRAN &amp; DOKUMENTASI</th>
+                    <th>KETERANGAN</th>
+                    <th style="text-align:right; padding-right:16px;">AKSI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if (empty($surat_keluars)): ?>
+                  <tr class="empty-row">
+                    <td colspan="6" style="text-align:center; padding: 36px 14px; color:#9ab5a8;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="margin-bottom:6px; display:inline-block;"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                      <div style="font-size:13px;">Tidak ada data surat keluar yang sesuai.</div>
+                    </td>
+                  </tr>
+                  <?php else: foreach ($surat_keluars as $data):
+                    $no_surat = !empty($data['nomor_surat']) ? htmlspecialchars($data['nomor_surat']) : '-';
+                    $tgl_keluar = !empty($data['tanggal_keluar']) && $data['tanggal_keluar'] !== '0000-00-00' ? htmlspecialchars($data['tanggal_keluar']) : '-';
+                    $penerima = !empty($data['penerima']) ? htmlspecialchars($data['penerima']) : '-';
+                    $jenis_surat = ucfirst($data['jenis_surat'] ?? 'Keterangan');
+                    $perihal = !empty($data['perihal']) ? htmlspecialchars($data['perihal']) : '-';
+                    $tempat = !empty($data['tempat_acara']) ? htmlspecialchars($data['tempat_acara']) : '';
+                    $tgl_kegiatan = !empty($data['tanggal_kegiatan']) && $data['tanggal_kegiatan'] !== '0000-00-00' ? htmlspecialchars($data['tanggal_kegiatan']) : '';
+                    $jam_kegiatan = !empty($data['jam_kegiatan']) ? htmlspecialchars(substr($data['jam_kegiatan'], 0, 5)) : '';
+                    $keterangan = !empty($data['keterangan']) ? htmlspecialchars($data['keterangan']) : '-';
+
+                    // Parse attachments
+                    $absensi_files = json_decode($data['lampiran_absensi'] ?? '[]', true);
+                    if (!is_array($absensi_files)) $absensi_files = [];
+                    $notulen_files = json_decode($data['lampiran_notulen'] ?? '[]', true);
+                    if (!is_array($notulen_files)) $notulen_files = [];
+                    $dok_files     = json_decode($data['dokumentasi_foto'] ?? '[]', true);
+                    if (!is_array($dok_files)) $dok_files = [];
+                  ?>
+                  <tr>
+                    <td>
+                      <div style="font-weight: 600; color: #1e3a2f; font-size: 13px;"><?php echo $no_surat; ?></div>
+                      <div style="font-size: 11px; color: #7a9e8e; margin-top: 1px;">Tgl: <?php echo $tgl_keluar; ?></div>
+                    </td>
+                    <td>
+                      <div style="font-weight: 500; font-size: 12.5px; color: #1e3a2f;"><?php echo $penerima; ?></div>
+                      <span class="badge badge-blue" style="margin-top: 3px; font-size: 10px; padding: 2px 7px;"><?php echo $jenis_surat; ?></span>
+                    </td>
+                    <td>
+                      <div style="font-size: 12.5px; font-weight: 500; color: #1e3a2f; max-width: 280px;"><?php echo $perihal; ?></div>
+                      <?php if ($tempat || $tgl_kegiatan): ?>
+                        <div style="font-size: 11px; color: #7a9e8e; margin-top: 1px;">
+                          <?php if ($tempat) echo '<i class="fa fa-map-marker"></i> ' . $tempat . ' '; ?>
+                          <?php if ($tgl_kegiatan) echo ' • ' . $tgl_kegiatan . ($jam_kegiatan ? ' (' . $jam_kegiatan . ')' : ''); ?>
+                        </div>
+                      <?php endif; ?>
+                    </td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                        <?php if (!empty($data['file_surat'])): ?>
+                          <a href="uploads/<?php echo htmlspecialchars(basename($data['file_surat'])); ?>" target="_blank" class="btn-icon btn-download" data-tooltip="Unduh Surat Keluar" title="Unduh Surat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                          </a>
+                        <?php endif; ?>
+                        <?php if (!empty($absensi_files)): ?>
+                          <a href="uploads/<?php echo rawurlencode($absensi_files[0]); ?>" target="_blank" class="badge badge-green" style="font-size: 10px; padding: 3px 7px; text-decoration: none;" title="Absensi">
+                            Absensi
+                          </a>
+                        <?php endif; ?>
+                        <?php if (!empty($notulen_files)): ?>
+                          <a href="uploads/<?php echo rawurlencode($notulen_files[0]); ?>" target="_blank" class="badge badge-amber" style="font-size: 10px; padding: 3px 7px; text-decoration: none;" title="Notulen">
+                            Notulen
+                          </a>
+                        <?php endif; ?>
+                        <?php if (!empty($dok_files)): ?>
+                          <div style="display: flex; align-items: center; gap: 2px;">
+                            <?php foreach (array_slice($dok_files, 0, 2) as $df): ?>
+                              <a href="uploads/<?php echo rawurlencode($df); ?>" target="_blank" title="Lihat Dokumentasi">
+                                <img src="uploads/<?php echo rawurlencode($df); ?>" style="width: 20px; height: 20px; object-fit: cover; border-radius: 4px; border: 1px solid #d6e6dc;">
+                              </a>
+                            <?php endforeach; ?>
+                            <?php if (count($dok_files) > 2): ?>
+                              <span style="font-size: 10px; color: #7a9e8e; font-weight: 600;">+<?php echo count($dok_files) - 2; ?></span>
+                            <?php endif; ?>
+                          </div>
+                        <?php endif; ?>
+                        <?php if (empty($data['file_surat']) && empty($absensi_files) && empty($notulen_files) && empty($dok_files)): ?>
+                          <span style="font-size: 11px; color: #9ab5a8;">-</span>
+                        <?php endif; ?>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="font-size: 12px; color: #2a4535; max-width: 180px;"><?php echo $keterangan; ?></div>
+                    </td>
+                    <td style="text-align:right; padding-right:16px;">
+                      <div class="btn-action-wrap">
+                        <!-- Detail -->
+                        <a href="detail-suratkeluar.php?id=<?php echo urlencode($data['No']); ?>" class="btn-icon btn-detail" data-tooltip="Detail Surat" title="Detail Surat">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </a>
+                        <!-- Edit -->
+                        <a href="editsuratkeluar.php?id=<?php echo urlencode($data['No']); ?>" class="btn-icon btn-edit" data-tooltip="Edit Data" title="Edit Data">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15.232 5.232l3.536 3.536M9 11l6.364-6.364a2 2 0 112.828 2.828L11.828 13.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"/><path d="M3 21h18"/></svg>
+                        </a>
+                        <!-- Hapus -->
+                        <button type="button" class="btn-icon btn-hapus" data-tooltip="Hapus Surat" title="Hapus Surat" onclick="konfirmasiHapus(<?php echo (int)$data['No']; ?>, '<?php echo htmlspecialchars($data['nomor_surat'] ?? '', ENT_QUOTES); ?>')">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <?php endforeach; endif; ?>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Footer & Pagination -->
+            <div class="table-footer">
+              <div>
+                Menampilkan <strong><?php echo $total_data > 0 ? ($offset + 1) : 0; ?></strong> - <strong><?php echo min($offset + $per_page, $total_data); ?></strong> dari <strong><?php echo $total_data; ?></strong> data surat keluar
+              </div>
+
+              <?php if ($total_pages > 1): ?>
+              <ul class="pagination">
+                <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                  <a class="page-link" href="<?php echo getPageUrl($page - 1); ?>" title="Sebelumnya">&laquo;</a>
+                </li>
+                <?php
+                  $start_p = max(1, $page - 2);
+                  $end_p   = min($total_pages, $page + 2);
+                  if ($start_p > 1):
+                ?>
+                  <li class="page-item"><a class="page-link" href="<?php echo getPageUrl(1); ?>">1</a></li>
+                  <?php if ($start_p > 2): ?><li class="page-item disabled"><span class="page-link">...</span></li><?php endif; ?>
+                <?php endif; ?>
+
+                <?php for ($i = $start_p; $i <= $end_p; $i++): ?>
+                  <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
+                    <a class="page-link" href="<?php echo getPageUrl($i); ?>"><?php echo $i; ?></a>
+                  </li>
+                <?php endfor; ?>
+
+                <?php if ($end_p < $total_pages): ?>
+                  <?php if ($end_p < $total_pages - 1): ?><li class="page-item disabled"><span class="page-link">...</span></li><?php endif; ?>
+                  <li class="page-item"><a class="page-link" href="<?php echo getPageUrl($total_pages); ?>"><?php echo $total_pages; ?></a></li>
+                <?php endif; ?>
+
+                <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
+                  <a class="page-link" href="<?php echo getPageUrl($page + 1); ?>" title="Berikutnya">&raquo;</a>
+                </li>
+              </ul>
+              <?php endif; ?>
+            </div>
+
+          </div><!-- /.card -->
+
         </div>
       </div>
       <!-- /page content -->
 
+      <!-- footer content -->
       <footer>
-        <div class="pull-right">Supported by DRTPM</div>
+        <div class="pull-left text-muted" style="font-size:12px;">
+          © <?php echo date("Y"); ?> Desa Wisata Candirejo Borobudur
+        </div>
+        <div class="pull-right text-muted" style="font-size:12px;">
+          Supported by DRTPM KEMDIKBUDRISTEK
+        </div>
         <div class="clearfix"></div>
       </footer>
+      <!-- /footer content -->
     </div>
   </div>
 
@@ -307,85 +388,57 @@ include "login/ceksession.php";
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
   <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- iCheck -->
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <!-- Datatables -->
-  <script src="../assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="../assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-  <script src="../assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="../assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-  <script src="../assets/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-  <script src="../assets/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-  <script src="../assets/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-  <script src="../assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-  <script src="../assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-  <script src="../assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-  <script src="../assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-  <script src="../assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-  <script src="../assets/vendors/jszip/dist/jszip.min.js"></script>
-  <script src="../assets/vendors/pdfmake/build/pdfmake.min.js"></script>
-  <script src="../assets/vendors/pdfmake/build/vfs_fonts.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
-  <script>
-    // ── Konfirmasi hapus dengan SweetAlert ────────────────────────────
-    function konfirmasiHapus(id) {
+  <script type="text/javascript">
+  function konfirmasiHapus(id, nomor) {
+    if (typeof Swal !== 'undefined') {
       Swal.fire({
+        title: 'Hapus Surat Keluar?',
+        text: 'Surat keluar "' + (nomor || '') + '" akan dihapus permanen!',
         icon: 'warning',
-        title: 'Hapus Data?',
-        text: 'Data yang dihapus tidak dapat dikembalikan!',
         showCancelButton: true,
-        confirmButtonColor: '#e74c3c',
-        cancelButtonColor: '#95a5a6',
-        confirmButtonText: '<i class="fa fa-trash-o"></i> Ya, Hapus',
+        confirmButtonColor: '#c0392b',
+        cancelButtonColor: '#6b8f7e',
+        confirmButtonText: '<i class="fa fa-trash"></i> Ya, Hapus!',
         cancelButtonText: 'Batal',
         reverseButtons: true
-      }).then(function(result) {
+      }).then((result) => {
         if (result.isConfirmed) {
-          window.location = 'proses/proses_hapussuratkeluar.php?id=' + id;
+          window.location.href = 'proses/proses_hapussuratkeluar.php?id=' + id;
         }
       });
+    } else {
+      if (confirm('Yakin ingin menghapus data surat keluar ini?')) {
+        window.location.href = 'proses/proses_hapussuratkeluar.php?id=' + id;
+      }
+    }
+  }
+
+  $(document).ready(function() {
+    function adjustContentHeight() {
+      var windowH = $(window).height();
+      var leftH = $('.left_col').outerHeight() || 0;
+      var navH = $('.nav_menu').outerHeight() || $('.top_nav').outerHeight() || 50;
+      var footerH = $('footer').outerHeight() || 40;
+      var minH = Math.max(windowH, leftH) - navH - footerH;
+      $('.right_col').css('min-height', minH > 200 ? minH : windowH);
     }
 
-    // ── Tampilkan SweetAlert dari redirect status ──────────────────────
-    $(document).ready(function() {
+    // Instant client-side live filter while typing
+    $('#searchInput').on('input', function() {
+      var val = $(this).val().toLowerCase();
+      $('#tabelSuratKeluar tbody tr').filter(function() {
+        if ($(this).hasClass('empty-row')) return;
+        $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
+      });
+    });
 
-      <?php if (isset($_GET['status'])): ?>
-        <?php if ($_GET['status'] === 'deleted'): ?>
-        Swal.fire({
-          icon: 'success',
-          title: 'Dihapus!',
-          text: 'Data berhasil dihapus.',
-          confirmButtonColor: '#26B99A',
-          confirmButtonText: 'OK',
-          timer: 3000,
-          timerProgressBar: true
-        });
-        <?php elseif ($_GET['status'] === 'success'): ?>
-        Swal.fire({
-          icon: 'success',
-          title: 'Berhasil!',
-          text: 'Operasi berhasil dilakukan.',
-          confirmButtonColor: '#26B99A',
-          confirmButtonText: 'OK',
-          timer: 3000,
-          timerProgressBar: true
-        });
-        <?php elseif ($_GET['status'] === 'error'): ?>
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal!',
-          text: '<?php echo htmlspecialchars($_GET["msg"] ?? "Terjadi kesalahan."); ?>',
-          confirmButtonColor: '#e74c3c',
-          confirmButtonText: 'Tutup'
-        });
-        <?php endif; ?>
-      <?php endif; ?>
-
-    }); // ← TUTUP $(document).ready
+    adjustContentHeight();
+    $(window).on('resize', adjustContentHeight);
+    setTimeout(adjustContentHeight, 200);
+  });
   </script>
 
 </body>

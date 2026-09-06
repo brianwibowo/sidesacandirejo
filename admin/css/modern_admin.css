@@ -1,0 +1,1575 @@
+/* ==========================================================================
+   Modern Candirejo Admin Design System (modern_admin.css) v2.0
+   Menyamakan tampilan Web Arsip Surat (/admin) dengan Web Sistem Booking (/booking)
+   Palet Warna: Candirejo Green (#1e3a2f, #10b981, #7fa892, #f4f7f5)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --cd-primary-dark:   #1e3a2f;
+  --cd-primary-hover:  #2a4f3f;
+  --cd-primary-active: #2d5540;
+  --cd-accent-green:   #4caf80;
+  --cd-accent-emerald: #10b981;
+  --cd-accent-dark:    #059669;
+  --cd-sidebar-text:        #c8ddd4;
+  --cd-sidebar-text-dim:    #7fa892;
+  --cd-body-bg:    #f4f7f5;
+  --cd-card-bg:    #ffffff;
+  --cd-border:     #e5ede8;
+  --cd-border-light: #e2e8f0;
+  --cd-text-main:  #1e3a2f;
+  --cd-text-muted: #7a9e8e;
+  --cd-text-dark:  #2a4535;
+  --sidebar-width:     240px;
+  --sidebar-collapsed: 60px;
+}
+
+/* -- Global Typography ---------------------------------------------------- */
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  background-color: var(--cd-body-bg) !important;
+  color: var(--cd-text-main) !important;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6, .site_title { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important; }
+
+/* ==========================================================================
+   SIDEBAR IDENTIK WEB BOOKING
+   ========================================================================== */
+.booking-sidebar {
+  width: var(--sidebar-width) !important;
+  height: 100vh !important;
+  background: var(--cd-primary-dark) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  overflow: hidden !important;
+  transition: width 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+.booking-sidebar.collapsed {
+  width: var(--sidebar-collapsed) !important;
+}
+
+/* Brand */
+.sidebar-brand {
+  padding: 16px 14px 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  white-space: nowrap !important;
+  min-width: var(--sidebar-width) !important;
+  height: 58px !important;
+  box-sizing: border-box !important;
+}
+.brand-icon {
+  flex-shrink: 0 !important;
+  color: var(--cd-accent-green) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.brand-text {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+  transition: opacity 0.15s !important;
+}
+.brand-text .brand-title {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+}
+.brand-text .brand-subtitle {
+  color: var(--cd-sidebar-text-dim) !important;
+  font-size: 11.5px !important;
+  line-height: 1.2 !important;
+}
+.booking-sidebar.collapsed .brand-text {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Profile area */
+.sidebar-profile {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  min-width: var(--sidebar-width) !important;
+  box-sizing: border-box !important;
+}
+.profile-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(76,175,128,0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+.profile-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.avatar-initials {
+  color: var(--cd-accent-green) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+.profile-info {
+  transition: opacity 0.15s !important;
+}
+.profile-name {
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.profile-role {
+  color: var(--cd-sidebar-text-dim) !important;
+  font-size: 11px !important;
+  margin-top: 1px !important;
+}
+.booking-sidebar.collapsed .profile-info {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Nav items */
+.sidebar-nav {
+  padding: 12px 0 !important;
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+.sidebar-nav ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: var(--sidebar-width) !important;
+}
+
+.sidebar-nav > ul > li > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 20px !important;
+  color: var(--cd-sidebar-text) !important;
+  text-decoration: none !important;
+  font-size: 13.5px !important;
+  white-space: nowrap !important;
+  transition: background 0.15s, color 0.15s !important;
+  position: relative !important;
+}
+.sidebar-nav > ul > li > a:hover {
+  background: var(--cd-primary-hover) !important;
+  color: #ffffff !important;
+}
+.sidebar-nav > ul > li.active > a {
+  background: var(--cd-primary-active) !important;
+  color: #ffffff !important;
+  border-left: 3px solid var(--cd-accent-green) !important;
+  padding-left: 17px !important;
+}
+.sidebar-nav > ul > li.has-submenu.open > a {
+  background: var(--cd-primary-active) !important;
+  color: #ffffff !important;
+  border-left: 3px solid var(--cd-accent-green) !important;
+  padding-left: 17px !important;
+}
+
+/* Tooltip saat collapsed */
+.booking-sidebar.collapsed .sidebar-nav > ul > li > a::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(var(--sidebar-collapsed) + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #152b22;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 3000;
+}
+.booking-sidebar.collapsed .sidebar-nav > ul > li > a:hover::after {
+  opacity: 1;
+}
+
+.nav-icon {
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  opacity: 0.9 !important;
+}
+.nav-label {
+  transition: opacity 0.15s !important;
+}
+.booking-sidebar.collapsed .nav-label {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Chevron */
+.chevron {
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: transform 0.2s !important;
+  color: var(--cd-sidebar-text-dim) !important;
+}
+.chevron.rotated {
+  transform: rotate(180deg) !important;
+}
+.booking-sidebar.collapsed .chevron {
+  display: none !important;
+}
+
+/* Submenu */
+.submenu {
+  display: none;
+  background: rgba(0,0,0,0.15) !important;
+  padding: 4px 0 !important;
+  list-style: none !important;
+  margin: 0 !important;
+}
+.submenu.open {
+  display: block;
+}
+.booking-sidebar.collapsed .submenu {
+  display: none !important;
+}
+.submenu li a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 9px 20px 9px 40px !important;
+  color: var(--cd-sidebar-text-dim) !important;
+  text-decoration: none !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+  transition: color 0.15s, background 0.15s !important;
+}
+.submenu li a:hover {
+  color: #ffffff !important;
+  background: var(--cd-primary-hover) !important;
+}
+.submenu li.active a {
+  color: #ffffff !important;
+  background: rgba(76, 175, 128, 0.18) !important;
+  border-left: 3px solid var(--cd-accent-green) !important;
+  padding-left: 37px !important;
+  font-weight: 500 !important;
+}
+
+/* Switch ke Sistem Booking */
+.sidebar-switch-arsip {
+  padding: 12px 12px 16px !important;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
+  flex-shrink: 0 !important;
+  min-width: var(--sidebar-width) !important;
+  box-sizing: border-box !important;
+}
+.switch-btn-arsip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s !important;
+}
+.switch-btn-arsip:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
+}
+.switch-arsip-icon {
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #a8c8b8 !important;
+  flex-shrink: 0 !important;
+}
+.switch-arsip-text {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  gap: 1px !important;
+}
+.switch-arsip-label {
+  color: #ddeee6 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+}
+.switch-arsip-sub {
+  color: var(--cd-sidebar-text-dim) !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+.switch-arsip-arrow {
+  color: #7fa892 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  opacity: 0.6 !important;
+}
+.switch-btn-arsip:hover .switch-arsip-arrow {
+  opacity: 1 !important;
+}
+.booking-sidebar.collapsed .sidebar-switch-arsip {
+  display: none !important;
+}
+
+/* Sembunyikan left_col lama Gentelella */
+.col-md-3.left_col,
+.left_col {
+  display: none !important;
+}
+
+/* ── HEADER — FULL WIDTH, SIDEBAR DI ATASNYA ── */
+.booking-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 58px !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e5ede8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 24px 0 266px !important; /* 240px sidebar + 26px gap kiri */
+  z-index: 998 !important; /* di bawah sidebar (1000) */
+  transition: padding-left 0.25s ease !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+.booking-header.collapsed {
+  padding-left: 84px !important; /* 60px sidebar + 24px gap */
+}
+
+.header-left {
+  display: flex !important;
+  align-items: center !important;
+}
+.sidebar-toggle-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 6px !important;
+  border-radius: 6px !important;
+  color: #4a6358 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+.sidebar-toggle-btn:hover {
+  background: #f0f5f2 !important;
+  color: #1e3a2f !important;
+}
+
+.header-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.header-user {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  transition: background 0.15s !important;
+  position: relative !important;
+  user-select: none !important;
+}
+.header-user:hover {
+  background: #f0f5f2 !important;
+}
+.user-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #1e3a2f !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.user-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.user-initials {
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+.user-name {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #1e3a2f !important;
+}
+.user-chevron {
+  color: #7a9e8e !important;
+  transition: transform 0.2s !important;
+}
+.header-user.active .user-chevron {
+  transform: rotate(180deg) !important;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  background: #fff !important;
+  border: 1px solid #dde8e2 !important;
+  border-radius: 10px !important;
+  min-width: 160px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.09) !important;
+  padding: 6px 0 !important;
+  z-index: 3000 !important;
+}
+.user-dropdown.open {
+  display: block !important;
+}
+.dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 9px 16px !important;
+  font-size: 13px !important;
+  color: #2a4535 !important;
+  text-decoration: none !important;
+  transition: background 0.12s !important;
+}
+.dropdown-item:hover {
+  background: #f0f5f2 !important;
+  color: #1e3a2f !important;
+}
+.dropdown-item-danger {
+  color: #c0392b !important;
+}
+.dropdown-item-danger:hover {
+  background: #fdf2f2 !important;
+  color: #c0392b !important;
+}
+.dropdown-divider {
+  height: 1px !important;
+  background: #e5ede8 !important;
+  margin: 4px 0 !important;
+}
+
+/* Sembunyikan top_nav lama */
+.top_nav {
+  display: none !important;
+}
+
+/* ==========================================================================
+   CONTENT AREA & FOOTER
+   ========================================================================== */
+.right_col {
+  margin-left: 240px !important;
+  margin-top: 58px !important;
+  padding: 26px 24px 24px !important;
+  background: var(--cd-body-bg) !important;
+  min-height: 100vh !important;
+  transition: margin-left 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+.right_col.collapsed {
+  margin-left: 60px !important;
+}
+
+footer {
+  margin-left: 240px !important;
+  transition: margin-left 0.25s ease !important;
+  background: #ffffff !important;
+  border-top: 1px solid #e5ede8 !important;
+  padding: 14px 24px !important;
+  box-sizing: border-box !important;
+}
+footer.collapsed {
+  margin-left: 60px !important;
+}
+
+.x_panel {
+  background: #ffffff !important; border: 1px solid var(--cd-border) !important;
+  border-radius: 12px !important; box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  padding: 0 !important; margin-bottom: 20px !important; overflow: visible !important;
+}
+.x_title {
+  padding: 14px 20px 12px !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin-bottom: 0 !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+}
+.x_title h2 {
+  font-family: 'Outfit', sans-serif !important; font-size: 16px !important;
+  font-weight: 600 !important; color: var(--cd-primary-dark) !important;
+  margin: 0 !important; letter-spacing: -0.2px !important;
+}
+.x_content { padding: 20px !important; }
+
+/* ==========================================================================
+   STAT CARDS -- matching .stat-card from booking_dashboard.php
+   ========================================================================== */
+.tile-stats {
+  background: #ffffff !important; border: 1px solid var(--cd-border) !important;
+  border-radius: 12px !important; padding: 18px 20px !important;
+  box-shadow: none !important; display: flex !important;
+  align-items: center !important; justify-content: space-between !important;
+  position: relative !important; overflow: hidden !important;
+  transition: box-shadow 0.2s, transform 0.2s !important;
+  border-top: none !important;
+}
+.tile-stats:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important; transform: translateY(-1px) !important;
+}
+.tile-stats .icon {
+  width: 44px !important; height: 44px !important; border-radius: 10px !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  flex-shrink: 0 !important; position: static !important; font-size: 18px !important; order: 2 !important;
+}
+.tile-stats .stat-text { flex: 1; order: 1; }
+.tile-stats .stat-label {
+  font-size: 12.5px !important; color: var(--cd-text-muted) !important;
+  margin-bottom: 6px !important; font-weight: 400 !important;
+  text-transform: none !important; letter-spacing: 0 !important;
+}
+.tile-stats .count {
+  font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 26px !important;
+  font-weight: 600 !important; color: var(--cd-primary-dark) !important;
+  line-height: 1 !important; margin-bottom: 0 !important;
+}
+.tile-stats h3 {
+  font-size: 13px !important; font-weight: 500 !important;
+  color: var(--cd-text-muted) !important; text-transform: none !important;
+  letter-spacing: 0 !important; margin: 6px 0 0 0 !important;
+}
+.tile-stats p { display: none !important; }
+.tile-stats .icon-blue   { background: #eaf3fb !important; color: #3c7abf !important; }
+.tile-stats .icon-green  { background: #e4f5ec !important; color: #2e8a54 !important; }
+.tile-stats .icon-orange { background: #fdf0e0 !important; color: #c0742a !important; }
+.tile-stats .icon-purple { background: #f3f0fd !important; color: #6d49c8 !important; }
+.tile-stats .icon-gray   { background: #f1f4f2 !important; color: #6b8f7e !important; }
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+  border-radius: 8px !important; font-weight: 500 !important; font-size: 13px !important;
+  padding: 8px 16px !important; transition: all 0.15s ease !important;
+  display: inline-flex !important; align-items: center !important;
+  justify-content: center !important; gap: 6px !important;
+}
+.btn-primary { background: var(--cd-primary-dark) !important; border-color: var(--cd-primary-dark) !important; color: #ffffff !important; }
+.btn-primary:hover, .btn-primary:focus { background: var(--cd-primary-active) !important; color: #ffffff !important; }
+.btn-success { background: var(--cd-accent-emerald) !important; border-color: var(--cd-accent-emerald) !important; color: #ffffff !important; }
+.btn-success:hover { background: var(--cd-accent-dark) !important; color: #fff !important; }
+.btn-warning { background: #f59e0b !important; border-color: #f59e0b !important; color: #ffffff !important; }
+.btn-danger { background: #ef4444 !important; border-color: #ef4444 !important; color: #ffffff !important; }
+.btn-info { background: #3b82f6 !important; border-color: #3b82f6 !important; color: #ffffff !important; }
+.btn-default { background: #ffffff !important; border: 1px solid #d6e6dc !important; color: var(--cd-text-dark) !important; }
+.btn-default:hover { background: #f4f7f5 !important; border-color: #b0cfc0 !important; color: var(--cd-primary-dark) !important; }
+
+/* ==========================================================================
+   DATATABLES -- matching booking tables exactly
+   ========================================================================== */
+.dataTables_wrapper { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+table.dataTable thead th,
+.table thead th {
+  background: #fafcfb !important; color: var(--cd-text-muted) !important;
+  font-weight: 600 !important; font-size: 11.5px !important;
+  text-transform: uppercase !important; letter-spacing: 0.04em !important;
+  padding: 10px 10px !important; border-bottom: 1px solid #eff4f1 !important;
+  white-space: nowrap !important; border-top: none !important;
+}
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc { background-color: #fafcfb !important; }
+table.dataTable tbody td,
+.table tbody td {
+  padding: 12px 10px !important; font-size: 13px !important;
+  color: var(--cd-text-dark) !important; border-bottom: 1px solid #f4f7f5 !important;
+  vertical-align: middle !important;
+}
+table.dataTable tbody tr:hover td,
+.table tbody tr:hover td { background: #fafcfb !important; }
+.table-striped > tbody > tr:nth-of-type(odd) td { background-color: #ffffff !important; }
+.table-striped > tbody > tr:nth-of-type(even) td { background-color: #f8faf9 !important; }
+.table-bordered,
+.table-bordered > tbody > tr > td,
+.table-bordered > thead > tr > th { border: 1px solid #eff4f1 !important; }
+table.dataTable tbody tr:last-child td { border-bottom: none !important; }
+
+.dataTables_filter input,
+.dataTables_length select {
+  border: 1px solid #d6e6dc !important; border-radius: 8px !important;
+  height: 36px !important; font-size: 13px !important;
+  color: var(--cd-text-dark) !important; padding: 0 10px !important;
+  transition: border-color 0.15s !important; background: #fff !important; font-family: inherit !important;
+}
+.dataTables_filter input:focus,
+.dataTables_length select:focus {
+  border-color: var(--cd-accent-emerald) !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important; outline: none !important;
+}
+.form-control {
+  border: 1px solid #d6e6dc !important; border-radius: 8px !important;
+  height: 38px !important; font-size: 13px !important; color: var(--cd-text-dark) !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+.form-control:focus {
+  border-color: var(--cd-accent-emerald) !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important; outline: none !important;
+}
+
+/* Pagination */
+.pagination > .active > a,
+.pagination > .active > a:hover,
+.pagination > .active > span {
+  background-color: var(--cd-primary-dark) !important;
+  border-color: var(--cd-primary-dark) !important; color: #ffffff !important; font-weight: 600 !important;
+}
+.pagination > li > a,
+.pagination > li > span {
+  color: var(--cd-text-dark) !important; border: 1px solid #d6e6dc !important;
+  border-radius: 6px !important; margin: 0 2px !important;
+  font-weight: 500 !important; font-size: 13px !important;
+}
+.pagination > li > a:hover { background: #f4f7f5 !important; color: var(--cd-primary-dark) !important; }
+.dataTables_info { font-size: 12.5px !important; color: var(--cd-text-muted) !important; }
+
+/* Sidebar scroll */
+.left_col.scroll-view { overflow: hidden !important; }
+
+/* Footer */
+footer {
+  background: #ffffff !important; border-top: 1px solid var(--cd-border) !important;
+  color: var(--cd-text-muted) !important; font-size: 12.5px !important; padding: 14px 28px !important;
+}
+
+/* ==========================================================================
+   TABEL — Identik dengan Web Booking
+   Strategy: override DataTables Bootstrap dengan specificity tepat,
+   pisahkan scope filter-bar buttons vs action buttons tabel
+   ========================================================================== */
+
+/* 1. PANEL CARD ------------------------------------------------------------ */
+.x_panel {
+  background: #fff !important;
+  border: 1px solid #e5ede8 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 20px !important;
+  overflow: visible !important;
+}
+.x_title {
+  padding: 14px 20px 12px !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.x_title h2 {
+  font-size: 16px !important; font-weight: 600 !important;
+  color: #1e3a2f !important; margin: 0 !important;
+  letter-spacing: -0.2px !important;
+}
+.x_title .clearfix { display: none !important; }
+.x_content { padding: 0 !important; }
+.x_content .x_content { padding: 0 !important; }
+
+/* 2. FILTER FORM BAR ------------------------------------------------------- */
+.x_panel > form,
+.x_panel > .form-horizontal {
+  padding: 10px 16px !important;
+  margin: 0 0 0 0 !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+/* Reset semua child langsung dalam form */
+.x_panel > form > *,
+.x_panel > .form-horizontal > * {
+  float: none !important;
+  margin: 0 !important;
+}
+.x_panel > form > .col-md-2,
+.x_panel > form > .col-sm-2,
+.x_panel > form > .col-xs-6,
+.x_panel > .form-horizontal > .col-md-2,
+.x_panel > .form-horizontal > .col-sm-2,
+.x_panel > .form-horizontal > .col-xs-6 {
+  width: auto !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+}
+/* .row di dalam form (datasuratmasuk style) */
+.x_panel > form .row {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  float: none !important;
+  width: 100% !important;
+}
+.x_panel > form .row > * {
+  float: none !important;
+  width: auto !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+}
+/* select di filter bar */
+.x_panel form .form-control,
+.x_panel form select.form-control {
+  height: 34px !important;
+  font-size: 13px !important;
+  border: 1px solid #d6e6dc !important;
+  border-radius: 8px !important;
+  color: #1e3a2f !important;
+  padding: 0 10px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  width: auto !important;
+}
+.x_panel form .form-control:focus,
+.x_panel form select.form-control:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important;
+}
+/* Tombol filter (btn-sm di form bar — bukan di tabel) */
+.x_panel > form .btn-sm,
+.x_panel > form .btn,
+.x_panel > .form-horizontal .btn-sm,
+.x_panel > .form-horizontal .btn {
+  height: 34px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* 3. DATATABLES CONTROLS --------------------------------------------------- */
+.dataTables_wrapper {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+  color: #1e3a2f !important;
+}
+
+/* Reset row Bootstrap di dalam dataTables_wrapper */
+.dataTables_wrapper .row {
+  display: flex !important;
+  align-items: center !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  float: none !important;
+}
+.dataTables_wrapper .row::before,
+.dataTables_wrapper .row::after { display: none !important; }
+.dataTables_wrapper .row > [class*="col-"] {
+  float: none !important;
+  padding: 0 !important;
+  flex: 1 !important;
+}
+.dataTables_wrapper .row > [class*="col-"]:last-child {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+/* Top row: length kiri, search kanan */
+.dataTables_wrapper > .row:first-child {
+  padding: 10px 16px 8px !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+}
+/* Bottom row: info kiri, pagination kanan */
+.dataTables_wrapper > .row:last-child {
+  padding: 8px 16px !important;
+  border-top: 1px solid #f0f5f2 !important;
+}
+
+/* Label "Tampilkan X data" dan "Cari:" */
+div.dataTables_wrapper div.dataTables_length label,
+div.dataTables_wrapper div.dataTables_filter label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12.5px !important;
+  color: #6b8f7e !important;
+  font-weight: 400 !important;
+  margin: 0 !important;
+  float: none !important;
+  white-space: nowrap !important;
+}
+
+/* Select panjang baris */
+div.dataTables_wrapper div.dataTables_length select {
+  border: 1px solid #d6e6dc !important;
+  border-radius: 8px !important;
+  height: 32px !important;
+  font-size: 12.5px !important;
+  color: #1e3a2f !important;
+  padding: 0 8px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+  width: auto !important;
+  margin: 0 !important;
+  display: inline-block !important;
+}
+div.dataTables_wrapper div.dataTables_length select:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important;
+}
+
+/* Input pencarian */
+div.dataTables_wrapper div.dataTables_filter input[type="search"],
+div.dataTables_wrapper div.dataTables_filter input {
+  border: 1px solid #d6e6dc !important;
+  border-radius: 8px !important;
+  height: 32px !important;
+  font-size: 12.5px !important;
+  color: #1e3a2f !important;
+  padding: 0 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+  width: 200px !important;
+  margin: 0 !important;
+  display: inline-block !important;
+}
+div.dataTables_wrapper div.dataTables_filter input:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important;
+}
+
+/* 4. TABLE HEADER ---------------------------------------------------------- */
+table.dataTable {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+}
+table.dataTable thead tr { background: #f8fbf9 !important; }
+table.dataTable thead th,
+table.dataTable thead td {
+  padding: 10px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #5a7d6d !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid #e8f0ec !important;
+  background: #f8fbf9 !important;
+  white-space: nowrap !important;
+}
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc { background-color: #f8fbf9 !important; }
+
+/* 5. TABLE BODY ------------------------------------------------------------ */
+table.dataTable.table-striped tbody tr,
+table.dataTable tbody tr {
+  border-bottom: 1px solid #f0f5f2 !important;
+  background: transparent !important;
+}
+table.dataTable tbody tr:last-child { border-bottom: none !important; }
+table.dataTable tbody tr:hover { background: #fafcfa !important; }
+
+table.dataTable.table-striped tbody tr.odd,
+table.dataTable.table-striped tbody tr.even { background: transparent !important; }
+table.dataTable.table-striped tbody tr.odd:hover,
+table.dataTable.table-striped tbody tr.even:hover { background: #fafcfa !important; }
+
+table.dataTable tbody td,
+.x_content table.dataTable tbody td {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: #1e3a2f !important;
+  vertical-align: middle !important;
+  border: none !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+  background: transparent !important;
+}
+table.dataTable tbody tr:last-child td { border-bottom: none !important; }
+
+/* Hapus border Bootstrap table-bordered */
+.table-bordered,
+.x_content .table-bordered {
+  border: none !important;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td {
+  border: none !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+}
+
+/* 6. DATATABLES INFO -------------------------------------------------------- */
+div.dataTables_wrapper div.dataTables_info {
+  font-size: 12.5px !important;
+  color: #6b8f7e !important;
+  padding: 0 !important;
+  font-weight: 400 !important;
+  float: none !important;
+}
+
+/* 7. PAGINATION ------------------------------------------------------------ */
+div.dataTables_wrapper div.dataTables_paginate { float: none !important; }
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li { float: none !important; }
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li > a,
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  padding: 0 8px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  border: 1px solid #d6e6dc !important;
+  border-radius: 6px !important;
+  color: #2a4535 !important;
+  text-decoration: none !important;
+  background: #fff !important;
+  transition: all 0.15s !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  float: none !important;
+}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li > a:hover {
+  background: #f4fbf6 !important;
+  border-color: #2e7d4f !important;
+  color: #2e7d4f !important;
+}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li.active > a,
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li.active > span {
+  background: #1e3a2f !important;
+  border-color: #1e3a2f !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li.disabled > a,
+div.dataTables_wrapper div.dataTables_paginate ul.pagination > li.disabled > span {
+  opacity: 0.4 !important;
+  pointer-events: none !important;
+  background: #fafcfb !important;
+}
+
+/* 8. ACTION BUTTONS --------------------------------------------------------
+   SCOPE: hanya td di tabel, bukan tombol di filter bar
+   -------------------------------------------------------------------- */
+/* Wrapper action — rata kanan */
+table.dataTable tbody td:last-child {
+  text-align: right !important;
+  white-space: nowrap !important;
+  padding-right: 12px !important;
+}
+/* <a> pembungkus */
+table.dataTable tbody td:last-child > a,
+table.dataTable tbody td:last-child > button {
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+  vertical-align: middle !important;
+  margin: 0 1px !important;
+  position: relative !important;
+}
+/* Semua .btn-xs di kolom aksi → icon 28x28 */
+table.dataTable tbody td:last-child .btn,
+table.dataTable tbody td:last-child button.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 7px !important;
+  font-size: 13px !important;
+  border: none !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  transition: background 0.15s, transform 0.1s, color 0.15s !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+table.dataTable tbody td:last-child .btn:active { transform: scale(0.92) !important; }
+/* Sembunyikan <br> antar tombol aksi */
+table.dataTable tbody td:last-child br { display: none !important; }
+
+/* Warna pastel (identik .btn-icon booking) */
+table.dataTable tbody td:last-child .btn-success {
+  background: #e4f5ec !important; color: #2e8a54 !important;
+}
+table.dataTable tbody td:last-child .btn-success:hover {
+  background: #2e8a54 !important; color: #fff !important;
+}
+table.dataTable tbody td:last-child .btn-info {
+  background: #e8f3ff !important; color: #3c7abf !important;
+}
+table.dataTable tbody td:last-child .btn-info:hover {
+  background: #3c7abf !important; color: #fff !important;
+}
+table.dataTable tbody td:last-child .btn-warning {
+  background: #fff4e0 !important; color: #c07a20 !important;
+}
+table.dataTable tbody td:last-child .btn-warning:hover {
+  background: #c07a20 !important; color: #fff !important;
+}
+table.dataTable tbody td:last-child .btn-danger {
+  background: #fceaea !important; color: #c0392b !important;
+}
+table.dataTable tbody td:last-child .btn-danger:hover {
+  background: #c0392b !important; color: #fff !important;
+}
+table.dataTable tbody td:last-child .btn-default {
+  background: #f0f4f8 !important; color: #486581 !important;
+}
+table.dataTable tbody td:last-child .btn-default:hover {
+  background: #486581 !important; color: #fff !important;
+}
+table.dataTable tbody td:last-child .btn-primary {
+  background: #eef3ff !important; color: #3b6fd4 !important;
+}
+table.dataTable tbody td:last-child .btn-primary:hover {
+  background: #3b6fd4 !important; color: #fff !important;
+}
+
+/* 9. STICKY KOLOM AKSI ----------------------------------------------------- */
+#datatable thead th:last-child {
+  position: sticky !important; right: 0 !important;
+  z-index: 3 !important; background: #f8fbf9 !important;
+  box-shadow: -2px 0 5px -2px rgba(0,0,0,0.08) !important;
+}
+#datatable tbody td:last-child {
+  position: sticky !important; right: 0 !important;
+  z-index: 1 !important; background: #fff !important;
+  box-shadow: -2px 0 5px -2px rgba(0,0,0,0.06) !important;
+}
+#datatable tbody tr:hover td:last-child { background: #fafcfa !important; }
+
+/* 10. TABEL RESPONSIVE WRAPPER --------------------------------------------- */
+.table-responsive, .table-responsive-custom {
+  border: none !important; margin: 0 !important;
+}
+
+/* ==========================================================================
+   11. UNIFIED MODERN TABLE SYSTEM (IDENTIK DATA PENGUNJUNG & WEB BOOKING)
+   ========================================================================== */
+.booking-card {
+  background: #fff !important;
+  border: 1px solid #e5ede8 !important;
+  border-radius: 12px !important;
+  overflow: visible !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  margin-bottom: 24px !important;
+}
+
+.card-header-table {
+  padding: 16px 20px 14px !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  background: #fff !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.card-header-table h1,
+.card-header-table h2 {
+  font-size: 19px !important;
+  font-weight: 600 !important;
+  color: #1e3a2f !important;
+  margin: 0 0 3px 0 !important;
+  letter-spacing: -0.01em !important;
+  font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.card-header-table p {
+  font-size: 12.5px !important;
+  color: #6b8f7e !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.card-header-table + form .filter-bar,
+.card-header-table + .filter-bar {
+  border-radius: 0 !important;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f5f2;
+  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  max-width: 340px;
+}
+
+.search-wrap svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ab5a8;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid #d6e6dc;
+  border-radius: 8px;
+  padding: 7px 12px 7px 32px;
+  font-size: 12.5px;
+  color: #1e3a2f;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  height: 34px;
+}
+.search-input::placeholder { color: #aec9b8; }
+.search-input:focus { border-color: #2e7d4f; box-shadow: 0 0 0 3px rgba(46,125,79,.1); }
+
+.filter-select, .filter-date {
+  border: 1px solid #d6e6dc;
+  border-radius: 8px;
+  padding: 6px 11px;
+  font-size: 12.5px;
+  color: #1e3a2f;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  height: 34px;
+}
+.filter-select:focus, .filter-date:focus { border-color: #2e7d4f; }
+
+.btn-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #eef4f0;
+  border: 1px solid #d6e6dc;
+  border-radius: 8px;
+  color: #2e7d4f;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.btn-filter:hover { background: #2e7d4f; color: #fff; border-color: #2e7d4f; }
+
+.btn-reset-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b03030;
+  background: #fdf2f2;
+  border: 1px solid #f5c6c6;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition: all 0.15s;
+  height: 34px;
+}
+.btn-reset-filter:hover { background: #fce4e4; color: #8a1f1f; }
+
+.btn-export-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 11px;
+  height: 34px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2e7d4f;
+  background: #fff;
+  border: 1px solid #c2ded0;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition: all 0.15s;
+}
+.btn-export-outline:hover { background: #f0f7f3; color: #1e3a2f; border-color: #2e7d4f; }
+
+.btn-tambah {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #1e3a2f;
+  border-radius: 8px;
+  background: #1e3a2f;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-tambah:hover { background: #2d5540; border-color: #2d5540; }
+
+/* Table Elements */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 0 0 12px 12px;
+}
+
+table.tabel-booking {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  text-align: left !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+table.tabel-booking thead tr {
+  background: #f8fbf9 !important;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid #e8f0ec !important;
+}
+
+table.tabel-booking thead th {
+  padding: 10px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #5a7d6d !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  border: none !important;
+  border-bottom: 1px solid #e8f0ec !important;
+  white-space: nowrap !important;
+}
+
+table.tabel-booking tbody tr {
+  border-bottom: 1px solid #f0f5f2 !important;
+  transition: background 0.15s;
+  position: relative;
+  z-index: 1;
+  background: #fff;
+}
+
+table.tabel-booking tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+table.tabel-booking tbody td {
+  padding: 9px 14px !important;
+  font-size: 13px !important;
+  color: #1e3a2f !important;
+  vertical-align: middle !important;
+  position: relative;
+  border: none !important;
+  border-bottom: 1px solid #f0f5f2 !important;
+}
+
+table.tabel-booking tbody tr:hover {
+  background: #fafcfa !important;
+  position: relative;
+  z-index: 200;
+}
+
+table.tabel-booking tbody tr:hover td {
+  position: relative;
+  z-index: 200;
+}
+
+table.tabel-booking tbody tr:hover .btn-action-wrap {
+  position: relative;
+  z-index: 210;
+}
+
+table.tabel-booking tbody tr:hover .btn-icon:hover {
+  position: relative;
+  z-index: 250;
+}
+
+table.tabel-booking tbody tr:hover .btn-icon:hover::after,
+table.tabel-booking tbody tr:hover .btn-icon:hover::before {
+  z-index: 999999;
+}
+
+/* Badges */
+.badge-pax, .badge-green {
+  background: #e6f7ef !important;
+  color: #059669 !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 20px !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  padding: 3px 10px !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+}
+
+.badge-checkin {
+  background: #e4f5ec !important;
+  color: #2e7d4f !important;
+  border: 1px solid #a8d8bc !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  display: inline-block !important;
+}
+
+.badge-pending, .badge-amber {
+  background: #fef9e7 !important;
+  color: #b7791f !important;
+  border: 1px solid #fde68a !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  display: inline-block !important;
+}
+
+.badge-blue {
+  background: #ebf5ff !important;
+  color: #2563eb !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  display: inline-block !important;
+}
+
+.badge-purple {
+  background: #f3e8ff !important;
+  color: #7e22ce !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  display: inline-block !important;
+}
+
+.badge-muted {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  display: inline-block !important;
+}
+
+/* Action Button Wrapper & Icons */
+.btn-action-wrap {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 2;
+}
+
+.btn-icon {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, color 0.15s;
+  flex-shrink: 0;
+  text-decoration: none !important;
+}
+.btn-icon:active { transform: scale(0.93); }
+.btn-icon svg { display: block; }
+
+.btn-detail   { background: #f0f4f8; color: #486581; }
+.btn-detail:hover { background: #486581; color: #fff; }
+
+.btn-edit     { background: #eef3ff; color: #3b6fd4; }
+.btn-edit:hover     { background: #3b6fd4; color: #fff; }
+
+.btn-hapus    { background: #fceaea; color: #c0392b; }
+.btn-hapus:hover    { background: #c0392b; color: #fff; }
+
+.btn-download { background: #e4f5ec; color: #2e8a54; }
+.btn-download:hover { background: #2e8a54; color: #fff; }
+
+.btn-key      { background: #fff4e0; color: #c07a20; }
+.btn-key:hover      { background: #c07a20; color: #fff; }
+
+/* Tooltip for Action Icons */
+.btn-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  right: 50%;
+  transform: translateX(50%);
+  background: #1e3a2f;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 999999;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+}
+.btn-icon::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 50%;
+  transform: translateX(50%);
+  border: 5px solid transparent;
+  border-top-color: #1e3a2f;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 999999;
+}
+.btn-icon:last-child::after  { right: 0; transform: none; }
+.btn-icon:last-child::before { right: 9px; transform: none; }
+.btn-icon:hover::after, .btn-icon:hover::before { opacity: 1; }
+
+/* Pagination & Table Footer */
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid #f0f5f2;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #6b8f7e;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #d6e6dc;
+  border-radius: 6px;
+  color: #2a4535;
+  text-decoration: none !important;
+  background: #fff;
+  transition: all 0.15s;
+}
+.page-link:hover {
+  background: #f4fbf6;
+  border-color: #2e7d4f;
+  color: #2e7d4f;
+}
+.page-item.active .page-link {
+  background: #1e3a2f !important;
+  border-color: #1e3a2f !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.page-item.disabled .page-link {
+  opacity: 0.45;
+  pointer-events: none;
+  background: #fafcfb;
+}

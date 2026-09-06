@@ -170,164 +170,222 @@ include "login/ceksession.php";
 
       <!-- page content -->
       <div class="right_col" role="main">
-        <div class="">
-          <div class="clearfix"></div>
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Tambah Surat Masuk</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                  <br />
-                  <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post"
-                    enctype="multipart/form-data" id="demo-form2" class="form-horizontal form-label-left" novalidate>
+        <div class="page-title-modern">
+          <div class="page-title-left">
+            <h1>Tambah Surat Masuk</h1>
+            <p>Isi formulir pencatatan arsip surat masuk baru Desa Wisata Candirejo</p>
+          </div>
+          <a href="datasuratmasuk.php" class="btn-back-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Kembali ke Data Surat Masuk
+          </a>
+        </div>
 
-                    <?php
-                    include '../koneksi/koneksi.php';
-                    $query = "SELECT MAX(No) as last_no FROM tb_arsip_surat_masuk";
-                    $result = mysqli_query($db, $query);
-                    $row = mysqli_fetch_assoc($result);
-                    $next_no = ($row['last_no'] ?? 0) + 1;
-                    ?>
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-header-left">
+              <div class="hicon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <h2>Formulir Surat Masuk Baru</h2>
+            </div>
+          </div>
 
-                    <!-- Nomor Urut -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Nomor Urut <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" value="<?php echo $next_no; ?>" id="No" name="No"
-                          required maxlength="4" placeholder="Nomor Urut"
-                          class="form-control col-md-7 col-xs-12" readonly>
-                      </div>
-                    </div>
+          <div class="form-card-body">
+            <form action="proses/proses_inputsuratmasuk.php" name="formsuratmasuk" method="post"
+              enctype="multipart/form-data" id="demo-form2" novalidate>
 
-                    <!-- Tanggal Terima -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Terima <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="input-group">
-                          <input type="text" id="tanggal_terima" name="tanggal_terima" required
-                            class="form-control datepicker" placeholder="Pilih Tanggal Terima" autocomplete="off" readonly />
-                          <span class="input-group-addon" onclick="document.getElementById('tanggal_terima')._flatpickr.open()">
-                            <i class="fa fa-calendar"></i>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+              <?php
+              include '../koneksi/koneksi.php';
+              $query = "SELECT MAX(No) as last_no FROM tb_arsip_surat_masuk";
+              $result = mysqli_query($db, $query);
+              $row = mysqli_fetch_assoc($result);
+              $next_no = ($row['last_no'] ?? 0) + 1;
+              ?>
 
-                    <!-- Tanggal Surat -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Surat <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="input-group">
-                          <input type="text" id="tanggal_surat" name="tanggal_surat" required
-                            class="form-control datepicker" placeholder="Pilih Tanggal Surat" autocomplete="off" readonly />
-                          <span class="input-group-addon" onclick="document.getElementById('tanggal_surat')._flatpickr.open()">
-                            <i class="fa fa-calendar"></i>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+              <!-- INFORMASI SURAT -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Informasi Surat
+              </div>
 
-                    <!-- Nomor Surat -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Nomor Surat <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nomor_surat" name="nomor_surat" required maxlength="35"
-                          placeholder="Masukkan Nomor Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <!-- Pengirim -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Pengirim <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="pengirim" name="pengirim" required
-                          placeholder="Masukkan Nama Pengirim" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <!-- Penerima -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Penerima <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="penerima_surat" name="penerima_surat" required
-                          placeholder="Masukkan Nama Penerima" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <!-- Disposisi -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Disposisi <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="disposisi" name="disposisi" required class="form-control"
-                          rows="3" placeholder="Masukkan Disposisi Surat"></textarea>
-                      </div>
-                    </div>
-
-                    <!-- Perihal -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Perihal <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="perihal" name="perihal" required
-                          placeholder="Masukkan Perihal Surat" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <!-- Keterangan -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Keterangan <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <textarea id="keterangan" name="keterangan" required class="form-control"
-                          rows="3" placeholder="Masukkan Keterangan Surat"></textarea>
-                      </div>
-                    </div>
-
-                    <!-- File Surat -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload File Surat <span class="fa fa-upload" style="color: #3498db;"></span> <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-surat" data-field="file_surat">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">PDF (1 file wajib)</small>
-                        </div>
-                        <input type="file" name="file_surat" id="file_surat" accept="application/pdf" class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-surat"></div>
-                        <div id="file-surat-required" class="upload-required-message">File Surat wajib diisi.</div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Wajib. Format PDF, maks. 10 MB</small>
-                      </div>
-                    </div>
-
-                    <!-- Lampiran Foto (multi, opsional) -->
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Upload Lampiran Foto <span class="fa fa-upload" style="color: #3498db;"></span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class="upload-area" id="upload-area-foto" data-field="lampiran_foto">
-                          <div class="upload-icon"><span class="fa fa-cloud-upload"></span></div>
-                          <div><strong>Drag file atau klik untuk pilih</strong></div>
-                          <small style="color: #7f8c8d;">JPG, PNG, GIF, WebP (Bisa lebih dari 1 file)</small>
-                        </div>
-                        <input type="file" name="lampiran_foto[]" id="lampiran_foto" accept="image/*" multiple class="hidden-file-input" />
-                        <div class="file-list-preview" id="preview-foto"></div>
-                        <small class="text-muted" style="display: block; margin-top: 5px;">*Opsional. Format JPG/PNG/GIF, maks. 2 MB/foto. Foto akan otomatis dikonversi ke WebP.</small>
-                      </div>
-                    </div>
-
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
-                        <button type="button" class="btn btn-primary" onclick="resetFormInput()"><i class="fa fa-refresh"></i> Reset</button>
-                        <button type="button" class="btn btn-danger" onclick="kembaliPage()"><i class="fa fa-arrow-left"></i> Kembali</button>
-                      </div>
-                    </div>
-
-                  </form>
+              <!-- Nomor Urut -->
+              <div class="form-row form-group">
+                <label class="form-label">Nomor Urut <span class="req">*</span>
+                  <small>Nomor urut otomatis</small>
+                </label>
+                <div>
+                  <input type="text" value="<?php echo $next_no; ?>" id="No" name="No"
+                    required maxlength="4" placeholder="Nomor Urut"
+                    class="form-input input-sm" readonly>
                 </div>
               </div>
-            </div>
+
+              <!-- Tanggal Terima -->
+              <div class="form-row form-group">
+                <label class="form-label">Tanggal Terima <span class="req">*</span>
+                  <small>Tanggal surat diterima desa</small>
+                </label>
+                <div>
+                  <div class="input-group-modern">
+                    <input type="text" id="tanggal_terima" name="tanggal_terima" required
+                      class="form-input datepicker" placeholder="Pilih Tanggal Terima" autocomplete="off" readonly />
+                    <span class="input-group-addon-modern" onclick="document.getElementById('tanggal_terima')._flatpickr.open()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tanggal Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Tanggal Surat <span class="req">*</span>
+                  <small>Tanggal yang tertera di surat</small>
+                </label>
+                <div>
+                  <div class="input-group-modern">
+                    <input type="text" id="tanggal_surat" name="tanggal_surat" required
+                      class="form-input datepicker" placeholder="Pilih Tanggal Surat" autocomplete="off" readonly />
+                    <span class="input-group-addon-modern" onclick="document.getElementById('tanggal_surat')._flatpickr.open()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nomor Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Nomor Surat <span class="req">*</span>
+                  <small>Nomor resmi surat masuk</small>
+                </label>
+                <div>
+                  <input type="text" id="nomor_surat" name="nomor_surat" required maxlength="35"
+                    placeholder="Contoh: 005/123/Desa/2026" class="form-input">
+                </div>
+              </div>
+
+              <!-- PENGIRIM & PENERIMA -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                Pengirim &amp; Penerima
+              </div>
+
+              <!-- Pengirim -->
+              <div class="form-row form-group">
+                <label class="form-label">Pengirim <span class="req">*</span>
+                  <small>Instansi atau perorangan pengirim</small>
+                </label>
+                <div>
+                  <input type="text" id="pengirim" name="pengirim" required
+                    placeholder="Masukkan nama pengirim / asal instansi" class="form-input">
+                </div>
+              </div>
+
+              <!-- Penerima -->
+              <div class="form-row form-group">
+                <label class="form-label">Penerima <span class="req">*</span>
+                  <small>Pihak atau bagian penerima surat</small>
+                </label>
+                <div>
+                  <input type="text" id="penerima_surat" name="penerima_surat" required
+                    placeholder="Masukkan nama penerima surat" class="form-input">
+                </div>
+              </div>
+
+              <!-- Perihal -->
+              <div class="form-row form-group">
+                <label class="form-label">Perihal <span class="req">*</span>
+                  <small>Ringkasan inti perihal surat</small>
+                </label>
+                <div>
+                  <input type="text" id="perihal" name="perihal" required
+                    placeholder="Masukkan perihal surat" class="form-input">
+                </div>
+              </div>
+
+              <!-- DISPOSISI & KETERANGAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Disposisi &amp; Keterangan
+              </div>
+
+              <!-- Disposisi -->
+              <div class="form-row form-group">
+                <label class="form-label">Disposisi <span class="req">*</span>
+                  <small>Instruksi / arahan tindak lanjut</small>
+                </label>
+                <div>
+                  <textarea id="disposisi" name="disposisi" required class="form-input"
+                    rows="3" style="resize:vertical;min-height:75px;" placeholder="Masukkan disposisi surat"></textarea>
+                </div>
+              </div>
+
+              <!-- Keterangan -->
+              <div class="form-row form-group">
+                <label class="form-label">Keterangan <span class="req">*</span>
+                  <small>Keterangan atau catatan tambahan</small>
+                </label>
+                <div>
+                  <textarea id="keterangan" name="keterangan" required class="form-input"
+                    rows="3" style="resize:vertical;min-height:75px;" placeholder="Masukkan keterangan surat"></textarea>
+                </div>
+              </div>
+
+              <!-- FILE & LAMPIRAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                Lampiran Berkas
+              </div>
+
+              <!-- File Surat -->
+              <div class="form-row form-group">
+                <label class="form-label">Upload File Surat <span class="req">*</span>
+                  <small>Berkas surat resmi (PDF wajib)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-surat" data-field="file_surat">
+                    <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                    <div class="upload-text-main">Drag file PDF ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">Format PDF, maksimal ukuran 10 MB (1 file wajib)</div>
+                  </div>
+                  <input type="file" name="file_surat" id="file_surat" accept="application/pdf" class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-surat"></div>
+                  <div id="file-surat-required" class="upload-required-message">File Surat wajib diisi.</div>
+                </div>
+              </div>
+
+              <!-- Lampiran Foto (multi, opsional) -->
+              <div class="form-row form-group">
+                <label class="form-label">Upload Lampiran Foto
+                  <small>Foto dokumentasi (opsional)</small>
+                </label>
+                <div>
+                  <div class="upload-area-modern" id="upload-area-foto" data-field="lampiran_foto">
+                    <div class="upload-icon"><i class="fa fa-camera"></i></div>
+                    <div class="upload-text-main">Drag foto ke sini atau klik untuk memilih</div>
+                    <div class="upload-text-sub">JPG, PNG, GIF, WebP (Maks. 2 MB/foto, bisa lebih dari 1 file)</div>
+                  </div>
+                  <input type="file" name="lampiran_foto[]" id="lampiran_foto" accept="image/*" multiple class="hidden-file-input" />
+                  <div class="file-list-preview" id="preview-foto"></div>
+                </div>
+              </div>
+
+              <!-- Tombol Aksi -->
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  Simpan Surat
+                </button>
+                <button type="button" class="btn-reset" onclick="resetFormInput()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Reset
+                </button>
+                <button type="button" class="btn-cancel" onclick="kembaliPage()" style="margin-left:auto;">
+                  Batal
+                </button>
+              </div>
+
+            </form>
           </div>
         </div>
       </div>

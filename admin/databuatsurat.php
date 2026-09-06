@@ -102,8 +102,8 @@ include "login/ceksession.php";
                               <td>	'. $data['alamat'].'		</td>
                               <td>  '. $data['no_hp_bagian'].'  </td>  
                               <td style="text-align:center;">
-                              <a href=detail-bagian.php?id_bagian='.$data['id_bagian'].'><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
-                              <a href=editbagian.php?id_bagian='.$data['id_bagian'].'><button type="button" title="Edit" class="btn btn-success btn-xs"><i class="fa  fa-edit"></i></button></a>
+                              <a href="detail-buatsurat.php?id_bagian='.$data['id_bagian'].'"><button type="button" title="Detail" class="btn btn-info btn-xs"><i class="fa fa-file-image-o"></i></button></a>
+                              <a href="editbuatsurat.php?id_bagian='.$data['id_bagian'].'"><button type="button" title="Edit" class="btn btn-success btn-xs"><i class="fa  fa-edit"></i></button></a>
                               <a onclick="return konfirmasi()" href="proses/proses_hapusbagian.php?id_bagian='.$data['id_bagian'].'"><button type="button" title="Hapus" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button></a></td>
                               </tr>';
                             }
@@ -160,11 +160,17 @@ include "login/ceksession.php";
 
     <!-- Custom Theme Scripts -->
     <script src="../assets/build/js/custom.min.js"></script>
-    	<script>
+    <script>
       $(document).ready(function() {
-      $('#example').DataTable();
-      } );
-	  </script>
+        if ($.fn.DataTable.isDataTable('#datatable')) {
+          $('#datatable').DataTable().destroy();
+        }
+        $('#datatable').DataTable({
+          "pageLength": 15,
+          "lengthMenu": [15, 25, 50, 100]
+        });
+      });
+    </script>
     <script type="text/javascript" language="JavaScript">
         function konfirmasi()
         {

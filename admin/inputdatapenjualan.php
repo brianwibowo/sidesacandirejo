@@ -3,204 +3,151 @@ session_start();
 include "login/ceksession.php";
 ?>
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Arsip Surat Desa Candirejo Borobudur</title>
-
-  <!-- Bootstrap -->
+  <title>Input Data Penjualan - Arsip Desa Candirejo</title>
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- iCheck -->
-  <link href="../assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <!-- Select2 -->
-  <link href="../assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-  <!-- bootstrap-daterangepicker -->
-  <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-  <!-- bootstrap-datetimepicker -->
-  <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
   <link rel="shortcut icon" href="../img/icon.ico">
-
-  <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
 </head>
 
 <body class="nav-md">
   <div class="container body">
     <div class="main_container">
-      <!-- Profile and Sidebarmenu -->
-      <?php
-      include("sidebarmenu.php");
-      ?>
-      <!-- /Profile and Sidebarmenu -->
+      <?php include("sidebarmenu.php"); ?>
+      <?php include("header.php"); ?>
 
-      <!-- top navigation -->
-      <?php
-      include("header.php");
-      ?>
-      <!-- /top navigation -->
-
-      <!-- page content -->
       <div class="right_col" role="main">
-        <div class="">
-          <div class="clearfix"></div>
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Input Data Penjualan</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                  <br />
-                  <form action="proses/proses_inputdatapenjualan.php" name="forminputdatapenjualan" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+        <div class="page-title-modern">
+          <div class="page-title-left">
+            <h1>Input Data Penjualan</h1>
+            <p>Tambah data penjualan usaha Desa Wisata Candirejo</p>
+          </div>
+          <a href="datapenjualanusaha.php" class="btn-back-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Kembali ke Data Penjualan
+          </a>
+        </div>
 
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Produk<span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_produk" name="produk" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                          <option value="Listrik">Listrik</option>
-                          <option value="Pulsa">Pulsa</option>
-                          <option value="Paket Wisata">Paket Wisata</option>
-                        </select>
-                      </div>
-                    </div>
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-header-left">
+              <div class="hicon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+              <h2>Data Penjualan Baru</h2>
+            </div>
+          </div>
 
-                    <div class="form-group" id="pilihan_paket_wisata" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
-                        Wisata<span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="pilihan_paket_wisata" name="pilihan_paket_wisata"
-                          class="form-control col-md-7 col-xs-12">
-                          <option value="">--</option>
-                          <option value="Paket Fun Game">Paket Fun Game</option>
-                          <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
-                          <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
-                          <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day
-                          </option>
-                          <option value="Cycling Village Tour Candirejo">Cycling Village Tour Candirejo</option>
-                          <option value="Traditional Dance">Traditional Dance</option>
-                          <option value="Walking Around Village">Walking Around Village</option>
-                          <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In
-                            Candirejo Village (Homestay)</option>
-                          <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill
-                          </option>
-                          <option value="Cooking Lesson">Cooking Lesson</option>
-                          <option value="Village Experience">Village Experience</option>
-                          <option value="Dokar Village Tour Candirejo">Dokar Village Tour Candirejo</option>
-                        </select>
-                      </div>
-                    </div>
+          <div class="form-card-body">
+            <form action="proses/proses_inputdatapenjualan.php" name="forminputdatapenjualan" method="post"
+              id="demo-form2" data-parsley-validate>
 
-                    <script>
-                    document.getElementById('jenis_produk').addEventListener('change', function() {
-                      var pilihanPaketWisata = document.getElementById('pilihan_paket_wisata');
+              <!-- INFORMASI PENJUALAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Informasi Penjualan
+              </div>
 
-                      if (this.value === 'Paket Wisata') {
-                        pilihanPaketWisata.style.display = 'block';
-                      } else {
-                        pilihanPaketWisata.style.display = 'none';
-                      }
-                    });
-                    </script>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jumlah">Jumlah<span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="jumlah" name="jumlah" required="required" maxlength="100"
-                          placeholder="Masukkan Jumlah Pembelian" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="harga">Harga<span
-                          class="required">*</span>
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="harga" name="harga" required="required" maxlength="100"
-                          placeholder="Masukkan Harga" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-
-
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                        <button type="reset" class="btn btn-primary">Reset</button>
-                      </div>
-                    </div>
-
-                  </form>
+              <div class="form-row">
+                <label class="form-label">Jenis Produk <span class="req">*</span>
+                  <small>Kategori produk yang dijual</small>
+                </label>
+                <div>
+                  <select id="jenis_produk" name="produk" required class="form-select">
+                    <option value="Listrik">Listrik</option>
+                    <option value="Pulsa">Pulsa</option>
+                    <option value="Paket Wisata">Paket Wisata</option>
+                  </select>
                 </div>
               </div>
-            </div>
+
+              <!-- Sub: Pilihan Paket Wisata (muncul jika Paket Wisata dipilih) -->
+              <div class="form-row" id="paket-wisata-group" style="display:none;">
+                <label class="form-label">Pilihan Paket Wisata
+                  <small>Spesifikasi paket wisata yang dijual</small>
+                </label>
+                <div>
+                  <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" class="form-select">
+                    <option value="">-- Pilih Paket --</option>
+                    <option value="Paket Fun Game">Paket Fun Game</option>
+                    <option value="Paket Pelajar - Live In Candirejo">Paket Pelajar - Live In Candirejo</option>
+                    <option value="Paket Pelajar – Field Trip One Day">Paket Pelajar – Field Trip One Day</option>
+                    <option value="Paket Pelajar – Field Trip Half Day">Paket Pelajar – Field Trip Half Day</option>
+                    <option value="Cycling Village Tour Candirejo">Cycling Village Tour Candirejo</option>
+                    <option value="Traditional Dance">Traditional Dance</option>
+                    <option value="Walking Around Village">Walking Around Village</option>
+                    <option value="Stay At Local House In Candirejo Village (Homestay)">Stay At Local House In Candirejo Village (Homestay)</option>
+                    <option value="Serenade At The Foot Of Menoreh Hill">Serenade At The Foot Of Menoreh Hill</option>
+                    <option value="Cooking Lesson">Cooking Lesson</option>
+                    <option value="Village Experience">Village Experience</option>
+                    <option value="Dokar Village Tour Candirejo">Dokar Village Tour Candirejo</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label class="form-label">Jumlah <span class="req">*</span>
+                  <small>Jumlah item/unit yang dijual</small>
+                </label>
+                <div>
+                  <input type="number" id="jumlah" name="jumlah" required min="1"
+                    placeholder="Masukkan Jumlah" class="form-input">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label class="form-label">Harga <span class="req">*</span>
+                  <small>Total harga penjualan (Rp)</small>
+                </label>
+                <div>
+                  <input type="number" id="harga" name="harga" required min="0"
+                    placeholder="Masukkan Total Harga" class="form-input">
+                </div>
+              </div>
+
+              <!-- ACTIONS -->
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  <i class="fa fa-save"></i> Simpan Data
+                </button>
+                <button type="reset" class="btn-reset">
+                  <i class="fa fa-refresh"></i> Reset
+                </button>
+                <a href="datapenjualanusaha.php" class="btn-cancel">
+                  <i class="fa fa-times"></i> Batal
+                </a>
+              </div>
+
+            </form>
           </div>
         </div>
       </div>
-      <!-- /page content -->
 
-      <!-- footer content -->
       <footer>
-        <div class="pull-right">
-          Arsip Surat Desa Candirejo Borobudur
-        </div>
+        <div class="pull-right">Arsip Surat Desa Candirejo Borobudur</div>
         <div class="clearfix"></div>
       </footer>
-      <!-- /footer content -->
     </div>
   </div>
 
-  <!-- jQuery -->
   <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap -->
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- FastClick -->
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- bootstrap-progressbar -->
-  <script src="../assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-  <!-- iCheck -->
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <!-- bootstrap-daterangepicker -->
-  <script src="../assets/vendors/moment/min/moment.min.js"></script>
-  <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <!-- bootstrap-datetimepicker -->
-  <script src="../assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-  <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
-  $(document).ready(function() {
-    $('#jenis_wisatawan').change(function() {
-      if ($(this).val() == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-      } else if ($(this).val() == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-      }
-    });
+  document.getElementById('jenis_produk').addEventListener('change', function() {
+    var group = document.getElementById('paket-wisata-group');
+    group.style.display = (this.value === 'Paket Wisata') ? 'grid' : 'none';
   });
   </script>
 </body>
-
 </html>

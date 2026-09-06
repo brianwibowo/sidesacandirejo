@@ -43,9 +43,26 @@ function swalResponse($title, $message, $icon, $redirect) {
 </body></html>';
 }
 
+$allowed_ref = [
+    'booking_dashboard.php',
+    'booking_semua.php',
+    'booking_pending.php',
+    'booking_checkin.php',
+    'booking_tidakdatang.php',
+    'booking_kalender.php',
+    'booking_laporan.php',
+    'detail_booking.php'
+];
+
+$ref = isset($_POST['ref']) ? basename($_POST['ref']) : 'booking_dashboard.php';
+if (!in_array($ref, $allowed_ref, true)) {
+    $ref = 'booking_dashboard.php';
+}
+$redirect = '../' . $ref;
+
 // ── Validasi request ──────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo swalResponse('Permintaan Tidak Valid!', 'Metode tidak diizinkan.', 'error', '../booking_dashboard.php');
+    echo swalResponse('Permintaan Tidak Valid!', 'Metode tidak diizinkan.', 'error', $redirect);
     exit;
 }
 
@@ -53,7 +70,7 @@ $aksi      = isset($_POST['aksi'])     ? $_POST['aksi']     : '';
 $id_booking = isset($_POST['id_booking']) ? (int)$_POST['id_booking'] : 0;
 
 if (!in_array($aksi, ['checkin', 'tidak_hadir']) || $id_booking <= 0) {
-    echo swalResponse('Permintaan Tidak Valid!', 'Parameter tidak lengkap.', 'error', '../booking_dashboard.php');
+    echo swalResponse('Permintaan Tidak Valid!', 'Parameter tidak lengkap.', 'error', $redirect);
     exit;
 }
 
@@ -66,7 +83,7 @@ $booking = $result->fetch_assoc();
 $stmt->close();
 
 if (!$booking) {
-    echo swalResponse('Data Tidak Ditemukan!', 'Booking tidak ditemukan atau sudah diproses sebelumnya.', 'warning', '../booking_dashboard.php');
+    echo swalResponse('Data Tidak Ditemukan!', 'Booking tidak ditemukan atau sudah diproses sebelumnya.', 'warning', $redirect);
     exit;
 }
 
@@ -83,12 +100,12 @@ if ($aksi === 'tidak_hadir') {
             'Ditandai Tidak Hadir',
             'Booking atas nama <strong>' . htmlspecialchars($booking['nama']) . '</strong> ditandai tidak hadir.',
             'success',
-            '../booking_dashboard.php'
+            $redirect
         );
     } else {
         $err = htmlspecialchars($stmt->error);
         $stmt->close();
-        echo swalResponse('Terjadi Kesalahan!', $err, 'error', '../booking_dashboard.php');
+        echo swalResponse('Terjadi Kesalahan!', $err, 'error', $redirect);
     }
     $db->close();
     exit;
@@ -148,12 +165,12 @@ try {
         'Data <strong>' . htmlspecialchars($booking['nama']) . '</strong> berhasil dicatat. '
         . 'Admin dapat menambahkan foto di halaman Data Pengunjung.',
         'success',
-        '../booking_dashboard.php'
+        $redirect
     );
 
 } catch (Exception $e) {
     $db->rollback();
-    echo swalResponse('Terjadi Kesalahan!', htmlspecialchars($e->getMessage()), 'error', '../booking_dashboard.php');
+    echo swalResponse('Terjadi Kesalahan!', htmlspecialchars($e->getMessage()), 'error', $redirect);
 }
 
 $db->close();

@@ -1,0 +1,389 @@
+/* ==========================================================================
+   DETAIL MODERN -- Sistem Pengarsipan Desa Wisata Candirejo
+   Palet Warna: Candirejo Green (#1e3a2f, #2e7d4f, #10b981, #f4f7f5, #e5ede8)
+   ========================================================================== */
+
+.detail-page-wrapper {
+  padding: 6px 0 28px 0;
+}
+
+/* ── PAGE HEADER / TITLE CARD ────────────────────────────────────────────── */
+.page-title-card,
+.detail-header-card {
+  background: #ffffff;
+  border: 1px solid #e5ede8;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.detail-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 24px;
+  background: #ffffff;
+}
+
+/* Standalone fallback if not wrapped in .page-title-card */
+.detail-page-wrapper > .detail-header-bar:not(.card) {
+  border: 1px solid #e5ede8;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  margin-bottom: 20px;
+}
+
+.detail-header-left h1 {
+  font-size: 21px;
+  font-weight: 700;
+  color: #1e3a2f;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.detail-header-left p {
+  font-size: 13px;
+  color: #6b8f7e;
+  margin: 0;
+}
+.detail-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────────────── */
+.btn-back-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #ffffff;
+  color: #4a6a57 !important;
+  border: 1px solid #d6e6dc;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: all 0.15s ease;
+}
+.btn-back-detail:hover {
+  background: #f0f7f3;
+  border-color: #b5d5c0;
+  color: #1e3a2f !important;
+}
+
+.btn-edit-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #1e3a2f;
+  color: #ffffff !important;
+  border: 1px solid #1e3a2f;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(30,58,47,0.1);
+}
+.btn-edit-detail:hover {
+  background: #2d5540;
+  border-color: #2d5540;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* ── SUMMARY CARD ────────────────────────────────────────────────────────── */
+.detail-summary-card {
+  background: #ffffff;
+  border: 1px solid #e5ede8;
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.summary-main-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a2f;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+.summary-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: #6b8f7e;
+}
+.summary-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── BADGES ──────────────────────────────────────────────────────────────── */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.badge-pill-green {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+.badge-pill-blue {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+.badge-pill-purple {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+.badge-pill-amber {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.badge-pill-gray {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+/* ── GRID LAYOUT ─────────────────────────────────────────────────────────── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 20px;
+  align-items: start;
+}
+.detail-grid-single {
+  grid-template-columns: 1fr;
+}
+@media (max-width: 991px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── CARDS & PANELS ──────────────────────────────────────────────────────── */
+.detail-card {
+  background: #ffffff;
+  border: 1px solid #e5ede8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  margin-bottom: 20px;
+}
+.detail-card:last-child {
+  margin-bottom: 0;
+}
+.detail-card-header {
+  padding: 14px 20px;
+  background: #fafcfb;
+  border-bottom: 1px solid #edf3f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.detail-card-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e3a2f;
+  margin: 0;
+}
+.detail-card-title svg,
+.detail-card-title i {
+  color: #2e7d4f;
+  flex-shrink: 0;
+}
+.detail-card-body {
+  padding: 20px;
+}
+
+/* ── INFO LIST (KEY-VALUE) ───────────────────────────────────────────────── */
+.info-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.info-list-table tr {
+  border-bottom: 1px solid #f0f5f2;
+}
+.info-list-table tr:last-child {
+  border-bottom: none;
+}
+.info-list-table td {
+  padding: 12px 6px;
+  font-size: 13px;
+  vertical-align: top;
+}
+.info-list-table td.col-label {
+  width: 35%;
+  min-width: 130px;
+  color: #6b8f7e;
+  font-weight: 500;
+}
+.info-list-table td.col-value {
+  color: #1e3a2f;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* ── ATTACHMENT / FILE CARD ──────────────────────────────────────────────── */
+.file-card-box {
+  background: #f8faf9;
+  border: 1px solid #e0eae4;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.15s ease;
+  margin-bottom: 12px;
+}
+.file-card-box:last-child {
+  margin-bottom: 0;
+}
+.file-card-box:hover {
+  background: #f0f7f3;
+  border-color: #b5d5c0;
+}
+.file-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.file-badge-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+.file-badge-pdf {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.file-badge-img {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+.file-meta-text {
+  min-width: 0;
+}
+.file-name-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e3a2f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.file-sub-label {
+  font-size: 11.5px;
+  color: #7a9e8e;
+  margin-top: 1px;
+}
+.btn-file-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #1e3a2f;
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.btn-file-action:hover {
+  background: #2d5540;
+  color: #fff !important;
+}
+
+/* ── PHOTO GALLERY ───────────────────────────────────────────────────────── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+.gallery-thumb-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #e0eae4;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  display: block;
+}
+.gallery-thumb-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  border-color: #10b981;
+}
+.gallery-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── PROFILE SIDEBAR WIDGET ──────────────────────────────────────────────── */
+.profile-avatar-card {
+  text-align: center;
+  padding: 10px 0 6px;
+}
+.profile-main-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 14px;
+  border: 3px solid #b5d5c0;
+  box-shadow: 0 4px 12px rgba(30,58,47,0.1);
+  display: block;
+}
+.profile-rect-photo {
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 8px;
+  object-fit: contain;
+  border: 1px solid #d6e6dc;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}

@@ -259,11 +259,12 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
         </section>
 
         <section class="panel">
-          <div class="panel-header">Operasional Lapangan</div>
+          <div class="panel-header">Operasional Lapangan &amp; Catatan</div>
           <div class="panel-body">
             <div class="info-list">
               <div class="info-label">Driver / Agent Guide</div><div class="info-value"><?php echo displayField($bk['driver_agent_guide']); ?></div>
               <div class="info-label">Local Guide</div><div class="info-value"><?php echo displayField($bk['local_guide']); ?></div>
+              <div class="info-label">Catatan Tambahan</div><div class="info-value"><?php echo !empty(trim((string)($bk['catatan'] ?? ''))) ? nl2br(e($bk['catatan'])) : '-'; ?></div>
             </div>
           </div>
         </section>

@@ -4,12 +4,25 @@ include "login/ceksession.php";
 include '../koneksi/koneksi.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) { header("Location: booking_dashboard.php"); exit; }
+if ($id <= 0) { header("Location: booking_semua.php"); exit; }
+
+$ref = isset($_GET['ref']) ? $_GET['ref'] : 'booking_semua.php';
+$allowed_refs = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php'];
+if (!in_array($ref, $allowed_refs)) {
+    $ref = 'booking_semua.php';
+}
+$back_labels = [
+    'booking_dashboard.php'   => 'Kembali ke Dashboard',
+    'booking_semua.php'       => 'Kembali ke Semua Booking',
+    'booking_pending.php'     => 'Kembali ke Booking Pending',
+    'booking_checkin.php'     => 'Kembali ke Booking Check-in',
+    'booking_tidakdatang.php' => 'Kembali ke Booking Tidak Datang',
+];
+$back_label = $back_labels[$ref] ?? 'Kembali';
 
 $q  = mysqli_query($db, "SELECT * FROM tb_booking WHERE id = $id LIMIT 1");
 $bk = mysqli_fetch_assoc($q);
-if (!$bk) { header("Location: booking_dashboard.php?msg=tidak_ditemukan"); exit; }
-if ($bk['status'] !== 'pending') { header("Location: booking_dashboard.php?msg=tidak_bisa_edit"); exit; }
+if (!$bk) { header("Location: $ref?msg=tidak_ditemukan"); exit; }
 
 function e($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
 function sel($cur, $tgt) { return $cur === $tgt ? 'selected' : ''; }
@@ -46,7 +59,7 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
     .btn-back:hover { background: #f0f7f3; border-color: #b5d5c0; color: #1e3a2f; }
     .info-bar { display: flex; align-items: center; gap: 10px; background: #eef3ff; border: 1px solid #ccd9f5; border-radius: 9px; padding: 11px 16px; font-size: 13px; color: #2a47a0; margin-bottom: 18px; }
     .info-bar svg { flex-shrink: 0; }
-    .form-card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; max-width: 800px; }
+    .form-card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; width: 100%; }
     .form-card-header { padding: 18px 24px 14px; border-bottom: 1px solid #f0f5f2; display: flex; align-items: center; gap: 10px; }
     .form-card-header .hicon { width: 36px; height: 36px; background: #eef3ff; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #3b6fd4; flex-shrink: 0; }
     .form-card-header h2 { font-size: 16px; font-weight: 600; color: #1e3a2f; }
@@ -103,17 +116,17 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
     <div class="page-title">
       <div class="page-title-left">
         <h1>Edit Booking</h1>
-        <p>Perbarui data booking yang masih berstatus pending</p>
+        <p>Perbarui informasi dan detail reservasi booking pengunjung</p>
       </div>
-      <a href="booking_dashboard.php" class="btn-back">
+      <a href="<?php echo htmlspecialchars($ref); ?>" class="btn-back">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Kembali ke Dashboard
+        <?php echo htmlspecialchars($back_label); ?>
       </a>
     </div>
 
     <div class="info-bar">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
-      Booking <strong>#<?php echo $id; ?></strong> &nbsp;&middot;&nbsp; Dibuat: <strong><?php echo date('d M Y, H:i', strtotime($bk['created_at'])); ?></strong> &nbsp;&middot;&nbsp; Hanya booking <strong>Pending</strong> yang bisa diedit.
+      Booking <strong>#<?php echo $id; ?></strong> &nbsp;&middot;&nbsp; Dibuat: <strong><?php echo date('d M Y, H:i', strtotime($bk['created_at'])); ?></strong> &nbsp;&middot;&nbsp; Status: <strong><?php echo ucfirst($bk['status']); ?></strong>
     </div>
 
     <?php if (isset($_GET['msg'])): ?>
@@ -143,6 +156,7 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
         <form action="proses/proses_booking.php" method="POST" id="formEdit">
           <input type="hidden" name="aksi" value="edit">
           <input type="hidden" name="id"   value="<?php echo $id; ?>">
+          <input type="hidden" name="ref"  value="<?php echo htmlspecialchars($ref); ?>">
 
           <!-- INFORMASI KUNJUNGAN -->
           <div class="section-title">
@@ -324,7 +338,7 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
             <label class="form-label">Jumlah Pax<span class="req">*</span>
               <small>Jumlah orang/peserta</small>
             </label>
-            <input type="number" name="pax" required min="1" max="9999" class="form-input input-sm"
+            <input type="number" name="pax" required min="0" max="9999" class="form-input input-sm"
               value="<?php echo (int)$bk['pax']; ?>">
           </div>
 
@@ -335,21 +349,34 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
           </div>
 
           <div class="form-row">
-            <label class="form-label">Agen Wisata<span class="req">*</span></label>
-            <input type="text" name="agen_wisata" id="agen_wisata" required maxlength="100" class="form-input"
-              value="<?php echo e($bk['agen_wisata']); ?>" placeholder="Nama agen wisata">
+            <label class="form-label">Agen Wisata
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
+            <input type="text" name="agen_wisata" id="agen_wisata" maxlength="100" class="form-input"
+              value="<?php echo e($bk['agen_wisata']); ?>" placeholder="Nama agen wisata (opsional)">
           </div>
 
           <div class="form-row">
-            <label class="form-label">Driver / Agent Guide</label>
+            <label class="form-label">Driver / Agent Guide
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
             <input type="text" name="driver_agent_guide" maxlength="100" class="form-input"
-              value="<?php echo e($bk['driver_agent_guide']); ?>">
+              value="<?php echo e($bk['driver_agent_guide']); ?>" placeholder="Belum Ada">
           </div>
 
           <div class="form-row">
-            <label class="form-label">Local Guide</label>
+            <label class="form-label">Local Guide
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
             <input type="text" name="local_guide" maxlength="100" class="form-input"
-              value="<?php echo e($bk['local_guide']); ?>">
+              value="<?php echo e($bk['local_guide']); ?>" placeholder="Belum Ada">
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Catatan
+              <small>Catatan tambahan (opsional)</small>
+            </label>
+            <textarea name="catatan" id="catatan" rows="3" class="form-input" style="resize:vertical;min-height:85px;line-height:1.5;" placeholder="Tuliskan catatan khusus atau keterangan tambahan..."><?php echo e($bk['catatan'] ?? ''); ?></textarea>
           </div>
 
           <div class="form-actions">
@@ -357,7 +384,7 @@ $showNegara  = ($bk['jenis_wisatawan'] === 'Mancanegara') ? 'visible' : '';
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
               Perbarui Booking
             </button>
-            <a href="booking_dashboard.php" class="btn-cancel">Batal</a>
+            <a href="<?php echo htmlspecialchars($ref); ?>" class="btn-cancel">Batal</a>
           </div>
 
         </form>
@@ -466,19 +493,23 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Submit confirm */
   document.getElementById('btnSubmit').addEventListener('click', function (e) {
     e.preventDefault();
-    var nama = document.getElementById('nama').value || 'booking ini';
+    var form = document.getElementById('formEdit');
+    if (!form.reportValidity()) return;
+
+    var nama = document.getElementById('agen_wisata').value || document.getElementById('nama').value || 'booking ini';
     Swal.fire({
-      title: 'Perbarui Booking?',
-      html: 'Perubahan pada booking <strong>' + nama + '</strong> akan disimpan.',
+      title: 'Konfirmasi Perbarui Booking',
+      html: '<p style="font-size:14.5px;color:#555;">Simpan perubahan data booking untuk <strong>' + nama + '</strong>?</p>',
       icon: 'question',
       iconColor: '#3b6fd4',
       showCancelButton: true,
-      confirmButtonText: 'Ya, Perbarui',
+      confirmButtonText: 'Ya, Perbarui Data',
       cancelButtonText: 'Batal',
       confirmButtonColor: '#3b6fd4',
-      cancelButtonColor: '#aaa'
+      cancelButtonColor: '#9ab5a8',
+      reverseButtons: true
     }).then(function (r) {
-      if (r.isConfirmed) document.getElementById('formEdit').submit();
+      if (r.isConfirmed) form.submit();
     });
   });
 

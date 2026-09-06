@@ -19,7 +19,7 @@ if (empty($id)) {
   exit;
 }
 
-// Ambil data pengunjung berdasarkan ID dengan prepared statement untuk keamanan
+// Ambil data pengunjung berdasarkan ID
 $query = "SELECT * FROM tb_data_pengunjung WHERE id = ?";
 $stmt = mysqli_prepare($db, $query);
 mysqli_stmt_bind_param($stmt, "i", $id);
@@ -39,30 +39,47 @@ if (!$data_pengunjung) {
   </script></body></html>';
   exit;
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit Data Pengunjung - Arsip Desa Candirejo</title>
+  <link rel="icon" type="image/x-icon" href="../img/icon.ico">
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <link href="../assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-  <link href="../assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-  <link href="../assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-  <link href="../assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
-  <link rel="shortcut icon" href="../img/icon.ico">
-  <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="shortcut icon" href="../img/icon.ico">
+  <link href="../assets/build/css/custom.min.css" rel="stylesheet">
+  <style>
+    .foto-thumb {
+      position: relative; display: inline-block;
+    }
+    .foto-thumb img {
+      width: 80px; height: 80px; object-fit: cover;
+      border-radius: 8px; border: 1.5px solid #b5d5c0;
+    }
+    .foto-thumb .nama-file {
+      font-size: 9px; text-align: center; color: #6b8f7e;
+      max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .foto-thumb .btn-remove {
+      position: absolute; top: -6px; right: -6px;
+      background: #e74c3c; color: white; border: none;
+      border-radius: 50%; width: 20px; height: 20px;
+      font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .flatpickr-input { background: #fff !important; }
+  </style>
 </head>
 
 <body class="nav-md">
@@ -72,273 +89,309 @@ if (!$data_pengunjung) {
       <?php include("header.php"); ?>
 
       <div class="right_col" role="main">
-        <div class="">
-          <div class="clearfix"></div>
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Edit Data Pengunjung</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                  <br />
-                  <form action="proses/proses_editdatapengunjung.php" name="formeditdatapengunjung" method="post"
-                    id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+        <div class="page-title-modern">
+          <div class="page-title-left">
+            <h1>Edit Data Pengunjung</h1>
+            <p>Perbarui data kunjungan wisatawan Desa Wisata Candirejo</p>
+          </div>
+          <a href="datapengunjung.php" class="btn-back-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Kembali ke Data Pengunjung
+          </a>
+        </div>
 
-                    <!-- Hidden input untuk ID -->
-                    <input type="hidden" name="id"
-                      value="<?php echo htmlspecialchars($data_pengunjung['id'] ?? $id); ?>">
-                    <!-- Debug output to check values -->
-                    <?php
-                    // Uncomment for debugging
-                    // echo "<!-- Debug: ID from URL: $id, ID from data: " . ($data_pengunjung['id'] ?? 'not set') . " -->"; 
-                    ?>
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-header-left">
+              <div class="hicon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <h2>Edit Data Pengunjung</h2>
+            </div>
+          </div>
 
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kunjungan">Tanggal Kunjungan
-                        <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <div class='input-group date' id='myDatepicker6'>
-                          <input type='text' id="tanggal_kunjungan" name="tanggal_kunjungan" required="required"
-                            class="form-control" readonly="readonly"
-                            value="<?php echo htmlspecialchars($data_pengunjung['tanggal_kunjungan'] ?? ''); ?>" />
-                          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pilihan_paket_wisata">Pilihan Paket
-                        Wisata <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                          <option value="">--</option>
-                          <option value="meal_only" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'meal_only') ? 'selected' : ''; ?>>Breakfast/Lunch/Dinner Only</option>
-                          <option value="studi_banding" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'studi_banding') ? 'selected' : ''; ?>>Studi
-                            Banding</option>
-                          <option value="fun_game" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'fun_game') ? 'selected' : ''; ?>>Paket Fun Game</option>
-                          <option value="pelajar_live_in" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_live_in') ? 'selected' : ''; ?>>Paket
-                            Pelajar - Live In Candirejo</option>
-                          <option value="pelajar_field_trip_one_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_one_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip One Day</option>
-                          <option value="pelajar_field_trip_half_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_half_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip Half Day</option>
-                          <option value="cycling_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cycling_tour') ? 'selected' : ''; ?>>Cycling
-                            Village Tour with/without Lunch</option>
-                          <option value="traditional_dance" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'traditional_dance') ? 'selected' : ''; ?>>
-                            Traditional Dance</option>
-                          <option value="walking_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'walking_tour') ? 'selected' : ''; ?>>Walking
-                            Around Village with/without Lunch</option>
-                          <option value="homestay" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
-                          <option value="serenade" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
-                          <option value="cooking_lesson" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cooking_lesson') ? 'selected' : ''; ?>>Cooking
-                            Lesson with/without Tour</option>
-                          <option value="gamelan_class" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'gamelan_class') ? 'selected' : ''; ?>>Gamelan Class with/without Lunch</option>
-                          <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>
-                            Village Experience</option>
-                          <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar Village Tour with/without Lunch</option>
-                          <option value="inspection" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'inspection') ? 'selected' : ''; ?>>Inspection</option>
-                          <option value="lainnya" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'lainnya') ? 'selected' : ''; ?>>Lainnya</option>
-                        </select>
-                      </div>
-                    </div>
+          <div class="form-card-body">
+            <div class="info-bar-modern">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Anda sedang mengedit data pengunjung: <strong><?php echo htmlspecialchars($data_pengunjung['nama'] ?? ''); ?></strong>
+            </div>
 
+            <form action="proses/proses_editdatapengunjung.php" name="formeditdatapengunjung" method="post"
+              id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
-                    <div class="form-group" id="opsi_makan_tour_group" style="display:block;">
-                      <label class="control-label col-md-3" for="opsi_makan_tour">Opsi Makan Tour</label>
-                      <div class="col-md-9">
-                        <select id="opsi_makan_tour" name="opsi_makan_tour" class="form-control">
-                          <option value="">--</option>
-                          <option value="without_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'without_lunch') ? 'selected' : ''; ?>>Without Lunch
-                          </option>
-                          <option value="with_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
-                        </select>
+              <!-- Hidden input untuk ID -->
+              <input type="hidden" name="id" value="<?php echo htmlspecialchars($data_pengunjung['id'] ?? $id); ?>">
 
-                      </div>
-                    </div>
+              <!-- INFORMASI KUNJUNGAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M8 7V3m8 4V3M3 11h18M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>
+                Informasi Kunjungan
+              </div>
 
-
-                    <div class="form-group" id="jenis_makanan_paket_group" style="display:none;">
-                      <label class="control-label col-md-3" for="jenis_makanan_paket">Jenis Makanan</label>
-                      <div class="col-md-9">
-                        <select id="jenis_makanan_paket" name="jenis_makanan_paket" class="form-control">
-                          <option value="">--</option>
-                          <option value="breakfast" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'breakfast') ? 'selected' : ''; ?>>Breakfast
-                          </option>
-                          <option value="lunch" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'lunch') ? 'selected' : ''; ?>>Lunch</option>
-                          <option value="dinner" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'dinner') ? 'selected' : ''; ?>>Dinner</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group" id="opsi_cooking_lesson_group" style="display:none;">
-                      <label class="control-label col-md-3" for="opsi_cooking_lesson">Opsi Cooking Lesson</label>
-                      <div class="col-md-9">
-                        <select id="opsi_cooking_lesson" name="opsi_cooking_lesson" class="form-control">
-                          <option value="">--</option>
-                          <option value="lesson_only" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_only') ? 'selected' : ''; ?>>Lesson Only
-                          </option>
-                          <option value="lesson_with_tour" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>
-                            Lesson With Tour</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group" id="opsi_gamelan_group" style="display:none;">
-                      <label class="control-label col-md-3" for="opsi_gamelan">Opsi Gamelan Class</label>
-                      <div class="col-md-9">
-                        <select id="opsi_gamelan" name="opsi_gamelan" class="form-control">
-                          <option value="">--</option>
-                          <option value="without_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
-                          <option value="with_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_wisatawan">Jenis Wisatawan
-                        <span class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <select id="jenis_wisatawan" name="jenis_wisatawan" required="required"
-                          class="form-control col-md-7 col-xs-12">
-                          <option value="">--</option>
-                          <option value="Domestik" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Domestik') ? 'selected' : ''; ?>>Domestik</option>
-                          <option value="Mancanegara" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Mancanegara') ? 'selected' : ''; ?>>Mancanegara
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group" id="kota-group" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="kota">Kota <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="kota" name="kota" maxlength="100" placeholder="Masukkan Kota"
-                          class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['kota'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group" id="negara-group" style="display:none;">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="negara">Negara <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="negara" name="negara" maxlength="100" placeholder="Masukkan Negara"
-                          class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['negara'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama">Nama <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="nama" name="nama" required="required" maxlength="100"
-                          placeholder="Masukkan Nama Pengunjung" class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['nama'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pax">Jumlah Wisatawan (Pax) <span
-                          class="required">*</span></label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="number" id="pax" name="pax" required="required" min="1"
-                          placeholder="Masukkan Jumlah Pax" class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['pax'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agen_wisata">Agen Wisata
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"
-                          placeholder="Masukkan Agen Wisata (Opsional)" class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['agen_wisata'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="driver_agent_guide">Driver/Agent Guide
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="driver_agent_guide" name="driver_agent_guide" maxlength="100"
-                          placeholder="Masukkan Nama Driver/Agent Guide (Opsional)" class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['driver_agent_guide'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="local_guide">Local Guide
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <input type="text" id="local_guide" name="local_guide" maxlength="100"
-                          placeholder="Masukkan Nama Local Guide (Opsional)" class="form-control col-md-7 col-xs-12"
-                          value="<?php echo htmlspecialchars($data_pengunjung['local_guide'] ?? ''); ?>">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Foto
-                      </label>
-                      <div class="col-md-9 col-sm-9 col-xs-12">
-                        <?php
-                          // Foto baru (kolom foto JSON di tb_data_pengunjung)
-                          $foto_existing = [];
-                          if (!empty($data_pengunjung['foto'])) {
-                            $decoded = json_decode($data_pengunjung['foto'], true);
-                            $foto_existing = is_array($decoded) ? $decoded : [$data_pengunjung['foto']];
-                          }
-
-                          // Foto lama (dari tb_foto_pengunjung)
-                          $foto_lama = [];
-                          $stmt_foto = mysqli_prepare($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = ?");
-                          mysqli_stmt_bind_param($stmt_foto, "i", $id);
-                          mysqli_stmt_execute($stmt_foto);
-                          $result_foto = mysqli_stmt_get_result($stmt_foto);
-                          while ($row_foto = mysqli_fetch_assoc($result_foto)) {
-                            $foto_lama[] = $row_foto['nama_file'];
-                          }
-
-                          // Gabung keduanya
-                          $semua_foto = array_merge($foto_existing, $foto_lama);
-                        ?>
-                        <?php if (!empty($semua_foto)): ?>
-                          <!-- Sentinel: selalu ada, supaya PHP tahu field existing_foto sudah dikirim (walau semua foto dihapus) -->
-                          <input type="hidden" name="existing_foto_sent" value="1">
-                          <p style="margin-bottom:6px;font-size:13px;color:#555;">Foto saat ini <small class="text-muted">(klik ✕ untuk hapus foto)</small>:</p>
-                          <div id="existing-foto-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-                          <?php foreach($semua_foto as $f): ?>
-                            <div style="position:relative;display:inline-block;" id="existing-<?php echo htmlspecialchars(md5($f)); ?>">
-                              <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" 
-                                   alt="Foto" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
-                              <div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?php echo htmlspecialchars($f); ?></div>
-                              <!-- Hidden input untuk tandai foto ini masih dipertahankan -->
-                              <input type="hidden" name="existing_foto[]" value="<?php echo htmlspecialchars($f); ?>" id="input-<?php echo htmlspecialchars(md5($f)); ?>">
-                              <button type="button" 
-                                onclick="removeExistingFoto('<?php echo htmlspecialchars(md5($f)); ?>')"
-                                style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>
-                            </div>
-                          <?php endforeach; ?>
-                          </div>
-                        <?php endif; ?>
-                        <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="form-control col-md-7 col-xs-12" style="margin-top:6px;">
-                        <small class="text-muted">Format: JPG, PNG, JPEG (Maks 2MB per foto). Bisa pilih lebih dari 1 foto — foto lama <strong>tidak</strong> akan terhapus kecuali diklik ✕.</small>
-                        <div id="foto-preview" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
-                      </div>
-                    </div>
-
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button type="submit" class="btn btn-success">Update</button>
-                        <a href="datapengunjung.php" class="btn btn-primary">Kembali</a>
-                      </div>
-                    </div>
-                  </form>
+              <!-- Tanggal Kunjungan -->
+              <div class="form-row">
+                <label class="form-label">Tanggal Kunjungan <span class="req">*</span>
+                  <small>Waktu kedatangan wisatawan</small>
+                </label>
+                <div>
+                  <div class="input-group-modern">
+                    <input type="text" id="tanggal_kunjungan" name="tanggal_kunjungan" required
+                      class="form-input datepicker" placeholder="Pilih Tanggal"
+                      value="<?php echo htmlspecialchars($data_pengunjung['tanggal_kunjungan'] ?? ''); ?>"
+                      autocomplete="off" readonly />
+                    <span class="input-group-addon-modern" onclick="document.getElementById('tanggal_kunjungan')._flatpickr.open()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              <!-- Pilihan Paket Wisata -->
+              <div class="form-row">
+                <label class="form-label">Pilihan Paket Wisata <span class="req">*</span>
+                  <small>Pilih program wisata</small>
+                </label>
+                <div>
+                  <select id="pilihan_paket_wisata" name="pilihan_paket_wisata" required class="form-select">
+                    <option value="">--</option>
+                    <option value="meal_only" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'meal_only') ? 'selected' : ''; ?>>Breakfast/Lunch/Dinner Only</option>
+                    <option value="studi_banding" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'studi_banding') ? 'selected' : ''; ?>>Studi Banding</option>
+                    <option value="fun_game" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'fun_game') ? 'selected' : ''; ?>>Paket Fun Game</option>
+                    <option value="pelajar_live_in" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_live_in') ? 'selected' : ''; ?>>Paket Pelajar - Live In Candirejo</option>
+                    <option value="pelajar_field_trip_one_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_one_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip One Day</option>
+                    <option value="pelajar_field_trip_half_day" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'pelajar_field_trip_half_day') ? 'selected' : ''; ?>>Paket Pelajar – Field Trip Half Day</option>
+                    <option value="cycling_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cycling_tour') ? 'selected' : ''; ?>>Cycling Village Tour with/without Lunch</option>
+                    <option value="traditional_dance" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'traditional_dance') ? 'selected' : ''; ?>>Traditional Dance</option>
+                    <option value="walking_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'walking_tour') ? 'selected' : ''; ?>>Walking Around Village with/without Lunch</option>
+                    <option value="homestay" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'homestay') ? 'selected' : ''; ?>>Stay At Local House In Candirejo Village (Homestay)</option>
+                    <option value="serenade" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'serenade') ? 'selected' : ''; ?>>Serenade At The Foot Of Menoreh Hill</option>
+                    <option value="cooking_lesson" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'cooking_lesson') ? 'selected' : ''; ?>>Cooking Lesson with/without Tour</option>
+                    <option value="gamelan_class" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'gamelan_class') ? 'selected' : ''; ?>>Gamelan Class with/without Lunch</option>
+                    <option value="village_experience" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'village_experience') ? 'selected' : ''; ?>>Village Experience</option>
+                    <option value="dokar_tour" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'dokar_tour') ? 'selected' : ''; ?>>Dokar Village Tour with/without Lunch</option>
+                    <option value="inspection" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'inspection') ? 'selected' : ''; ?>>Inspection</option>
+                    <option value="lainnya" <?php echo ($data_pengunjung['pilihan_paket_wisata'] === 'lainnya') ? 'selected' : ''; ?>>Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Sub opsi paket -->
+              <div class="form-row" id="opsi_makan_tour_group" style="display:block;">
+                <label class="form-label">Opsi Makan Tour
+                  <small>Dengan atau tanpa makan</small>
+                </label>
+                <div>
+                  <select id="opsi_makan_tour" name="opsi_makan_tour" class="form-select input-md">
+                    <option value="">--</option>
+                    <option value="without_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
+                    <option value="with_lunch" <?php echo ($data_pengunjung['opsi_makan_tour'] === 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row" id="jenis_makanan_paket_group" style="display:none;">
+                <label class="form-label">Jenis Makanan
+                  <small>Waktu penyajian makanan</small>
+                </label>
+                <div>
+                  <select id="jenis_makanan_paket" name="jenis_makanan_paket" class="form-select input-md">
+                    <option value="">--</option>
+                    <option value="breakfast" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'breakfast') ? 'selected' : ''; ?>>Breakfast</option>
+                    <option value="lunch" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'lunch') ? 'selected' : ''; ?>>Lunch</option>
+                    <option value="dinner" <?php echo (isset($data_pengunjung['jenis_makanan_paket']) && $data_pengunjung['jenis_makanan_paket'] == 'dinner') ? 'selected' : ''; ?>>Dinner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row" id="opsi_cooking_lesson_group" style="display:none;">
+                <label class="form-label">Opsi Cooking Lesson
+                  <small>Pilihan paket memasak</small>
+                </label>
+                <div>
+                  <select id="opsi_cooking_lesson" name="opsi_cooking_lesson" class="form-select input-md">
+                    <option value="">--</option>
+                    <option value="lesson_only" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_only') ? 'selected' : ''; ?>>Lesson Only</option>
+                    <option value="lesson_with_tour" <?php echo (isset($data_pengunjung['opsi_cooking_lesson']) && $data_pengunjung['opsi_cooking_lesson'] == 'lesson_with_tour') ? 'selected' : ''; ?>>Lesson With Tour</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row" id="opsi_gamelan_group" style="display:none;">
+                <label class="form-label">Opsi Gamelan Class
+                  <small>Pilihan paket gamelan</small>
+                </label>
+                <div>
+                  <select id="opsi_gamelan" name="opsi_gamelan" class="form-select input-md">
+                    <option value="">--</option>
+                    <option value="without_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'without_lunch') ? 'selected' : ''; ?>>Without Lunch</option>
+                    <option value="with_lunch" <?php echo (isset($data_pengunjung['opsi_gamelan']) && $data_pengunjung['opsi_gamelan'] == 'with_lunch') ? 'selected' : ''; ?>>With Lunch</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- DATA WISATAWAN -->
+              <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Data Wisatawan
+              </div>
+
+              <!-- Jenis Wisatawan -->
+              <div class="form-row">
+                <label class="form-label">Jenis Wisatawan <span class="req">*</span>
+                  <small>Domestik atau Mancanegara</small>
+                </label>
+                <div>
+                  <select id="jenis_wisatawan" name="jenis_wisatawan" required class="form-select input-md">
+                    <option value="">--</option>
+                    <option value="Domestik" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Domestik') ? 'selected' : ''; ?>>Domestik</option>
+                    <option value="Mancanegara" <?php echo (isset($data_pengunjung['jenis_wisatawan']) && $data_pengunjung['jenis_wisatawan'] == 'Mancanegara') ? 'selected' : ''; ?>>Mancanegara</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Kota (Domestik) -->
+              <div class="form-row" id="kota-group" style="display:none;">
+                <label class="form-label">Kota Asal <span class="req">*</span>
+                  <small>Kota asal wisatawan domestik</small>
+                </label>
+                <div>
+                  <input type="text" id="kota" name="kota" maxlength="100" placeholder="Contoh: Yogyakarta, Jakarta"
+                    class="form-input" value="<?php echo htmlspecialchars($data_pengunjung['kota'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Negara (Mancanegara) -->
+              <div class="form-row" id="negara-group" style="display:none;">
+                <label class="form-label">Negara Asal <span class="req">*</span>
+                  <small>Negara asal wisatawan mancanegara</small>
+                </label>
+                <div>
+                  <input type="text" id="negara" name="negara" maxlength="100" placeholder="Contoh: Netherlands, Australia"
+                    class="form-input" value="<?php echo htmlspecialchars($data_pengunjung['negara'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Nama -->
+              <div class="form-row">
+                <label class="form-label">Nama Pengunjung <span class="req">*</span>
+                  <small>Nama atau nama grup</small>
+                </label>
+                <div>
+                  <input type="text" id="nama" name="nama" required maxlength="100"
+                    placeholder="Masukkan Nama Pengunjung" class="form-input"
+                    value="<?php echo htmlspecialchars($data_pengunjung['nama'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Pax -->
+              <div class="form-row">
+                <label class="form-label">Jumlah Wisatawan (Pax) <span class="req">*</span>
+                  <small>Total orang dalam rombongan</small>
+                </label>
+                <div>
+                  <input type="number" id="pax" name="pax" required min="1"
+                    placeholder="Masukkan Jumlah Pax" class="form-input"
+                    value="<?php echo htmlspecialchars($data_pengunjung['pax'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Agen Wisata -->
+              <div class="form-row">
+                <label class="form-label">Agen Wisata
+                  <small>Nama agen (opsional)</small>
+                </label>
+                <div>
+                  <input type="text" id="agen_wisata" name="agen_wisata" maxlength="100"
+                    placeholder="Masukkan Agen Wisata" class="form-input"
+                    value="<?php echo htmlspecialchars($data_pengunjung['agen_wisata'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Driver/Agent Guide -->
+              <div class="form-row">
+                <label class="form-label">Driver/Agent Guide
+                  <small>Nama driver atau agent guide</small>
+                </label>
+                <div>
+                  <input type="text" id="driver_agent_guide" name="driver_agent_guide" maxlength="100"
+                    placeholder="Masukkan Nama Driver/Agent Guide" class="form-input"
+                    value="<?php echo htmlspecialchars($data_pengunjung['driver_agent_guide'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Local Guide -->
+              <div class="form-row">
+                <label class="form-label">Local Guide
+                  <small>Nama pemandu lokal</small>
+                </label>
+                <div>
+                  <input type="text" id="local_guide" name="local_guide" maxlength="100"
+                    placeholder="Masukkan Nama Local Guide" class="form-input"
+                    value="<?php echo htmlspecialchars($data_pengunjung['local_guide'] ?? ''); ?>">
+                </div>
+              </div>
+
+              <!-- Foto -->
+              <div class="form-row">
+                <label class="form-label">Foto Kunjungan
+                  <small>Foto pendukung (opsional)</small>
+                </label>
+                <div>
+                  <?php
+                  $foto_existing = [];
+                  if (!empty($data_pengunjung['foto'])) {
+                    $decoded = json_decode($data_pengunjung['foto'], true);
+                    $foto_existing = is_array($decoded) ? $decoded : [$data_pengunjung['foto']];
+                  }
+                  $foto_lama = [];
+                  $stmt_foto = mysqli_prepare($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = ?");
+                  mysqli_stmt_bind_param($stmt_foto, "i", $id);
+                  mysqli_stmt_execute($stmt_foto);
+                  $result_foto = mysqli_stmt_get_result($stmt_foto);
+                  while ($row_foto = mysqli_fetch_assoc($result_foto)) {
+                    $foto_lama[] = $row_foto['nama_file'];
+                  }
+                  $semua_foto = array_merge($foto_existing, $foto_lama);
+                  ?>
+
+                  <?php if (!empty($semua_foto)): ?>
+                    <input type="hidden" name="existing_foto_sent" value="1">
+                    <p class="form-hint" style="margin-bottom:8px;">Foto saat ini <small>(klik ✕ untuk hapus)</small>:</p>
+                    <div id="existing-foto-container" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+                    <?php foreach($semua_foto as $f): ?>
+                      <div class="foto-thumb" id="existing-<?php echo htmlspecialchars(md5($f)); ?>">
+                        <img src="../admin/uploads/pengunjung/<?php echo htmlspecialchars($f); ?>" alt="Foto">
+                        <div class="nama-file"><?php echo htmlspecialchars($f); ?></div>
+                        <input type="hidden" name="existing_foto[]" value="<?php echo htmlspecialchars($f); ?>" id="input-<?php echo htmlspecialchars(md5($f)); ?>">
+                        <button type="button" class="btn-remove"
+                          onclick="removeExistingFoto('<?php echo htmlspecialchars(md5($f)); ?>')"
+                          title="Hapus foto">✕</button>
+                      </div>
+                    <?php endforeach; ?>
+                    </div>
+                  <?php endif; ?>
+
+                  <div class="upload-area-modern" onclick="document.getElementById('foto').click()">
+                    <div class="upload-icon"><i class="fa fa-image"></i></div>
+                    <div class="upload-text-main">Klik untuk tambah foto baru</div>
+                    <div class="upload-text-sub">Format: JPG, PNG, JPEG (Maks 2MB per foto)</div>
+                  </div>
+                  <input type="file" id="foto" name="foto[]" accept="image/*" multiple class="hidden-file-input">
+                  <div id="foto-preview" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"></div>
+                </div>
+              </div>
+
+              <!-- ACTIONS -->
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  <i class="fa fa-save"></i> Simpan Perubahan
+                </button>
+                <a href="datapengunjung.php" class="btn-cancel">
+                  <i class="fa fa-times"></i> Batal
+                </a>
+              </div>
+
+            </form>
           </div>
         </div>
       </div>
@@ -349,63 +402,69 @@ if (!$data_pengunjung) {
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <script src="../assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-  <script src="../assets/vendors/iCheck/icheck.min.js"></script>
-  <script src="../assets/vendors/moment/min/moment.min.js"></script>
-  <script src="../assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <script src="../assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <!-- Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
   <script src="../assets/build/js/custom.min.js"></script>
 
   <script>
+  // Flatpickr
+  flatpickr(".datepicker", {
+    locale: "id",
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d F Y",
+    allowInput: false,
+    disableMobile: false
+  });
+
   $(document).ready(function () {
-    $('#myDatepicker6').datetimepicker({
-      ignoreReadonly: true,
-      allowInputToggle: true,
-      format: 'YYYY-MM-DD'
-    });
-  
     function showHideFields() {
       let paket = $('#pilihan_paket_wisata').val();
-  
-      // Hide semua optional fields terlebih dahulu
       $('#opsi_makan_tour_group').hide();
       $('#jenis_makanan_paket_group').hide();
       $('#opsi_cooking_lesson_group').hide();
       $('#opsi_gamelan_group').hide();
-  
-      // Show relevant fields based on selected package
       if (paket === 'cycling_tour' || paket === 'dokar_tour' || paket === 'walking_tour') {
         $('#opsi_makan_tour_group').show();
       }
-      if (paket === 'meal_only') {
-        $('#jenis_makanan_paket_group').show();
-      }
-      if (paket === 'cooking_lesson') {
-        $('#opsi_cooking_lesson_group').show();
-      }
-      if (paket === 'gamelan_class') {
-        $('#opsi_gamelan_group').show();
-      }
+      if (paket === 'meal_only') { $('#jenis_makanan_paket_group').show(); }
+      if (paket === 'cooking_lesson') { $('#opsi_cooking_lesson_group').show(); }
+      if (paket === 'gamelan_class') { $('#opsi_gamelan_group').show(); }
     }
-  
+
     $('#pilihan_paket_wisata').change(function () {
-      let paket = $(this).val();
-  
-      // Reset values HANYA jika user mengubah pilihan (bukan saat load)
       if ($(this).data('user-changed')) {
         $('#opsi_makan_tour').val('');
         $('#jenis_makanan_paket').val('');
         $('#opsi_cooking_lesson').val('');
         $('#opsi_gamelan').val('');
       }
-  
       showHideFields();
-      
-      // Set flag bahwa user sudah mengubah pilihan
       $(this).data('user-changed', true);
     });
 
-    // === MULTI-FILE UPLOAD: akumulasi file dari beberapa kali buka file manager ===
+    // Init tampilan berdasar nilai saat ini
+    showHideFields();
+
+    // Jenis wisatawan
+    function updateWisatawanFields() {
+      const jenis = $('#jenis_wisatawan').val();
+      if (jenis == 'Domestik') {
+        $('#kota-group').show(); $('#negara-group').hide();
+        $('#kota').attr('required', true); $('#negara').removeAttr('required');
+      } else if (jenis == 'Mancanegara') {
+        $('#kota-group').hide(); $('#negara-group').show();
+        $('#negara').attr('required', true); $('#kota').removeAttr('required');
+      } else {
+        $('#kota-group').hide(); $('#negara-group').hide();
+        $('#kota').removeAttr('required'); $('#negara').removeAttr('required');
+      }
+    }
+    $('#jenis_wisatawan').change(updateWisatawanFields);
+    updateWisatawanFields();
+
+    // === MULTI-FILE UPLOAD ===
     var selectedFiles = [];
 
     function renderFotoPreview() {
@@ -416,19 +475,16 @@ if (!$data_pengunjung) {
         reader.onload = (function(f, i) {
           return function(e) {
             preview.append(
-              '<div style="position:relative;display:inline-block;margin:4px;" id="fpreview-' + i + '">' +
-              '<img src="' + e.target.result + '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">' +
-              '<div style="font-size:10px;text-align:center;color:#555;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</div>' +
-              '<button type="button" onclick="removeSelectedFile(' + i + ')" ' +
-              'style="position:absolute;top:-6px;right:-6px;background:#e74c3c;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:17px;padding:0;text-align:center;">✕</button>' +
+              '<div class="foto-thumb" id="fpreview-' + i + '">' +
+              '<img src="' + e.target.result + '">' +
+              '<div class="nama-file">' + f.name + '</div>' +
+              '<button type="button" class="btn-remove" onclick="removeSelectedFile(' + i + ')">✕</button>' +
               '</div>'
             );
           };
         })(file, idx);
         reader.readAsDataURL(file);
       });
-
-      // Sync ke input file via DataTransfer supaya ter-submit
       var dt = new DataTransfer();
       selectedFiles.forEach(function(f) { dt.items.add(f); });
       document.getElementById('foto').files = dt.files;
@@ -439,97 +495,31 @@ if (!$data_pengunjung) {
       renderFotoPreview();
     };
 
-    // Hapus foto existing (yang sudah ada di DB) — hanya hide dari tampilan & hapus hidden input
     window.removeExistingFoto = function(hash) {
       var wrapper = document.getElementById('existing-' + hash);
       var hiddenInput = document.getElementById('input-' + hash);
       if (wrapper) wrapper.style.display = 'none';
-      if (hiddenInput) hiddenInput.disabled = true; // disabled = tidak ikut tersubmit
+      if (hiddenInput) hiddenInput.disabled = true;
     };
 
     $('#foto').on('change', function() {
       var newFiles = Array.from(this.files);
       var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-      var maxSize = 2 * 1024 * 1024; // 2 MB
-      var rejectedType = [];
-      var rejectedSize = [];
-
+      var maxSize = 2 * 1024 * 1024;
       newFiles.forEach(function(newFile) {
-        // Validasi tipe
-        if (!allowedTypes.includes(newFile.type)) {
-          rejectedType.push(newFile.name);
-          return;
-        }
-        // Validasi ukuran
-        if (newFile.size > maxSize) {
-          rejectedSize.push(newFile.name);
-          return;
-        }
-        // Hindari duplikat
-        var isDuplicate = selectedFiles.some(function(f) {
-          return f.name === newFile.name && f.size === newFile.size;
-        });
-        if (!isDuplicate) {
-          selectedFiles.push(newFile);
-        }
+        if (!allowedTypes.includes(newFile.type) || newFile.size > maxSize) return;
+        var isDuplicate = selectedFiles.some(function(f) { return f.name === newFile.name && f.size === newFile.size; });
+        if (!isDuplicate) selectedFiles.push(newFile);
       });
-
-      // Tampilkan peringatan jika ada yang ditolak
-      if (rejectedType.length > 0 || rejectedSize.length > 0) {
-        var msg = '';
-        if (rejectedType.length > 0) {
-          msg += '<b>Format tidak didukung</b> (harus JPG/JPEG/PNG):<br>' + rejectedType.map(function(n){ return '• ' + n; }).join('<br>') + '<br><br>';
-        }
-        if (rejectedSize.length > 0) {
-          msg += '<b>Melebihi batas 2 MB:</b><br>' + rejectedSize.map(function(n){ return '• ' + n; }).join('<br>');
-        }
-        Swal.fire({
-          title: 'Foto Tidak Valid',
-          html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left;font-size:14px;color:#555;">' + msg + '</div>',
-          icon: 'warning',
-          iconColor: '#f39c12',
-          confirmButtonText: 'Mengerti',
-          background: '#fff',
-          color: '#1a1a2e',
-          customClass: { popup: 'swal-custom-popup', title: 'swal-custom-title' }
-        });
-      }
-
       renderFotoPreview();
     });
-    // === END MULTI-FILE UPLOAD ===
-  
-    $('#jenis_wisatawan').change(function () {
-      const jenis = $(this).val();
-  
-      if (jenis == 'Domestik') {
-        $('#kota-group').show();
-        $('#negara-group').hide();
-        $('#kota').attr('required', true);
-        $('#negara').removeAttr('required').val('');
-      } else if (jenis == 'Mancanegara') {
-        $('#kota-group').hide();
-        $('#negara-group').show();
-        $('#negara').attr('required', true);
-        $('#kota').removeAttr('required').val('');
-      } else {
-        $('#kota-group').hide();
-        $('#negara-group').hide();
-        $('#kota').removeAttr('required').val('');
-        $('#negara').removeAttr('required').val('');
-      }
+
+    $('button[type="reset"]').on('click', function() {
+      selectedFiles = [];
+      $('#foto-preview').empty();
     });
-  
-    // Initialize pada saat load pertama kali TANPA mereset values
-    showHideFields();
-    
-    const initialJenis = $('#jenis_wisatawan').val();
-    if (initialJenis) {
-      $('#jenis_wisatawan').trigger('change');
-    }
   });
   </script>
 </body>
-
 </html>
 <?php ob_end_flush(); ?>

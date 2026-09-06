@@ -35,7 +35,7 @@ $initials = strtoupper(substr($nama, 0, 1));
       </svg>
 
       <div class="user-dropdown" id="userDropdown">
-        <a href="../admin/profile.php" class="dropdown-item">
+        <a href="booking_profile.php" class="dropdown-item">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
@@ -66,6 +66,9 @@ $initials = strtoupper(substr($nama, 0, 1));
   border-bottom: 1px solid #e5ede8;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; z-index: 99; transition: left 0.25s;
+}
+.booking-header.collapsed {
+  left: var(--sidebar-collapsed) !important;
 }
 .header-left { display: flex; align-items: center; }
 .sidebar-toggle-btn {
@@ -118,7 +121,22 @@ document.addEventListener('DOMContentLoaded', function () {
   var sidebar   = document.getElementById('bookingSidebar');
   var header    = document.getElementById('bookingHeader');
   var content   = document.getElementById('bookingContent');
-  var collapsed = false;
+
+  function applyCollapse(collapsed) {
+    if (sidebar) sidebar.classList.toggle('collapsed', collapsed);
+    if (header)  header.classList.toggle('collapsed', collapsed);
+    if (content) content.classList.toggle('collapsed', collapsed);
+    if (collapsed) {
+      document.documentElement.classList.add('sidebar-is-collapsed');
+    } else {
+      document.documentElement.classList.remove('sidebar-is-collapsed');
+    }
+    localStorage.setItem('booking_sidebar_collapsed', collapsed ? 'true' : 'false');
+  }
+
+  // Load state sidebar dari localStorage
+  var isCollapsed = localStorage.getItem('booking_sidebar_collapsed') === 'true';
+  applyCollapse(isCollapsed);
 
   if (userBtn && dropdown) {
     userBtn.addEventListener('click', function (e) {
@@ -130,12 +148,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', function () {
-      collapsed = !collapsed;
-      sidebar.classList.toggle('collapsed', collapsed);
-      if (header)  header.style.left        = collapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-width)';
-      if (content) content.classList.toggle('collapsed', collapsed);
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var willCollapse = !sidebar.classList.contains('collapsed');
+      applyCollapse(willCollapse);
 
       // Tunggu animasi sidebar selesai (0.25s), lalu destroy & recreate semua chart
       setTimeout(function () {

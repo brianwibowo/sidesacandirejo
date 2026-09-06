@@ -29,7 +29,7 @@ $data = mysqli_fetch_assoc($query);
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edit Admin - Arsip Surat Desa Candirejo</title>
+<title>Edit Admin - Arsip Desa Candirejo</title>
 <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="../assets/build/css/custom.min.css" rel="stylesheet">
@@ -43,52 +43,81 @@ $data = mysqli_fetch_assoc($query);
     <?php include("header.php"); ?>
 
     <div class="right_col" role="main">
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          <div class="x_panel">
-            <div class="x_title">
-              <h2><i class="fa fa-edit"></i> Edit Admin</h2>
-              <div class="clearfix"></div>
+      <div class="page-title-modern">
+        <div class="page-title-left">
+          <h1>Edit Admin</h1>
+          <p>Perbarui data akun admin yang ada</p>
+        </div>
+        <a href="manajemen_admin.php" class="btn-back-modern">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Kembali ke Manajemen Admin
+        </a>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="form-card-header-left">
+            <div class="hicon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             </div>
-            <div class="x_content">
-              <form action="proses/proses_edit_admin.php" method="post" class="form-horizontal">
-                <input type="hidden" name="id_admin" value="<?= $data['id_admin'] ?>">
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Nama Admin</label>
-                  <div class="col-sm-9">
-                    <input type="text" name="nama_admin" class="form-control" required
-                           value="<?= htmlspecialchars($data['nama_admin']) ?>">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Username</label>
-                  <div class="col-sm-9">
-                    <input type="text" name="username_admin" class="form-control" required
-                           value="<?= htmlspecialchars($data['username_admin']) ?>">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">Role</label>
-                  <div class="col-sm-9">
-                    <select name="role" class="form-control" required>
-                      <option value="superadmin" <?= $data['role']=='superadmin' ? 'selected' : '' ?>>Superadmin</option>
-                      <option value="admin"      <?= $data['role']=='admin'      ? 'selected' : '' ?>>Admin</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="col-sm-9 col-sm-offset-3">
-                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Perubahan</button>
-                    <a href="manajemen_admin.php" class="btn btn-default"><i class="fa fa-arrow-left"></i> Batal</a>
-                  </div>
-                </div>
-              </form>
-            </div>
+            <h2>Edit Data Admin</h2>
           </div>
+        </div>
+        <div class="form-card-body">
+          <div class="info-bar-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Mengedit akun: <strong><?= htmlspecialchars($data['nama_admin']) ?></strong>
+          </div>
+
+          <form action="proses/proses_edit_admin.php" method="post">
+            <input type="hidden" name="id_admin" value="<?= $data['id_admin'] ?>">
+
+            <div class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Identitas & Akses
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Nama Admin <span class="req">*</span>
+                <small>Nama tampil di sistem</small>
+              </label>
+              <div>
+                <input type="text" name="nama_admin" class="form-input" required maxlength="70"
+                  value="<?= htmlspecialchars($data['nama_admin']) ?>">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Username <span class="req">*</span>
+                <small>Digunakan untuk login</small>
+              </label>
+              <div>
+                <input type="text" name="username_admin" class="form-input" required maxlength="50"
+                  value="<?= htmlspecialchars($data['username_admin']) ?>">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Role <span class="req">*</span>
+                <small>Level akses pengguna</small>
+              </label>
+              <div>
+                <select name="role" class="form-select input-md" required>
+                  <option value="superadmin" <?= $data['role']=='superadmin' ? 'selected' : '' ?>>Superadmin</option>
+                  <option value="admin" <?= $data['role']=='admin' ? 'selected' : '' ?>>Admin</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-submit">
+                <i class="fa fa-save"></i> Simpan Perubahan
+              </button>
+              <a href="manajemen_admin.php" class="btn-cancel">
+                <i class="fa fa-times"></i> Batal
+              </a>
+            </div>
+          </form>
         </div>
       </div>
     </div>

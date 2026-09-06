@@ -12,6 +12,24 @@ $nama     = isset($_SESSION['nama']) ? $_SESSION['nama'] : 'Admin';
 $initials = strtoupper(substr($nama, 0, 1));
 ?>
 
+<script>
+  if (localStorage.getItem('booking_sidebar_collapsed') === 'true') {
+    document.documentElement.classList.add('sidebar-is-collapsed');
+  }
+</script>
+<style>
+  html.sidebar-is-collapsed .booking-sidebar { width: var(--sidebar-collapsed, 60px) !important; }
+  html.sidebar-is-collapsed .booking-header { left: var(--sidebar-collapsed, 60px) !important; }
+  html.sidebar-is-collapsed .booking-content { margin-left: var(--sidebar-collapsed, 60px) !important; }
+  html.sidebar-is-collapsed .booking-sidebar .brand-text,
+  html.sidebar-is-collapsed .booking-sidebar .profile-info,
+  html.sidebar-is-collapsed .booking-sidebar .nav-label,
+  html.sidebar-is-collapsed .booking-sidebar .chevron,
+  html.sidebar-is-collapsed .booking-sidebar .submenu,
+  html.sidebar-is-collapsed .booking-sidebar .switch-arsip-text,
+  html.sidebar-is-collapsed .booking-sidebar .switch-arsip-arrow { display: none !important; opacity: 0 !important; }
+</style>
+
 <div class="booking-sidebar" id="bookingSidebar">
 
   <div class="sidebar-brand">
@@ -221,17 +239,7 @@ $initials = strtoupper(substr($nama, 0, 1));
   border-left: 3px solid var(--sidebar-accent); padding-left: 17px;
 }
 
-/* Tooltip saat collapsed */
-.booking-sidebar.collapsed .sidebar-nav > ul > li > a::after {
-  content: attr(data-label);
-  position: absolute; left: calc(var(--sidebar-collapsed) + 8px); top: 50%;
-  transform: translateY(-50%);
-  background: #152b22; color: #fff; font-size: 12px; font-weight: 500;
-  padding: 5px 10px; border-radius: 6px; white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  opacity: 0; pointer-events: none; transition: opacity 0.15s; z-index: 300;
-}
-.booking-sidebar.collapsed .sidebar-nav > ul > li > a:hover::after { opacity: 1; }
+/* Nav Icon */
 
 .nav-icon {
   width: 20px; height: 20px; display: flex;
@@ -320,7 +328,108 @@ $initials = strtoupper(substr($nama, 0, 1));
   opacity: 0.6;
 }
 .switch-btn-arsip:hover .switch-arsip-arrow { opacity: 1; }
-.collapsed .sidebar-switch-arsip { display: none; }
+.booking-sidebar.collapsed .sidebar-switch-arsip,
+.collapsed .sidebar-switch-arsip {
+  padding: 10px 8px;
+  display: block;
+}
+.booking-sidebar.collapsed .switch-btn-arsip,
+.collapsed .switch-btn-arsip {
+  padding: 8px;
+  justify-content: center;
+}
+.booking-sidebar.collapsed .switch-arsip-text,
+.collapsed .switch-arsip-text,
+.booking-sidebar.collapsed .switch-arsip-arrow,
+.collapsed .switch-arsip-arrow {
+  display: none;
+}
+
+/* ── FLOATING TOOLTIP & FLYOUT SAAT SIDEBAR COLLAPSED ── */
+#sidebarFloatingTooltip {
+  position: fixed;
+  z-index: 99999;
+  background: #142a20;
+  border: 1px solid #2d5540;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+}
+#sidebarFloatingTooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+#sidebarFloatingTooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: var(--arrow-top, 14px);
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #142a20;
+}
+
+.sft-pill {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  color: #e5f0ea;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sft-popover {
+  min-width: 195px;
+  padding: 6px 0;
+}
+.sft-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7fa892;
+  padding: 8px 16px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sft-menu {
+  list-style: none;
+  margin: 4px 0 0 0;
+  padding: 0;
+}
+.sft-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  color: #c8ddd4;
+  text-decoration: none !important;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.sft-item:hover {
+  background: #234635;
+  color: #ffffff !important;
+}
+.sft-item.active {
+  background: #204b36;
+  color: #10b981 !important;
+  font-weight: 600;
+}
 </style>
 
 <script>
@@ -340,5 +449,125 @@ document.addEventListener('DOMContentLoaded', function () {
       if (chevron) chevron.classList.toggle('rotated');
     });
   }
+
+  /* Floating Tooltip & Popover */
+  (function() {
+    var sidebar = document.getElementById('bookingSidebar');
+    if (!sidebar) return;
+
+    var tooltipEl = document.getElementById('sidebarFloatingTooltip');
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'sidebarFloatingTooltip';
+      document.body.appendChild(tooltipEl);
+    }
+
+    var hideTimer = null;
+
+    function hideTooltip() {
+      if (tooltipEl) {
+        tooltipEl.classList.remove('show');
+      }
+    }
+
+    function scheduleHide() {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hideTooltip, 120);
+    }
+
+    tooltipEl.addEventListener('mouseenter', function() {
+      clearTimeout(hideTimer);
+    });
+    tooltipEl.addEventListener('mouseleave', function() {
+      scheduleHide();
+    });
+
+    function showForElement(el, isSubmenu, label, submenuEl) {
+      clearTimeout(hideTimer);
+      if (!sidebar.classList.contains('collapsed')) {
+        hideTooltip();
+        return;
+      }
+
+      var rect = el.getBoundingClientRect();
+      var html = '';
+
+      if (isSubmenu && submenuEl) {
+        html = '<div class="sft-popover">';
+        html += '<div class="sft-header">' + (label || 'Menu') + '</div>';
+        html += '<div class="sft-menu">';
+        var links = submenuEl.querySelectorAll('a');
+        links.forEach(function(a) {
+          var isAct = (a.closest('li') && a.closest('li').classList.contains('active')) || a.classList.contains('active');
+          var text = a.querySelector('.nav-label') ? a.querySelector('.nav-label').textContent.trim() : a.textContent.trim();
+          html += '<a href="' + a.getAttribute('href') + '" class="sft-item' + (isAct ? ' active' : '') + '">' + text + '</a>';
+        });
+        html += '</div></div>';
+      } else {
+        html = '<div class="sft-pill">' + (label || el.getAttribute('data-label') || el.getAttribute('title') || el.textContent.trim()) + '</div>';
+      }
+
+      tooltipEl.innerHTML = html;
+
+      // Posisi X persis rapat di samping kanan sidebar ciut (60px + 6px = 66px)
+      var sidebarRect = sidebar.getBoundingClientRect();
+      var posX = Math.round(sidebarRect.right) + 6;
+      tooltipEl.style.left = posX + 'px';
+
+      // Posisi Y presisi sejajar ikon yang disorot
+      tooltipEl.classList.add('show');
+      var itemCenterY = rect.top + (rect.height / 2);
+      var tooltipHeight = tooltipEl.offsetHeight || 36;
+      var targetTop = isSubmenu ? rect.top : (itemCenterY - (tooltipHeight / 2));
+
+      // Mencegah tooltip terpotong di batas atas / bawah layar
+      var newTop = targetTop;
+      if (newTop + tooltipHeight > window.innerHeight - 10) {
+        newTop = window.innerHeight - 10 - tooltipHeight;
+      }
+      if (newTop < 10) {
+        newTop = 10;
+      }
+
+      tooltipEl.style.top = Math.round(newTop) + 'px';
+      var arrowOffset = Math.max(10, Math.min(tooltipHeight - 10, itemCenterY - newTop));
+      tooltipEl.style.setProperty('--arrow-top', Math.round(arrowOffset) + 'px');
+    }
+
+    var menuItems = sidebar.querySelectorAll('.sidebar-nav > ul > li');
+    menuItems.forEach(function(li) {
+      var a = li.querySelector(':scope > a');
+      if (!a) return;
+
+      var isSubmenu = li.classList.contains('has-submenu');
+      var submenuEl = li.querySelector('.submenu');
+      var label = a.getAttribute('data-label') || (a.querySelector('.nav-label') ? a.querySelector('.nav-label').textContent.trim() : '');
+
+      li.addEventListener('mouseenter', function() {
+        showForElement(a, isSubmenu, label, submenuEl);
+      });
+      li.addEventListener('mouseleave', function() {
+        scheduleHide();
+      });
+    });
+
+    var switchBtn = sidebar.querySelector('.switch-btn-arsip');
+    if (switchBtn) {
+      switchBtn.addEventListener('mouseenter', function() {
+        var label = switchBtn.getAttribute('data-label') || 'Buka Arsip Surat';
+        showForElement(switchBtn, false, label, null);
+      });
+      switchBtn.addEventListener('mouseleave', function() {
+        scheduleHide();
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!tooltipEl.contains(e.target) && !sidebar.contains(e.target)) {
+        hideTooltip();
+      }
+    });
+    window.addEventListener('resize', hideTooltip);
+  })();
 });
 </script>

@@ -35,7 +35,6 @@ if(isset($_POST['submit'])){
             exit();
         }
 
-        // Nama file unik agar tidak tertimpa
         $filename    = time() . '_' . basename($_FILES['gambar']['name']);
         $target_dir  = __DIR__ . "/images/";
         $target_file = $target_dir . $filename;
@@ -62,14 +61,13 @@ if(isset($_POST['submit'])){
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tambah Admin - Arsip Surat Desa Candirejo</title>
+<title>Tambah Admin - Arsip Desa Candirejo</title>
 <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="../assets/build/css/custom.min.css" rel="stylesheet">
@@ -84,74 +82,117 @@ if(isset($_POST['submit'])){
     <?php include("header.php"); ?>
 
     <div class="right_col" role="main">
-      <div class="row">
-        <div class="col-md-8 col-sm-8 col-xs-12">
-          <div class="x_panel">
-            <div class="x_title">
-              <h2>Tambah Admin Baru</h2>
-              <div class="clearfix"></div>
+      <div class="page-title-modern">
+        <div class="page-title-left">
+          <h1>Tambah Admin Baru</h1>
+          <p>Daftarkan akun admin baru untuk sistem arsip</p>
+        </div>
+        <a href="manajemen_admin.php" class="btn-back-modern">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Kembali ke Manajemen Admin
+        </a>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="form-card-header-left">
+            <div class="hicon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
             </div>
-            <div class="x_content">
-              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal form-label-left">
-
-                <div class="form-group">
-                  <label class="control-label col-md-3">Nama Admin <span class="required">*</span></label>
-                  <div class="col-md-6">
-                    <input type="text" name="nama_admin" required class="form-control" placeholder="Masukkan nama lengkap">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3">Username <span class="required">*</span></label>
-                  <div class="col-md-6">
-                    <input type="text" name="username_admin" required class="form-control" placeholder="Masukkan username">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3">Password <span class="required">*</span></label>
-                  <div class="col-md-6">
-                    <div class="input-group">
-                      <input type="password" id="password_admin" name="password_admin" required class="form-control" placeholder="Masukkan password">
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" id="togglePassword" tabindex="-1">
-                          <i class="fa fa-eye" id="eyeIcon"></i>
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3">Role <span class="required">*</span></label>
-                  <div class="col-md-6">
-                    <select name="role" class="form-control" required>
-                      <option value="">Pilih Role</option>
-                      <option value="superadmin">Superadmin</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="control-label col-md-3">Foto Profil</label>
-                  <div class="col-md-6">
-                    <input type="file" name="gambar" class="form-control" accept="image/*">
-                    <small class="text-muted">Format: JPG, PNG, GIF, WEBP. Opsional.</small>
-                  </div>
-                </div>
-
-                <div class="ln_solid"></div>
-                <div class="form-group">
-                  <div class="col-md-6 col-md-offset-3">
-                    <button type="submit" name="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>
-                    <a href="manajemen_admin.php" class="btn btn-default"><i class="fa fa-arrow-left"></i> Kembali</a>
-                  </div>
-                </div>
-
-              </form>
-            </div>
+            <h2>Data Admin Baru</h2>
           </div>
+        </div>
+        <div class="form-card-body">
+          <form action="" method="post" enctype="multipart/form-data">
+
+            <div class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Identitas Admin
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Nama Admin <span class="req">*</span>
+                <small>Nama lengkap admin</small>
+              </label>
+              <div>
+                <input type="text" name="nama_admin" required class="form-input"
+                  placeholder="Masukkan nama lengkap" maxlength="70">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Username <span class="req">*</span>
+                <small>Digunakan untuk login</small>
+              </label>
+              <div>
+                <input type="text" name="username_admin" required class="form-input"
+                  placeholder="Masukkan username" maxlength="50">
+              </div>
+            </div>
+
+            <div class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Keamanan & Akses
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Password <span class="req">*</span>
+                <small>Minimal 6 karakter</small>
+              </label>
+              <div>
+                <div class="input-group-modern">
+                  <input type="password" id="password_admin" name="password_admin" required class="form-input"
+                    placeholder="Masukkan password">
+                  <span class="input-group-addon-modern" id="togglePassword" style="cursor:pointer;">
+                    <i class="fa fa-eye" id="eyeIcon"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Role <span class="req">*</span>
+                <small>Level akses pengguna</small>
+              </label>
+              <div>
+                <select name="role" class="form-select input-md" required>
+                  <option value="">Pilih Role</option>
+                  <option value="superadmin">Superadmin</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Foto Profil
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Foto Profil
+                <small>JPG, PNG, GIF, WEBP – Opsional</small>
+              </label>
+              <div>
+                <div class="upload-area-modern" onclick="document.getElementById('gambar').click()" style="padding:16px;">
+                  <div class="upload-icon"><i class="fa fa-user-circle"></i></div>
+                  <div class="upload-text-main">Klik untuk upload foto profil</div>
+                  <div class="upload-text-sub">JPG, PNG, GIF, WEBP – Opsional</div>
+                </div>
+                <input type="file" name="gambar" id="gambar" class="hidden-file-input" accept="image/*">
+                <div id="preview-gambar" style="margin-top:8px;"></div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" name="submit" class="btn-submit">
+                <i class="fa fa-save"></i> Simpan Admin
+              </button>
+              <a href="manajemen_admin.php" class="btn-cancel">
+                <i class="fa fa-times"></i> Batal
+              </a>
+            </div>
+
+          </form>
         </div>
       </div>
     </div>

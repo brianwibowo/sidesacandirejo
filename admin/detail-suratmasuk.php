@@ -1,56 +1,64 @@
 <?php
 session_start();
 include "login/ceksession.php";
+include '../koneksi/koneksi.php';
+
+$id = isset($_GET['id']) ? mysqli_real_escape_string($db, trim($_GET['id'])) : '';
+if (empty($id)) {
+    header("Location: datasuratmasuk.php");
+    exit();
+}
+
+$sql   = "SELECT * FROM tb_arsip_surat_masuk WHERE No='$id'";
+$query = mysqli_query($db, $sql);
+$data  = mysqli_fetch_array($query);
+
+if (!$data) {
+    header("Location: datasuratmasuk.php");
+    exit();
+}
+
+// Parse lampiran foto
+$fotos = [];
+if (!empty($data['lampiran_foto'])) {
+    $decoded = json_decode($data['lampiran_foto'], true);
+    $fotos = (json_last_error() === JSON_ERROR_NONE && is_array($decoded))
+             ? $decoded : [$data['lampiran_foto']];
+}
+
+// Format tanggal
+function tgl_indo($tgl) {
+    if (empty($tgl) || $tgl === '0000-00-00') return '-';
+    $bulan = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    $pecahkan = explode('-', date('Y-m-d', strtotime($tgl)));
+    return (int)$pecahkan[2] . ' ' . ($bulan[(int)$pecahkan[1]] ?? '') . ' ' . $pecahkan[0];
+}
 ?>
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html lang="id">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arsip Surat Desa Candirejo Borobudur</title>
+  <title>Detail Surat Masuk #<?php echo htmlspecialchars($data['nomor_surat']); ?> - Arsip Candirejo</title>
 
-  <!-- Bootstrap -->
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendors -->
   <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
   <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
   <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="shortcut icon" href="../img/icon.ico">
-  <!-- Custom Theme Style -->
   <link href="../assets/build/css/custom.min.css" rel="stylesheet">
-
-  <style>
-    .foto-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .foto-gallery a {
-      display: block;
-      width: 110px;
-      height: 110px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 2px solid #26B99A;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      transition: transform .2s;
-    }
-    .foto-gallery a:hover {
-      transform: scale(1.05);
-    }
-    .foto-gallery a img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  </style>
+  <link href="css/modern_admin.css?v=2.3" rel="stylesheet">
+  <link href="css/detail_modern.css?v=1.0" rel="stylesheet">
 </head>
 
 <body class="nav-md">
@@ -59,146 +67,201 @@ include "login/ceksession.php";
       <?php include("sidebarmenu.php"); ?>
       <?php include("header.php"); ?>
 
-      <!-- page content -->
       <div class="right_col" role="main">
-        <div class="">
-          <div class="page-title">
-            <div class="title_left"><h3>Surat Masuk</h3></div>
-          </div>
-          <div class="clearfix"></div>
+        <div class="detail-page-wrapper">
 
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Surat Masuk &rsaquo; <small>Detail Surat Masuk</small></h2>
-                  <div class="clearfix"></div>
-                </div>
-
-                <?php
-                include '../koneksi/koneksi.php';
-                $id    = mysqli_real_escape_string($db, $_GET['id']);
-                $sql   = "SELECT * FROM tb_arsip_surat_masuk WHERE No='$id'";
-                $query = mysqli_query($db, $sql);
-                $data  = mysqli_fetch_array($query);
-
-                // Parse foto lampiran
-                $fotos = [];
-                if (!empty($data['lampiran_foto'])) {
-                    $decoded = json_decode($data['lampiran_foto'], true);
-                    $fotos = (json_last_error() === JSON_ERROR_NONE && is_array($decoded))
-                             ? $decoded : [$data['lampiran_foto']];
-                }
-                ?>
-
-                <div class="x_content">
-                  <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="profile_title">
-                      <div class="col-md-6">
-                        <h2>Detail Surat Masuk</h2>
-                      </div>
-                    </div>
-                    <div class="x_content"></div>
-
-                    <table class="table table-striped">
-                      <tbody>
-                        <tr>
-                          <td width="35%">Tanggal Masuk</td>
-                          <td><?php echo htmlspecialchars($data['tanggal_terima']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Nomor Urut</td>
-                          <td><?php echo htmlspecialchars($data['No']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Nomor Surat</td>
-                          <td><?php echo htmlspecialchars($data['nomor_surat']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Tanggal Surat</td>
-                          <td><?php echo htmlspecialchars($data['tanggal_surat']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Pengirim</td>
-                          <td><?php echo htmlspecialchars($data['pengirim']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Perihal</td>
-                          <td><?php echo htmlspecialchars($data['perihal']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Penerima</td>
-                          <td><?php echo htmlspecialchars($data['penerima_surat']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>Disposisi</td>
-                          <td><?php echo htmlspecialchars($data['disposisi']); ?></td>
-                        </tr>
-                        <tr>
-                          <td>File Surat</td>
-                          <td>
-                            <a href="<?php echo htmlspecialchars('uploads/' . $data['file_surat']); ?>"
-                               target="_blank" class="btn btn-sm btn-default">
-                              <i class="fa fa-file-pdf-o"></i> Unduh / Lihat File
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Lampiran Foto</td>
-                          <td>
-                            <?php if (!empty($fotos)): ?>
-                              <p class="text-muted" style="margin-bottom:6px;">
-                                <small><?php echo count($fotos); ?> foto lampiran</small>
-                              </p>
-                              <div class="foto-gallery">
-                                <?php foreach ($fotos as $foto): ?>
-                                  <a href="<?php echo htmlspecialchars('uploads/' . $foto); ?>" target="_blank"
-                                     title="Klik untuk memperbesar">
-                                    <img src="<?php echo htmlspecialchars('uploads/' . $foto); ?>"
-                                         alt="Lampiran Foto">
-                                  </a>
-                                <?php endforeach; ?>
-                              </div>
-                            <?php else: ?>
-                              <span class="text-muted"><i class="fa fa-image"></i> Tidak ada lampiran foto</span>
-                            <?php endif; ?>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                    <div class="text-right">
-                      <a href="datasuratmasuk.php" class="btn btn-success">
-                        <span class="glyphicon glyphicon-arrow-left"></span> Kembali
-                      </a>
-                    </div>
-                  </div>
-                </div>
+          <!-- Card Header Page Title -->
+          <div class="card page-title-card">
+            <div class="detail-header-bar">
+              <div class="detail-header-left">
+                <h1>Detail Surat Masuk</h1>
+                <p>Informasi lengkap arsip surat masuk dan berkas dokumen terkait</p>
+              </div>
+              <div class="detail-header-actions">
+                <a href="datasuratmasuk.php" class="btn-back-detail">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                  Kembali ke Data
+                </a>
+                <a href="editsuratmasuk.php?id=<?php echo urlencode($data['No']); ?>" class="btn-edit-detail">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15.232 5.232l3.536 3.536M9 11l6.364-6.364a2 2 0 112.828 2.828L11.828 13.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"/><path d="M3 21h18"/></svg>
+                  Edit Surat
+                </a>
               </div>
             </div>
           </div>
+
+          <!-- Summary Card -->
+          <div class="detail-summary-card">
+            <div class="summary-main-info">
+              <h2><?php echo htmlspecialchars($data['perihal']); ?></h2>
+              <div class="summary-meta-row">
+                <span class="summary-meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                  No. Urut: <strong>#<?php echo htmlspecialchars($data['No']); ?></strong>
+                </span>
+                <span class="summary-meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  No. Surat: <strong><?php echo htmlspecialchars($data['nomor_surat']); ?></strong>
+                </span>
+                <span class="summary-meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Diterima: <?php echo tgl_indo($data['tanggal_terima']); ?>
+                </span>
+              </div>
+            </div>
+            <div>
+              <span class="badge-pill badge-pill-green">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+                Surat Masuk
+              </span>
+            </div>
+          </div>
+
+          <!-- Grid Layout -->
+          <div class="detail-grid">
+            
+            <!-- Left Column: Informasi Utama -->
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <h3 class="detail-card-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  Rincian Informasi Surat
+                </h3>
+              </div>
+              <div class="detail-card-body">
+                <table class="info-list-table">
+                  <tbody>
+                    <tr>
+                      <td class="col-label">Nomor Urut Arsip</td>
+                      <td class="col-value">#<?php echo htmlspecialchars($data['No']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Nomor Surat</td>
+                      <td class="col-value"><?php echo htmlspecialchars($data['nomor_surat']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Tanggal Masuk / Diterima</td>
+                      <td class="col-value"><?php echo tgl_indo($data['tanggal_terima']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Tanggal Surat Asli</td>
+                      <td class="col-value"><?php echo tgl_indo($data['tanggal_surat']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Instansi / Pengirim</td>
+                      <td class="col-value"><?php echo htmlspecialchars($data['pengirim']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Penerima Surat</td>
+                      <td class="col-value"><?php echo htmlspecialchars($data['penerima_surat']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Perihal</td>
+                      <td class="col-value"><?php echo htmlspecialchars($data['perihal']); ?></td>
+                    </tr>
+                    <tr>
+                      <td class="col-label">Disposisi / Keterangan</td>
+                      <td class="col-value">
+                        <?php if (!empty($data['disposisi'])): ?>
+                          <div style="background:#f8faf9;border:1px solid #e2ede6;border-radius:8px;padding:10px 14px;font-weight:500;color:#2a4535;line-height:1.5;">
+                            <?php echo nl2br(htmlspecialchars($data['disposisi'])); ?>
+                          </div>
+                        <?php else: ?>
+                          <span style="color:#9ab5a8;">- Tidak ada disposisi khusus -</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right Column: Berkas Dokumen & Foto -->
+            <div>
+              <!-- Dokumen Berkas Surat -->
+              <div class="detail-card">
+                <div class="detail-card-header">
+                  <h3 class="detail-card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    Dokumen File Surat
+                  </h3>
+                </div>
+                <div class="detail-card-body">
+                  <?php if (!empty($data['file_surat']) && file_exists(__DIR__ . '/uploads/' . $data['file_surat'])): ?>
+                    <div class="file-card-box">
+                      <div class="file-card-info">
+                        <div class="file-badge-icon file-badge-pdf">
+                          <i class="fa fa-file-pdf-o"></i>
+                        </div>
+                        <div class="file-meta-text">
+                          <div class="file-name-label" title="<?php echo htmlspecialchars($data['file_surat']); ?>">
+                            <?php echo htmlspecialchars($data['file_surat']); ?>
+                          </div>
+                          <div class="file-sub-label">Berkas Surat Resmi</div>
+                        </div>
+                      </div>
+                      <a href="uploads/<?php echo htmlspecialchars($data['file_surat']); ?>" target="_blank" class="btn-file-action">
+                        <i class="fa fa-external-link"></i> Buka File
+                      </a>
+                    </div>
+                  <?php else: ?>
+                    <div style="text-align:center;padding:24px 14px;color:#9ab5a8;background:#fafcfb;border-radius:8px;border:1px dashed #d6e6dc;">
+                      <i class="fa fa-file-o" style="font-size:28px;margin-bottom:8px;display:block;"></i>
+                      <div style="font-size:12.5px;">Tidak ada berkas file surat yang diunggah.</div>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
+
+              <!-- Lampiran Foto -->
+              <div class="detail-card">
+                <div class="detail-card-header">
+                  <h3 class="detail-card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Lampiran Dokumentasi Foto
+                  </h3>
+                  <?php if (!empty($fotos)): ?>
+                    <span class="badge-pill badge-pill-gray"><?php echo count($fotos); ?> Foto</span>
+                  <?php endif; ?>
+                </div>
+                <div class="detail-card-body">
+                  <?php if (!empty($fotos)): ?>
+                    <div class="gallery-grid">
+                      <?php foreach ($fotos as $idx => $foto): 
+                        $fpath = 'uploads/' . $foto;
+                      ?>
+                        <a href="<?php echo htmlspecialchars($fpath); ?>" target="_blank" class="gallery-thumb-item" title="Lihat Foto <?php echo $idx + 1; ?>">
+                          <img src="<?php echo htmlspecialchars($fpath); ?>" alt="Lampiran Foto <?php echo $idx + 1; ?>" onerror="this.src='../img/default-avatar.png';">
+                        </a>
+                      <?php endforeach; ?>
+                    </div>
+                  <?php else: ?>
+                    <div style="text-align:center;padding:24px 14px;color:#9ab5a8;background:#fafcfb;border-radius:8px;border:1px dashed #d6e6dc;">
+                      <i class="fa fa-picture-o" style="font-size:28px;margin-bottom:8px;display:block;"></i>
+                      <div style="font-size:12.5px;">Tidak ada lampiran foto untuk surat ini.</div>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
       </div>
-      <!-- /page content -->
 
       <footer>
-        <div class="pull-right"></div>
+        <div class="pull-right">Arsip Surat Desa Candirejo Borobudur</div>
         <div class="clearfix"></div>
       </footer>
     </div>
   </div>
 
-  <!-- jQuery -->
   <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap -->
   <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- FastClick -->
   <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Custom Theme Scripts -->
   <script src="../assets/build/js/custom.min.js"></script>
 </body>
 </html>

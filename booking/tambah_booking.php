@@ -1,6 +1,20 @@
 <?php
 session_start();
 include "login/ceksession.php";
+
+$ref = isset($_GET['ref']) ? $_GET['ref'] : 'booking_dashboard.php';
+$allowed_refs = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php'];
+if (!in_array($ref, $allowed_refs)) {
+    $ref = 'booking_dashboard.php';
+}
+$back_labels = [
+    'booking_dashboard.php'   => 'Kembali ke Dashboard',
+    'booking_semua.php'       => 'Kembali ke Semua Booking',
+    'booking_pending.php'     => 'Kembali ke Booking Pending',
+    'booking_checkin.php'     => 'Kembali ke Booking Check-in',
+    'booking_tidakdatang.php' => 'Kembali ke Booking Tidak Datang',
+];
+$back_label = $back_labels[$ref] ?? 'Kembali';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -22,7 +36,7 @@ include "login/ceksession.php";
     .page-title-left p  { font-size: 13.5px; color: #6b8f7e; }
     .btn-back { display: inline-flex; align-items: center; gap: 7px; background: #fff; color: #4a6a57; border: 1px solid #d6e6dc; border-radius: 8px; padding: 9px 16px; font-size: 13.5px; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
     .btn-back:hover { background: #f0f7f3; border-color: #b5d5c0; color: #1e3a2f; }
-    .form-card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; max-width: 800px; }
+    .form-card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; width: 100%; }
     .form-card-header { padding: 18px 24px 14px; border-bottom: 1px solid #f0f5f2; display: flex; align-items: center; gap: 10px; }
     .form-card-header .hicon { width: 36px; height: 36px; background: #e4f5ec; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #2e7d4f; flex-shrink: 0; }
     .form-card-header h2 { font-size: 16px; font-weight: 600; color: #1e3a2f; }
@@ -79,9 +93,9 @@ include "login/ceksession.php";
         <h1>Tambah Booking</h1>
         <p>Isi data booking baru pengunjung Desa Wisata Candirejo</p>
       </div>
-      <a href="booking_dashboard.php" class="btn-back">
+      <a href="<?php echo htmlspecialchars($ref); ?>" class="btn-back">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Kembali ke Dashboard
+        <?php echo htmlspecialchars($back_label); ?>
       </a>
     </div>
 
@@ -106,6 +120,7 @@ include "login/ceksession.php";
       <div class="form-card-body">
         <form action="proses/proses_booking.php" method="POST" id="formTambah">
           <input type="hidden" name="aksi" value="tambah">
+          <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref); ?>">
 
           <!-- INFORMASI KUNJUNGAN -->
           <div class="section-title">
@@ -274,7 +289,7 @@ include "login/ceksession.php";
             <label class="form-label">Jumlah Pax<span class="req">*</span>
               <small>Jumlah orang/peserta</small>
             </label>
-            <input type="number" name="pax" required min="1" max="9999" value="1" class="form-input input-sm">
+            <input type="number" name="pax" required min="0" max="9999" value="0" class="form-input input-sm">
           </div>
 
           <!-- AGEN & PEMANDU -->
@@ -284,18 +299,31 @@ include "login/ceksession.php";
           </div>
 
           <div class="form-row">
-            <label class="form-label">Agen Wisata<span class="req">*</span></label>
-            <input type="text" name="agen_wisata" id="agen_wisata" required maxlength="100" class="form-input" placeholder="Nama agen wisata">
+            <label class="form-label">Agen Wisata
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
+            <input type="text" name="agen_wisata" id="agen_wisata" maxlength="100" class="form-input" placeholder="Nama agen wisata (opsional)">
           </div>
 
           <div class="form-row">
-            <label class="form-label">Driver / Agent Guide</label>
-            <input type="text" name="driver_agent_guide" maxlength="100" value="Belum Ada" class="form-input">
+            <label class="form-label">Driver / Agent Guide
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
+            <input type="text" name="driver_agent_guide" maxlength="100" value="Belum Ada" class="form-input" placeholder="Belum Ada">
           </div>
 
           <div class="form-row">
-            <label class="form-label">Local Guide</label>
-            <input type="text" name="local_guide" maxlength="100" value="Belum Ada" class="form-input">
+            <label class="form-label">Local Guide
+              <small>Opsional, default 'Belum Ada'</small>
+            </label>
+            <input type="text" name="local_guide" maxlength="100" value="Belum Ada" class="form-input" placeholder="Belum Ada">
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Catatan
+              <small>Catatan tambahan (opsional)</small>
+            </label>
+            <textarea name="catatan" id="catatan" rows="3" class="form-input" style="resize:vertical;min-height:85px;line-height:1.5;" placeholder="Tuliskan catatan khusus atau keterangan tambahan..."></textarea>
           </div>
 
           <!-- TOMBOL -->
@@ -417,19 +445,23 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Submit confirm */
   document.getElementById('btnSubmit').addEventListener('click', function (e) {
     e.preventDefault();
-    var nama = document.getElementById('nama').value || 'wisatawan ini';
+    var form = document.getElementById('formTambah');
+    if (!form.reportValidity()) return;
+
+    var nama = document.getElementById('agen_wisata').value || document.getElementById('nama').value || 'data ini';
     Swal.fire({
-      title: 'Simpan Booking?',
-      html: 'Booking untuk <strong>' + nama + '</strong> akan disimpan.',
+      title: 'Konfirmasi Simpan Booking',
+      html: '<p style="font-size:14.5px;color:#555;">Simpan data booking baru untuk <strong>' + nama + '</strong>?</p>',
       icon: 'question',
       iconColor: '#2e7d4f',
       showCancelButton: true,
-      confirmButtonText: 'Ya, Simpan',
+      confirmButtonText: 'Ya, Simpan Booking',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#2e7d4f',
-      cancelButtonColor: '#aaa'
+      confirmButtonColor: '#1e3a2f',
+      cancelButtonColor: '#9ab5a8',
+      reverseButtons: true
     }).then(function (r) {
-      if (r.isConfirmed) document.getElementById('formTambah').submit();
+      if (r.isConfirmed) form.submit();
     });
   });
 

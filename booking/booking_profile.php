@@ -9,61 +9,43 @@ $query = mysqli_query($db, $sql);
 $data = mysqli_fetch_array($query);
 
 if (!$data) {
-    header("Location: index.php");
+    header("Location: booking_dashboard.php");
     exit();
 }
 
-// Data counts for statistics
-$q_sm = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_arsip_surat_masuk");
-$c_sm = $q_sm ? (int)mysqli_fetch_assoc($q_sm)['total'] : 0;
+// Booking counts for statistics
+$q_total = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_booking");
+$c_total = $q_total ? (int)mysqli_fetch_assoc($q_total)['total'] : 0;
 
-$q_sk = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_arsip_surat_keluar");
-$c_sk = $q_sk ? (int)mysqli_fetch_assoc($q_sk)['total'] : 0;
+$q_checkin = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_booking WHERE status='checkin'");
+$c_checkin = $q_checkin ? (int)mysqli_fetch_assoc($q_checkin)['total'] : 0;
 
-$q_pg = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_data_pengunjung");
-$c_pg = $q_pg ? (int)mysqli_fetch_assoc($q_pg)['total'] : 0;
+$q_pending = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_booking WHERE status='pending'");
+$c_pending = $q_pending ? (int)mysqli_fetch_assoc($q_pending)['total'] : 0;
 
-$q_bk = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_booking");
-$c_bk = $q_bk ? (int)mysqli_fetch_assoc($q_bk)['total'] : 0;
+$q_pax = mysqli_query($db, "SELECT SUM(pax) as total FROM tb_booking");
+$c_pax = $q_pax ? (int)mysqli_fetch_assoc($q_pax)['total'] : 0;
 
 $nama_admin     = htmlspecialchars($data['nama_admin'] ?? 'Administrator');
 $username_admin = htmlspecialchars($data['username_admin'] ?? 'admin');
 $id_admin       = htmlspecialchars($data['id_admin'] ?? '-');
 $role_admin     = strtolower($data['role'] ?? 'admin');
-$is_superadmin  = ($role_admin === 'superadmin');
 $avatar_file    = $data['gambar'] ?? '';
-$has_avatar     = (!empty($avatar_file) && file_exists(__DIR__ . "/images/" . $avatar_file));
-
-// Format last active
-$last_active = $data['last_active'] ?? null;
-$online_text = "Online (Sesi Ini)";
-$online_color = "#10b981";
-$last_active_formatted = "Saat ini aktif";
-if (!empty($last_active)) {
-    $last_active_formatted = date('d M Y, H:i', strtotime($last_active)) . " WIB";
-}
+$has_avatar     = (!empty($avatar_file) && file_exists(__DIR__ . "/../admin/images/" . $avatar_file));
+$initials       = strtoupper(substr($nama_admin, 0, 1));
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profil Saya - Desa Wisata Candirejo</title>
-
-  <!-- Google Fonts -->
+  <title>Profil Saya - Sistem Booking Candirejo</title>
+  <link rel="shortcut icon" href="img/iconbooking.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap & Vendors -->
-  <link href="../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link href="../assets/vendors/nprogress/nprogress.css" rel="stylesheet">
-  <link rel="shortcut icon" href="../img/icon.ico">
-  <link href="../assets/build/css/custom.min.css" rel="stylesheet">
-  <link href="css/modern_admin.css?v=2.3" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -82,7 +64,7 @@ if (!empty($last_active)) {
       transition: margin-left 0.25s;
     }
     .booking-content.collapsed { margin-left: 60px; }
-    .content-inner { padding: 28px 32px 48px; max-width: 1280px; margin: 0 auto; }
+    .content-inner { padding: 28px 32px 48px; min-width: 1080px; margin: 0 auto; }
 
     /* Page Header Card */
     .profile-header-card {
@@ -543,24 +525,20 @@ if (!empty($last_active)) {
   </style>
 </head>
 
-<body class="nav-md">
-  <div class="container body">
-    <div class="main_container">
+<body>
 
-      <!-- Sidebar Menu -->
-      <?php include("sidebarmenu.php"); ?>
-      <!-- /Sidebar Menu -->
+  <!-- Sidebar -->
+  <?php include 'booking_sidebar.php'; ?>
 
-      <!-- Top Navigation -->
-      <?php include("header.php"); ?>
-      <!-- /Top Navigation -->
+  <!-- Header -->
+  <?php include 'booking_header.php'; ?>
 
-      <!-- Page Content -->
-      <div class="right_col" role="main">
-        <div class="profile-page-wrapper">
+  <!-- Main Content -->
+  <main class="booking-content" id="bookingContent">
+    <div class="content-inner">
 
-          <!-- Page Header -->
-                <div class="profile-header-card">
+      <!-- Page Header Card -->
+      <div class="profile-header-card">
         <div class="profile-header-title">
           <h1>Profil Administrator</h1>
           <p>Informasi detail akun, kredensial, dan hak akses Sistem Booking Desa Wisata Candirejo</p>
@@ -592,122 +570,113 @@ if (!empty($last_active)) {
         </div>
       </div>
 
-          <!-- Hero Profile Card -->
-          <div class="profile-hero-card">
-            <div class="profile-hero-banner"></div>
-            <div class="profile-hero-content">
-              <div class="profile-hero-left">
-                <div class="profile-avatar-wrap">
-                  <?php if ($has_avatar): ?>
-                    <img src="images/<?php echo htmlspecialchars($avatar_file); ?>" alt="Avatar" class="profile-avatar-img">
-                  <?php else: ?>
-                    <div class="profile-avatar-fallback">
-                      <?php echo strtoupper(substr($nama_admin, 0, 1)); ?>
-                    </div>
-                  <?php endif; ?>
-                  <span class="profile-status-indicator" title="Status: Online"></span>
+      <!-- Hero Profile Card -->
+      <div class="profile-hero-card">
+        <div class="profile-hero-banner"></div>
+        <div class="profile-hero-content">
+          <div class="profile-hero-left">
+            <div class="profile-avatar-wrap">
+              <?php if ($has_avatar): ?>
+                <img src="../admin/images/<?php echo htmlspecialchars($avatar_file); ?>" alt="Avatar" class="profile-avatar-img">
+              <?php else: ?>
+                <div class="profile-avatar-fallback">
+                  <?php echo $initials; ?>
                 </div>
-                <div class="profile-hero-info">
-                  <h2 class="profile-hero-name"><?php echo $nama_admin; ?></h2>
-                  <div class="profile-badges-row">
-                    <span class="badge-username-tag">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
-                      </svg>
-                      <?php echo $username_admin; ?>
-                    </span>
-                    <?php if ($is_superadmin): ?>
-                      <span class="badge-user-role badge-role-superadmin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                        Superadmin
-                      </span>
-                    <?php else: ?>
-                      <span class="badge-user-role badge-role-admin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        Administrator
-                      </span>
-                    <?php endif; ?>
-                    <span class="badge-status-tag">
-                      <span class="status-dot"></span>
-                      Aktif
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="profile-hero-buttons">
-                <a href="editprofile.php" class="btn-edit-profile">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              <?php endif; ?>
+              <span class="profile-status-indicator" title="Status: Online"></span>
+            </div>
+            <div class="profile-hero-info">
+              <h2 class="profile-hero-name"><?php echo $nama_admin; ?></h2>
+              <div class="profile-badges-row">
+                <span class="badge-username-tag">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
                   </svg>
-                  Ganti Foto &amp; Data
-                </a>
-                <a href="../koneksi/proses_logout.php" class="btn-logout-profile" onclick="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                  <?php echo $username_admin; ?>
+                </span>
+                <span class="badge-role-tag">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  Keluar
-                </a>
+                  Administrator Booking
+                </span>
+                <span class="badge-status-tag">
+                  <span class="status-dot"></span>
+                  Aktif
+                </span>
               </div>
             </div>
           </div>
-
-          <!-- Quick Stats Row -->
-          <div class="profile-stats-grid">
-            <div class="profile-stat-card">
-              <div class="profile-stat-info">
-                <div class="stat-label">Surat Masuk</div>
-                <div class="stat-val"><?php echo number_format($c_sm, 0, ',', '.'); ?></div>
-              </div>
-              <div class="profile-stat-icon stat-icon-green">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                </svg>
-              </div>
-            </div>
-
-            <div class="profile-stat-card">
-              <div class="profile-stat-info">
-                <div class="stat-label">Surat Keluar</div>
-                <div class="stat-val"><?php echo number_format($c_sk, 0, ',', '.'); ?></div>
-              </div>
-              <div class="profile-stat-icon stat-icon-blue">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-              </div>
-            </div>
-
-            <div class="profile-stat-card">
-              <div class="profile-stat-info">
-                <div class="stat-label">Data Pengunjung</div>
-                <div class="stat-val"><?php echo number_format($c_pg, 0, ',', '.'); ?></div>
-              </div>
-              <div class="profile-stat-icon stat-icon-emerald">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-              </div>
-            </div>
-
-            <div class="profile-stat-card">
-              <div class="profile-stat-info">
-                <div class="stat-label">Total Booking</div>
-                <div class="stat-val"><?php echo number_format($c_bk, 0, ',', '.'); ?></div>
-              </div>
-              <div class="profile-stat-icon stat-icon-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-              </div>
-            </div>
+          <div class="profile-hero-buttons">
+            <a href="booking_editprofile.php" class="btn-edit-profile">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              Ganti Foto &amp; Data
+            </a>
+            <a href="../koneksi/proses_logout.php" class="btn-logout-profile" onclick="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              Keluar
+            </a>
           </div>
+        </div>
+      </div>
 
-          <!-- Main Details Grid -->
-          <div class="profile-details-grid">
+      <!-- Quick Stats Row -->
+      <div class="profile-stats-grid">
+        <div class="profile-stat-card">
+          <div class="profile-stat-info">
+            <div class="stat-label">Total Booking</div>
+            <div class="stat-val"><?php echo number_format($c_total, 0, ',', '.'); ?></div>
+          </div>
+          <div class="profile-stat-icon stat-icon-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-info">
+            <div class="stat-label">Sudah Check-In</div>
+            <div class="stat-val"><?php echo number_format($c_checkin, 0, ',', '.'); ?></div>
+          </div>
+          <div class="profile-stat-icon stat-icon-emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-info">
+            <div class="stat-label">Booking Pending</div>
+            <div class="stat-val"><?php echo number_format($c_pending, 0, ',', '.'); ?></div>
+          </div>
+          <div class="profile-stat-icon stat-icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-info">
+            <div class="stat-label">Total Wisatawan / Pax</div>
+            <div class="stat-val"><?php echo number_format($c_pax, 0, ',', '.'); ?></div>
+          </div>
+          <div class="profile-stat-icon stat-icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Details Grid -->
+      <div class="profile-details-grid">
         
         <!-- Left Card: Informasi Akun -->
         <div class="profile-card">
@@ -836,27 +805,20 @@ if (!empty($last_active)) {
 
       </div>
 
-        </div>
-      </div>
-      <!-- /page content -->
-
-      <!-- Footer Content -->
-      <footer>
-        <div class="pull-right">
-          Sistem Informasi Desa Wisata Candirejo Borobudur
-        </div>
-        <div class="clearfix"></div>
-      </footer>
-      <!-- /Footer Content -->
-
     </div>
-  </div>
+  </main>
 
-  <!-- Scripts -->
-  <script src="../assets/vendors/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="../assets/vendors/fastclick/lib/fastclick.js"></script>
-  <script src="../assets/vendors/nprogress/nprogress.js"></script>
-  <script src="../assets/build/js/custom.min.js"></script>
+  <?php if (isset($_GET['status']) && $_GET['status'] == 'sukses'): ?>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Profil Berhasil Diperbarui!',
+      text: 'Data informasi akun Anda telah berhasil disimpan.',
+      confirmButtonColor: '#10b981',
+      timer: 3000
+    });
+  </script>
+  <?php endif; ?>
+
 </body>
 </html>
