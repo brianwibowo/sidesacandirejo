@@ -582,7 +582,7 @@ if (!empty($last_active)) {
             <span>Dashboard Arsip</span>
           </a>
 
-          <a href="booking_editprofile.php" class="btn-edit-profile" title="Edit Profil">
+          <a href="editprofile.php" class="btn-edit-profile" title="Edit Profil">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
               <path d="M15.232 5.232l3.536 3.536M9 11l6.364-6.364a2 2 0 112.828 2.828L11.828 13.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"/>
               <path d="M3 21h18"/>

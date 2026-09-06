@@ -10,6 +10,11 @@ $nama_admin  = isset($_SESSION['nama']) ? $_SESSION['nama'] : 'Admin';
 $initials    = strtoupper(substr($nama_admin, 0, 1));
 ?>
 
+  <link href="/admin/css/form_modern.css" rel="stylesheet">
+  <link href="/admin/css/detail_modern.css" rel="stylesheet">
+  <link href="/admin/css/tabel_modern.css" rel="stylesheet">
+  <link href="/admin/css/modern_admin.css" rel="stylesheet">
+
 <header class="booking-header admin-header" id="bookingHeader">
 
   <!-- Left: Sidebar Collapse Toggle Button (Identik Web Booking) -->
