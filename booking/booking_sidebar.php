@@ -180,6 +180,7 @@ $initials = strtoupper(substr($nama, 0, 1));
 
 /* Sidebar base */
 .booking-sidebar {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   width: var(--sidebar-width); height: 100vh;
   background: var(--sidebar-bg);
   display: flex; flex-direction: column;
@@ -195,7 +196,7 @@ $initials = strtoupper(substr($nama, 0, 1));
   white-space: nowrap; min-width: var(--sidebar-width);
 }
 .brand-icon { flex-shrink: 0; color: var(--sidebar-accent); }
-.brand-text .brand-title { color: #fff; font-size: 17px; font-weight: 600; }
+.brand-text .brand-title { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; color: #fff; font-size: 17px; font-weight: 600; }
 .brand-text .brand-subtitle { color: var(--sidebar-text-muted); font-size: 12px; margin-top: 2px; }
 .brand-text { transition: opacity 0.15s; }
 .collapsed .brand-text { opacity: 0; pointer-events: none; }
@@ -354,7 +355,7 @@ $initials = strtoupper(substr($nama, 0, 1));
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
   color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;

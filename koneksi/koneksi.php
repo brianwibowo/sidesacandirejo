@@ -34,4 +34,14 @@ if (!$db && !$is_production) {
 if (!$db) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
+
+// Self-healing migration: pastikan kolom catatan ada di tb_booking
+try {
+    $col_check = mysqli_query($db, "SHOW COLUMNS FROM tb_booking LIKE 'catatan'");
+    if ($col_check && mysqli_num_rows($col_check) === 0) {
+        mysqli_query($db, "ALTER TABLE tb_booking ADD COLUMN catatan TEXT NULL AFTER local_guide");
+    }
+} catch (Throwable $e) {
+    // Abaikan jika migrasi gagal atau hak akses terbatas
+}
 ?>

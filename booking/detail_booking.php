@@ -105,11 +105,15 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Detail Booking #<?php echo (int)$bk['id']; ?> - Sistem Booking Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
     .booking-content.collapsed { margin-left: 60px; }
     .content-inner { padding: 28px 28px 40px; }

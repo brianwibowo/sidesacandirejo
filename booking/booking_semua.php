@@ -87,14 +87,18 @@ if (!function_exists('getPageUrl')) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Semua Booking - Sistem Booking Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #f4f7f5; color: #1e3a2f; min-height: 100vh;
     }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
 
     /* ── LAYOUT ── */
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
@@ -209,7 +213,7 @@ if (!function_exists('getPageUrl')) {
     tbody tr { border-bottom: 1px solid #f0f5f2; transition: background 0.15s; position: relative; z-index: 1; }
     tbody tr:last-child { border-bottom: none; }
     tbody td {
-      padding: 9px 14px; font-size: 13px; color: #1e3a2f;
+      padding: 8px 14px; font-size: 13px; color: #1e3a2f;
       vertical-align: middle; position: relative;
     }
     .empty-row td { text-align: center; color: #9ab5a8; padding: 32px; font-size: 13.5px; font-style: italic; }
@@ -224,11 +228,13 @@ if (!function_exists('getPageUrl')) {
 
     /* ── BADGE ── */
     .badge {
-      display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px;
-      font-size: 11.5px; font-weight: 500; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      white-space: nowrap; text-transform: capitalize;
     }
-    .badge-pending     { background: #fdf0e0; color: #c0742a; border: 1px solid #f5d9a8; }
-    .badge-checkin     { background: #e4f5ec; color: #2e7d4f; border: 1px solid #a8d8bc; }
+    .badge-pax { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+    .badge-pending    { background: #fef9e7; color: #b7791f; border: 1px solid #fde68a; }
+    .badge-checkin    { background: #e4f5ec; color: #1e6b3c; border: 1px solid #b5dfc5; }
     .badge-tidak_hadir { background: #fceaea; color: #c0392b; border: 1px solid #f5b8b8; }
 
     /* ── TOMBOL AKSI IKON ── */
@@ -533,72 +539,56 @@ if (!function_exists('getPageUrl')) {
               <th>Paket &amp; Layanan</th>
               <th>Driver / Guide</th>
               <th>Status</th>
-              <th style="text-align:right;padding-right:24px;">Aksi</th>
+              <th style="text-align:right;">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <?php if (empty($bookings)): ?>
-            <tr class="empty-row">
-              <td colspan="7">Tidak ada data booking ditemukan</td>
+            <tr>
+              <td colspan="7" style="text-align:center; padding: 28px 14px; color:#9ab5a8;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="margin-bottom:6px; display:inline-block;"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <div style="font-size:13px;">Tidak ada data booking ditemukan.</div>
+              </td>
             </tr>
             <?php else: foreach ($bookings as $row):
               $status     = $row['status'];
               $badgeClass = 'badge-' . ($status === 'tidak_hadir' ? 'tidak_hadir' : $status);
               $badgeLabel = $status === 'checkin' ? 'Check-in'
                           : ($status === 'pending' ? 'Pending' : 'Tidak Datang');
-              $tgl_display = tglIndo($row['tanggal_kunjungan'] ?? $row['created_at'] ?? null);
 
-              $nama_agen = (!empty(trim((string)($row['agen_wisata'] ?? ''))) && strtolower(trim((string)$row['agen_wisata'])) !== 'null')
-                          ? htmlspecialchars($row['agen_wisata'])
-                          : '-';
-
-              $asal = $row['jenis_wisatawan'] === 'Domestik'
-                    ? htmlspecialchars($row['kota'] ?? '-')
-                    : htmlspecialchars($row['negara'] ?? '-');
-
-              $opsi_makan = '';
-              if (!empty($row['opsi_makan_tour'])) {
-                if ($row['opsi_makan_tour'] === 'with_lunch') {
-                  $opsi_makan = 'With Lunch';
-                } elseif ($row['opsi_makan_tour'] === 'without_lunch') {
-                  $opsi_makan = 'Without Lunch';
-                } else {
-                  $opsi_makan = ucwords(str_replace('_', ' ', $row['opsi_makan_tour']));
-                }
-              }
-
-              $driver_val = !empty(trim((string)($row['driver_agent_guide'] ?? ''))) ? htmlspecialchars($row['driver_agent_guide']) : 'Belum Ada';
-              $lg_val     = !empty(trim((string)($row['local_guide'] ?? ''))) ? htmlspecialchars($row['local_guide']) : 'Belum Ada';
+              $agenText = !empty(trim($row['agen_wisata'] ?? '')) ? htmlspecialchars($row['agen_wisata']) : 'Belum Ada';
+              $tamuText = !empty(trim($row['nama'] ?? '')) ? htmlspecialchars($row['nama']) : '-';
+              $asal     = $row['jenis_wisatawan'] === 'Domestik' ? ($row['kota'] ?: 'Domestik') : ($row['negara'] ?: 'Mancanegara');
+              $driver   = !empty(trim($row['driver_agent_guide'] ?? '')) ? htmlspecialchars($row['driver_agent_guide']) : 'Belum Ada';
+              $lg       = !empty(trim($row['local_guide'] ?? '')) ? htmlspecialchars($row['local_guide']) : 'Belum Ada';
             ?>
             <tr class="data-row">
               <td>
-                <div style="font-weight:600;color:#1e3a2f;font-size:14px;"><?php echo $nama_agen; ?></div>
-                <?php if (!empty($row['nama']) && $row['nama'] !== $row['agen_wisata']): ?>
-                  <div style="font-size:12px;color:#7a9e8e;margin-top:2px;">Tamu: <?php echo htmlspecialchars($row['nama']); ?></div>
-                <?php endif; ?>
+                <div style="font-weight: 600; color: #1e3a2f; font-size: 13px;"><?php echo $agenText; ?></div>
+                <div style="font-size: 11px; color: #7a9e8e; margin-top: 1px;">Tamu: <?php echo $tamuText; ?></div>
               </td>
               <td>
-                <div style="font-weight:500;"><?php echo $tgl_display; ?></div>
-                <div style="font-size:11.5px;color:#8ba89b;margin-top:2px;">
-                  <?php echo htmlspecialchars($row['jenis_wisatawan'] ?? ''); ?> &bull; <?php echo $asal; ?>
-                </div>
+                <div style="font-weight: 500; font-size: 12.5px;"><?php echo tglIndo($row['tanggal_kunjungan']); ?></div>
+                <div style="font-size: 11px; color: #7a9e8e;"><?php echo htmlspecialchars($asal); ?></div>
               </td>
               <td>
-                <span style="display:inline-block;padding:3px 9px;background:#f0f5f2;border-radius:6px;font-weight:600;font-size:12.5px;color:#2a4535;">
-                  <?php echo (int)$row['pax']; ?> pax
-                </span>
+                <span class="badge badge-pax"><?php echo (int)$row['pax']; ?> Pax</span>
               </td>
               <td>
-                <div style="font-weight:500;color:#1e3a2f;"><?php echo htmlspecialchars(labelPaket($row['pilihan_paket_wisata'])); ?></div>
-                <?php if (!empty($opsi_makan)): ?>
-                  <div style="font-size:11.5px;color:#2e7d4f;font-weight:600;margin-top:3px;display:inline-block;background:#e8f7ee;padding:1px 8px;border-radius:4px;">
-                    <?php echo $opsi_makan; ?>
+                <div style="font-size: 12.5px; font-weight: 500;"><?php echo htmlspecialchars(labelPaket($row['pilihan_paket_wisata'])); ?></div>
+                <?php if ($row['opsi_makan_tour']): ?>
+                  <div style="font-size: 10.5px; color: #2e7d4f; font-weight: 600;">
+                    <?php echo $row['opsi_makan_tour'] === 'with_lunch' ? 'With Lunch' : 'Without Lunch'; ?>
+                  </div>
+                <?php elseif ($row['jenis_makanan_paket']): ?>
+                  <div style="font-size: 10.5px; color: #b7791f; font-weight: 600;">
+                    🍽 <?php echo ucfirst($row['jenis_makanan_paket']); ?>
                   </div>
                 <?php endif; ?>
               </td>
               <td>
-                <div style="font-size: 12px; font-weight: 500; color: #2a4535;">D: <?php echo $driver_val; ?></div>
-                <div style="font-size: 11px; color: #7a9e8e;">G: <?php echo $lg_val; ?></div>
+                <div style="font-size: 12px; font-weight: 500; color: #2a4535;">D: <?php echo $driver; ?></div>
+                <div style="font-size: 11px; color: #7a9e8e;">G: <?php echo $lg; ?></div>
               </td>
               <td>
                 <span class="badge <?php echo $badgeClass; ?>"><?php echo $badgeLabel; ?></span>

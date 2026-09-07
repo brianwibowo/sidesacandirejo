@@ -49,10 +49,16 @@ if (!function_exists('getFotoList')) {
             if (!empty(trim($kolom_foto))) return [trim($kolom_foto)];
         }
         $pid = (int)$id_pengunjung;
-        $res = mysqli_query($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = $pid ORDER BY id_foto ASC");
         $list = [];
-        while ($r = mysqli_fetch_assoc($res)) {
-            if (!empty($r['nama_file'])) $list[] = $r['nama_file'];
+        try {
+            $res = mysqli_query($db, "SELECT nama_file FROM tb_foto_pengunjung WHERE id_pengunjung = $pid ORDER BY id_foto ASC");
+            if ($res) {
+                while ($r = mysqli_fetch_assoc($res)) {
+                    if (!empty($r['nama_file'])) $list[] = $r['nama_file'];
+                }
+            }
+        } catch (Throwable $e) {
+            // Abaikan jika tabel tb_foto_pengunjung belum ada
         }
         return $list;
     }
@@ -70,9 +76,9 @@ if ($tanggal !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $tanggal)) {
     $where .= " AND tanggal_kunjungan = '$tanggal'";
 }
 
-/* ── Pagination (Default: 10 baris pas satu layar tanpa scroll) ─────────── */
-$allowed_per_page = [10, 15, 25, 50];
-$per_page = isset($_GET['per_page']) && in_array((int)$_GET['per_page'], $allowed_per_page) ? (int)$_GET['per_page'] : 10;
+/* ── Pagination (Default: 50 baris) ─────────────────────────────────────── */
+$allowed_per_page = [10, 15, 25, 50, 100];
+$per_page = isset($_GET['per_page']) && in_array((int)$_GET['per_page'], $allowed_per_page) ? (int)$_GET['per_page'] : 50;
 
 $count_query = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_data_pengunjung $where");
 $count_row   = mysqli_fetch_assoc($count_query);
@@ -555,12 +561,13 @@ if (!function_exists('getPageUrl')) {
                   onchange="document.getElementById('filterForm').submit()"
                 >
 
-                <!-- Rows per page (Default 10 baris sesuai gambar referensi) -->
+                <!-- Rows per page (Default 50 baris) -->
                 <select name="per_page" id="perPage" class="filter-select" style="min-width:115px;" onchange="document.getElementById('filterForm').submit()">
                   <option value="10" <?php echo $per_page === 10 ? 'selected' : ''; ?>>10 baris</option>
                   <option value="15" <?php echo $per_page === 15 ? 'selected' : ''; ?>>15 baris</option>
                   <option value="25" <?php echo $per_page === 25 ? 'selected' : ''; ?>>25 baris</option>
                   <option value="50" <?php echo $per_page === 50 ? 'selected' : ''; ?>>50 baris</option>
+                  <option value="100" <?php echo $per_page === 100 ? 'selected' : ''; ?>>100 baris</option>
                 </select>
 
                 <!-- Submit filter icon -->

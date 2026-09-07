@@ -166,8 +166,8 @@ include "login/ceksession.php";
           $('#datatable').DataTable().destroy();
         }
         $('#datatable').DataTable({
-          "pageLength": 15,
-          "lengthMenu": [15, 25, 50, 100]
+          "pageLength": 50,
+          "lengthMenu": [10, 25, 50, 100]
         });
       });
     </script>

@@ -40,6 +40,7 @@ $initials       = strtoupper(substr($nama_admin, 0, 1));
       color: #1e3a2f;
       min-height: 100vh;
     }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
 
     /* Content Layout */
     .booking-content {

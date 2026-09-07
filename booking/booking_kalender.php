@@ -7,6 +7,7 @@ include '../koneksi/koneksi.php';
 $today_y = (int)date('Y');
 $today_m = (int)date('n');
 $today_d = (int)date('j');
+$today_str = sprintf('%04d-%02d-%02d', $today_y, $today_m, $today_d);
 
 $bulan = isset($_GET['bulan']) ? (int)$_GET['bulan'] : $today_m;
 $tahun = isset($_GET['tahun']) ? (int)$_GET['tahun'] : $today_y;
@@ -35,8 +36,18 @@ while ($r = mysqli_fetch_assoc($q)) {
     $booking_map[$key][] = $r;
 }
 
-/* ── Tanggal yang dipilih (klik kalender) ───────────────────────────────── */
-$selected_date = isset($_GET['tgl']) ? $_GET['tgl'] : null;
+/* ── Tanggal yang dipilih (default: hari ini jika membuka bulan berjalan) ── */
+if (isset($_GET['tgl'])) {
+    $selected_date = !empty($_GET['tgl']) ? $_GET['tgl'] : null;
+} elseif (isset($_GET['close'])) {
+    $selected_date = null;
+} elseif ($bulan == $today_m && $tahun == $today_y) {
+    // Saat baru buka halaman: langsung tampilkan booking hari ini
+    $selected_date = $today_str;
+} else {
+    $selected_date = null;
+}
+
 $selected_bookings = [];
 if ($selected_date && isset($booking_map[$selected_date])) {
     $selected_bookings = $booking_map[$selected_date];
@@ -49,14 +60,18 @@ if ($selected_date && isset($booking_map[$selected_date])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kalender Booking - Sistem Booking Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #f4f7f5; color: #1e3a2f; min-height: 100vh;
     }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
 
     /* ── LAYOUT ── */
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
@@ -117,6 +132,25 @@ if ($selected_date && isset($booking_map[$selected_date])) {
       background: #1e3a2f;
       color: #fff;
       border-color: #1e3a2f;
+    }
+    .btn-tambah-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #1e3a2f;
+      color: #fff !important;
+      border: 1px solid #1e3a2f;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none !important;
+      transition: all 0.15s;
+    }
+    .btn-tambah-header:hover {
+      background: #2d5540;
+      border-color: #2d5540;
     }
 
     /* ── MAIN GRID ── */
@@ -196,12 +230,25 @@ if ($selected_date && isset($booking_map[$selected_date])) {
     .side-panel {
       background: #fff; border: 1px solid #e5ede8; border-radius: 12px;
       padding: 20px;
+      position: sticky;
+      top: 78px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #d6e6dc transparent;
     }
+    .side-panel::-webkit-scrollbar { width: 5px; }
+    .side-panel::-webkit-scrollbar-thumb { background: #d6e6dc; border-radius: 4px; }
     .side-panel-empty {
       text-align: center; padding: 40px 20px;
       color: #9ab5a8; font-size: 13.5px;
     }
     .side-panel-empty svg { margin-bottom: 10px; color: #c8ddd4; }
+
+    @media (max-width: 900px) {
+      .kalender-layout { grid-template-columns: 1fr; }
+      .side-panel { position: static; max-height: none; }
+    }
 
     .panel-header {
       display: flex; align-items: flex-start; justify-content: space-between;
@@ -266,6 +313,38 @@ if ($selected_date && isset($booking_map[$selected_date])) {
     }
     .btn-checkin-panel:hover { background: #2d5540; }
 
+    /* Tombol Tambah Booking di panel */
+    .panel-action-wrap {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #f0f5f2;
+    }
+    .btn-tambah-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      background: #1e3a2f;
+      color: #fff !important;
+      border: none;
+      border-radius: 7px;
+      padding: 9.5px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none !important;
+      transition: background 0.15s, transform 0.1s;
+      box-sizing: border-box;
+    }
+    .btn-tambah-panel:hover {
+      background: #2d5540;
+      color: #fff !important;
+    }
+    .btn-tambah-panel:active {
+      transform: scale(0.98);
+    }
+
     /* ── PAGE FOOTER ── */
     .booking-footer {
       margin-top: 40px; padding: 14px 28px;
@@ -290,7 +369,14 @@ if ($selected_date && isset($booking_map[$selected_date])) {
           <h1>Kalender Booking</h1>
           <p>Lihat jadwal booking dalam tampilan kalender</p>
         </div>
-        <div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <?php
+            $target_tgl_header = $selected_date ?: (($bulan == $today_m && $tahun == $today_y) ? $today_str : sprintf('%04d-%02d-01', $tahun, $bulan));
+          ?>
+          <a href="tambah_booking.php?tgl=<?php echo urlencode($target_tgl_header); ?>&ref=booking_kalender.php" class="btn-tambah-header" title="Tambah Booking Baru">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 4v16m8-8H4"/></svg>
+            Tambah Booking
+          </a>
           <a href="?bulan=<?php echo $today_m; ?>&tahun=<?php echo $today_y; ?>&tgl=<?php echo date('Y-m-d'); ?>" class="btn-today" title="Lompat ke tanggal hari ini">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
@@ -316,10 +402,10 @@ if ($selected_date && isset($booking_map[$selected_date])) {
               $next_m = $bulan + 1; $next_y = $tahun;
               if ($next_m > 12) { $next_m = 1; $next_y++; }
             ?>
-            <a href="?bulan=<?php echo $prev_m; ?>&tahun=<?php echo $prev_y; ?><?php echo $selected_date ? '&tgl='.$selected_date : ''; ?>" class="kal-nav-btn">
+            <a href="?bulan=<?php echo $prev_m; ?>&tahun=<?php echo $prev_y; ?>" class="kal-nav-btn" title="Bulan sebelumnya">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </a>
-            <a href="?bulan=<?php echo $next_m; ?>&tahun=<?php echo $next_y; ?><?php echo $selected_date ? '&tgl='.$selected_date : ''; ?>" class="kal-nav-btn">
+            <a href="?bulan=<?php echo $next_m; ?>&tahun=<?php echo $next_y; ?>" class="kal-nav-btn" title="Bulan berikutnya">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </a>
           </div>
@@ -349,7 +435,9 @@ if ($selected_date && isset($booking_map[$selected_date])) {
             $classes  = 'kal-cell';
             if ($is_today)  $classes .= ' today';
             if ($is_sel)    $classes .= ' selected';
-            $url = '?bulan='.$bulan.'&tahun='.$tahun.'&tgl='.$tgl_key;
+            $url = $is_sel
+                 ? '?bulan='.$bulan.'&tahun='.$tahun.'&close=1'
+                 : '?bulan='.$bulan.'&tahun='.$tahun.'&tgl='.$tgl_key;
           ?>
             <a href="<?php echo $url; ?>" class="<?php echo $classes; ?>" style="text-decoration:none;">
               <span class="kal-date"><?php echo $d; ?></span>
@@ -386,14 +474,23 @@ if ($selected_date && isset($booking_map[$selected_date])) {
                   <?php
                     $ts = strtotime($selected_date);
                     echo date('j', $ts) . ' ' . $bulan_id[(int)date('n',$ts)] . ' ' . date('Y',$ts);
+                    if ($selected_date === $today_str) {
+                        echo ' <span style="font-size:11px;background:#e4f5ec;color:#2e7d4f;padding:2px 7px;border-radius:12px;font-weight:600;margin-left:4px;">Hari Ini</span>';
+                    }
                   ?>
                 </div>
               </div>
-              <a href="?bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>" class="panel-close">
+              <a href="?bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>&close=1" class="panel-close" title="Tutup panel">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </a>
             </div>
             <div class="side-panel-empty">Tidak ada booking pada tanggal ini</div>
+            <div class="panel-action-wrap">
+              <a href="tambah_booking.php?tgl=<?php echo urlencode($selected_date); ?>&ref=booking_kalender.php" class="btn-tambah-panel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 4v16m8-8H4"/></svg>
+                Tambah Booking
+              </a>
+            </div>
           <?php else: ?>
             <!-- Belum pilih tanggal -->
             <div class="side-panel-empty">
@@ -402,6 +499,15 @@ if ($selected_date && isset($booking_map[$selected_date])) {
                 <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
               </svg>
               <p>Pilih tanggal pada kalender<br>untuk melihat booking</p>
+            </div>
+            <div class="panel-action-wrap">
+              <?php
+                $fallback_tgl_panel = ($bulan == $today_m && $tahun == $today_y) ? $today_str : sprintf('%04d-%02d-01', $tahun, $bulan);
+              ?>
+              <a href="tambah_booking.php?tgl=<?php echo urlencode($fallback_tgl_panel); ?>&ref=booking_kalender.php" class="btn-tambah-panel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 4v16m8-8H4"/></svg>
+                Tambah Booking
+              </a>
             </div>
           <?php endif; ?>
 
@@ -414,10 +520,13 @@ if ($selected_date && isset($booking_map[$selected_date])) {
                 <?php
                   $ts = strtotime($selected_date);
                   echo date('j', $ts) . ' ' . $bulan_id[(int)date('n',$ts)] . ' ' . date('Y',$ts);
+                  if ($selected_date === $today_str) {
+                      echo ' <span style="font-size:11px;background:#e4f5ec;color:#2e7d4f;padding:2px 7px;border-radius:12px;font-weight:600;margin-left:4px;">Hari Ini</span>';
+                  }
                 ?>
               </div>
             </div>
-            <a href="?bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>" class="panel-close">
+            <a href="?bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>&close=1" class="panel-close" title="Tutup panel">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </a>
           </div>
@@ -456,6 +565,13 @@ if ($selected_date && isset($booking_map[$selected_date])) {
             <?php endif; ?>
           </div>
           <?php endforeach; ?>
+
+          <div class="panel-action-wrap">
+            <a href="tambah_booking.php?tgl=<?php echo urlencode($selected_date); ?>&ref=booking_kalender.php" class="btn-tambah-panel">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M12 4v16m8-8H4"/></svg>
+              Tambah Booking
+            </a>
+          </div>
 
         <?php endif; ?>
       </div><!-- /.side-panel -->

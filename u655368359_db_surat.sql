@@ -112,6 +112,7 @@ CREATE TABLE `tb_booking` (
   `agen_wisata` varchar(100) DEFAULT NULL,
   `driver_agent_guide` varchar(100) DEFAULT NULL,
   `local_guide` varchar(100) DEFAULT NULL,
+  `catatan` text DEFAULT NULL,
   `status` enum('pending','checkin','tidak_hadir') NOT NULL DEFAULT 'pending',
   `id_pengunjung` int(11) DEFAULT NULL COMMENT 'FK ke tb_data_pengunjung.id setelah check-in',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),

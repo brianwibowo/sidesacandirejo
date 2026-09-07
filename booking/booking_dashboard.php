@@ -63,11 +63,15 @@ $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard - Sistem Booking Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
 
     /* ── CONTENT ── */
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
@@ -273,16 +277,27 @@ $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
     .btn-icon:last-child::before { right: 9px; transform: none; }
     .btn-icon:hover::after, .btn-icon:hover::before { opacity: 1; }
 
-    /* ── TABLE ── */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 220px; gap: 20px; align-items: start; }
+    /* ── TABLE & DASHBOARD GRID ── */
+    .dashboard-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 240px; 
+      gap: 20px; 
+      align-items: stretch; 
+    }
     .card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; overflow: visible; }
-    .card-header { padding: 14px 22px 12px; border-bottom: 1px solid #f0f5f2; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .dashboard-grid > .card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+    .card-header { padding: 14px 22px 12px; border-bottom: 1px solid #f0f5f2; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
     .card-header h2 { font-size: 16px; font-weight: 600; color: #1e3a2f; }
     .card-header-right { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #7a9e8e; }
     .show-select { font-size: 12.5px; color: #1e3a2f; border: 1px solid #d6e6dc; border-radius: 6px; padding: 4px 8px; background: #fafcfb; cursor: pointer; outline: none; }
     .show-select:focus { border-color: #2e7d4f; }
-    .table-wrapper { overflow: hidden; border-radius: 0 0 12px 12px; }
-    .table-footer { padding: 10px 22px; border-top: 1px solid #f0f5f2; font-size: 12.5px; color: #9ab5a8; display: flex; align-items: center; justify-content: space-between; }
+    .table-wrapper { overflow-x: auto; flex: 1 1 auto; min-height: 0; }
+    .table-footer { padding: 10px 22px; border-top: 1px solid #f0f5f2; font-size: 12.5px; color: #9ab5a8; display: flex; align-items: center; justify-content: space-between; margin-top: auto; flex-shrink: 0; border-radius: 0 0 12px 12px; background: #fff; }
     table { width: 100%; border-collapse: collapse; }
     tbody td { padding: 12px 10px; font-size: 13px; color: #2a4535; border-bottom: 1px solid #f4f7f5; vertical-align: middle; }
     thead th { padding: 10px 10px; text-align: left; font-size: 11.5px; font-weight: 600; color: #7a9e8e; text-transform: uppercase; letter-spacing: 0.04em; background: #fafcfb; border-bottom: 1px solid #eff4f1; }
@@ -300,10 +315,29 @@ $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
     .badge-tidak_hadir  { background: #fceaea; color: #b03030; }
 
     /* ── BOOKING BESOK ── */
-    .tomorrow-card { background: #fff; border: 1px solid #e5ede8; border-radius: 12px; overflow: hidden; }
-    .tomorrow-header { padding: 18px 20px 10px; border-bottom: 1px solid #f0f5f2; }
+    .tomorrow-card { 
+      background: #fff; 
+      border: 1px solid #e5ede8; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .tomorrow-header { padding: 18px 20px 12px; border-bottom: 1px solid #f0f5f2; flex-shrink: 0; }
     .tomorrow-header h2 { font-size: 15px; font-weight: 600; color: #1e3a2f; }
     .tomorrow-header p  { font-size: 12.5px; color: #7a9e8e; margin-top: 2px; }
+    .tomorrow-list {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      min-height: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #d6e6dc transparent;
+    }
+    .tomorrow-list::-webkit-scrollbar { width: 5px; }
+    .tomorrow-list::-webkit-scrollbar-thumb { background: #d6e6dc; border-radius: 4px; }
     .tomorrow-item { padding: 12px 20px; border-bottom: 1px solid #f4f7f5; }
     .tomorrow-item:last-child { border-bottom: none; }
     .tomorrow-item-name  { font-size: 13.5px; font-weight: 500; color: #1e3a2f; margin-bottom: 3px; }
@@ -315,7 +349,8 @@ $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
 
     @media (max-width: 1100px) {
       .stat-cards { grid-template-columns: repeat(2,1fr); }
-      .dashboard-grid { grid-template-columns: 1fr; }
+      .dashboard-grid { grid-template-columns: 1fr; align-items: start; }
+      .dashboard-grid > .card, .tomorrow-card { height: auto; }
     }
     @media (max-width: 600px) {
       .stat-cards { grid-template-columns: 1fr; }
@@ -564,29 +599,31 @@ $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
             echo date('j', $besok_ts) . ' ' . $bulan_id[(int)date('n', $besok_ts) - 1] . ' ' . date('Y', $besok_ts);
           ?></p>
         </div>
-        <?php if (empty($booking_besok)): ?>
-          <div class="tomorrow-empty">Belum ada booking untuk besok</div>
-        <?php else: foreach ($booking_besok as $b):
-          $nama_agen_b = (!empty(trim((string)($b['agen_wisata'] ?? ''))) && strtolower(trim((string)$b['agen_wisata'])) !== 'null')
-                        ? htmlspecialchars($b['agen_wisata'])
-                        : '-';
-        ?>
-        <div class="tomorrow-item" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-          <div style="flex:1;min-width:0;">
-            <div class="tomorrow-item-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><strong><?php echo $nama_agen_b; ?></strong></div>
-            <div class="tomorrow-item-paket"><?php echo labelPaket($b['pilihan_paket_wisata']); ?></div>
-            <div class="tomorrow-item-pax">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              <?php echo $b['pax']; ?> pax
+        <div class="tomorrow-list">
+          <?php if (empty($booking_besok)): ?>
+            <div class="tomorrow-empty">Belum ada booking untuk besok</div>
+          <?php else: foreach ($booking_besok as $b):
+            $nama_agen_b = (!empty(trim((string)($b['agen_wisata'] ?? ''))) && strtolower(trim((string)$b['agen_wisata'])) !== 'null')
+                          ? htmlspecialchars($b['agen_wisata'])
+                          : '-';
+          ?>
+          <div class="tomorrow-item" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+            <div style="flex:1;min-width:0;">
+              <div class="tomorrow-item-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><strong><?php echo $nama_agen_b; ?></strong></div>
+              <div class="tomorrow-item-paket"><?php echo labelPaket($b['pilihan_paket_wisata']); ?></div>
+              <div class="tomorrow-item-pax">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <?php echo $b['pax']; ?> pax
+              </div>
             </div>
+            <a href="detail_booking.php?id=<?php echo $b['id']; ?>&ref=booking_dashboard.php" class="btn-icon btn-detail" data-tooltip="Lihat Detail" style="flex-shrink:0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </a>
           </div>
-          <a href="detail_booking.php?id=<?php echo $b['id']; ?>&ref=booking_dashboard.php" class="btn-icon btn-detail" data-tooltip="Lihat Detail" style="flex-shrink:0;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-          </a>
+          <?php endforeach; endif; ?>
         </div>
-        <?php endforeach; endif; ?>
       </div>
 
     </div>

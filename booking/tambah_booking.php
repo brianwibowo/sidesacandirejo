@@ -3,7 +3,7 @@ session_start();
 include "login/ceksession.php";
 
 $ref = isset($_GET['ref']) ? $_GET['ref'] : 'booking_dashboard.php';
-$allowed_refs = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php'];
+$allowed_refs = ['booking_semua.php', 'booking_pending.php', 'booking_checkin.php', 'booking_tidakdatang.php', 'booking_dashboard.php', 'booking_kalender.php'];
 if (!in_array($ref, $allowed_refs)) {
     $ref = 'booking_dashboard.php';
 }
@@ -13,8 +13,17 @@ $back_labels = [
     'booking_pending.php'     => 'Kembali ke Booking Pending',
     'booking_checkin.php'     => 'Kembali ke Booking Check-in',
     'booking_tidakdatang.php' => 'Kembali ke Booking Tidak Datang',
+    'booking_kalender.php'    => 'Kembali ke Kalender',
 ];
 $back_label = $back_labels[$ref] ?? 'Kembali';
+$val_tgl    = (isset($_GET['tgl']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['tgl'])) ? $_GET['tgl'] : date('Y-m-d');
+$back_url   = $ref;
+if ($ref === 'booking_kalender.php' && $val_tgl) {
+    $ts_tgl = strtotime($val_tgl);
+    if ($ts_tgl) {
+        $back_url = 'booking_kalender.php?bulan=' . date('n', $ts_tgl) . '&tahun=' . date('Y', $ts_tgl) . '&tgl=' . $val_tgl;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -23,11 +32,15 @@ $back_label = $back_labels[$ref] ?? 'Kembali';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tambah Booking – Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f5; color: #1e3a2f; min-height: 100vh; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
     .booking-content.collapsed { margin-left: 60px; }
     .content-inner { padding: 28px 28px 40px; }
@@ -93,7 +106,7 @@ $back_label = $back_labels[$ref] ?? 'Kembali';
         <h1>Tambah Booking</h1>
         <p>Isi data booking baru pengunjung Desa Wisata Candirejo</p>
       </div>
-      <a href="<?php echo htmlspecialchars($ref); ?>" class="btn-back">
+      <a href="<?php echo htmlspecialchars($back_url); ?>" class="btn-back">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         <?php echo htmlspecialchars($back_label); ?>
       </a>
@@ -130,7 +143,7 @@ $back_label = $back_labels[$ref] ?? 'Kembali';
 
           <div class="form-row">
             <label class="form-label">Tanggal Kunjungan<span class="req">*</span></label>
-            <input type="date" name="tanggal_kunjungan" id="tanggal_kunjungan" required class="form-input" style="max-width:200px;">
+            <input type="date" name="tanggal_kunjungan" id="tanggal_kunjungan" required class="form-input" style="max-width:200px;" value="<?php echo htmlspecialchars($val_tgl); ?>">
           </div>
 
           <div class="form-row">

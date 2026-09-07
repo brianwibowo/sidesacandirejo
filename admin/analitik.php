@@ -350,30 +350,43 @@ $pct_dom   = ($total_pax > 0) ? round(($pax_domestik / $total_pax) * 100, 1) : 0
     }
     .input-wrap {
       position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
     }
     .input-wrap svg {
       position: absolute;
-      left: 11px;
+      left: 13px;
       top: 50%;
       transform: translateY(-50%);
-      color: #9ab5a8;
+      color: #7a9e8e;
       pointer-events: none;
+      z-index: 2;
     }
     .filter-input {
       border: 1px solid #d6e6dc;
       border-radius: 8px;
-      padding: 8.5px 12px 8.5px 36px;
+      padding: 8.5px 34px 8.5px 38px !important;
       font-size: 13px;
       color: #1e3a2f;
-      background: #fff;
+      background-color: #fff;
       outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
       width: 100%;
+      height: 38px;
       cursor: pointer;
       font-family: inherit;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a9e8e' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 12px center !important;
+      box-sizing: border-box !important;
     }
     .filter-input:focus {
       border-color: #2e7d4f;
+      box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.12);
     }
     .btn-tampilkan {
       background: #1e3a2f;
@@ -455,7 +468,7 @@ $pct_dom   = ($total_pax > 0) ? round(($pax_domestik / $total_pax) * 100, 1) : 0
     .stat-value {
       font-size: 28px;
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.25;
       color: #1e3a2f;
       margin-bottom: 6px;
     }
@@ -944,7 +957,7 @@ $pct_dom   = ($total_pax > 0) ? round(($pax_domestik / $total_pax) * 100, 1) : 0
             <div class="stat-card">
               <div>
                 <div class="stat-label">Paket Terpopuler (#1)</div>
-                <div class="stat-value" style="font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?php echo htmlspecialchars($top_paket_name); ?>">
+                <div class="stat-value" style="font-size:18px; line-height:1.35; padding:2px 0 5px; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?php echo htmlspecialchars($top_paket_name); ?>">
                   <?php echo htmlspecialchars($top_paket_name); ?>
                 </div>
               </div>
@@ -958,7 +971,7 @@ $pct_dom   = ($total_pax > 0) ? round(($pax_domestik / $total_pax) * 100, 1) : 0
             <div class="stat-card">
               <div>
                 <div class="stat-label">Asal Mancanegara (#1)</div>
-                <div class="stat-value" style="font-size:22px;">
+                <div class="stat-value" style="font-size:22px; line-height:1.35; padding:2px 0 5px; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?php echo htmlspecialchars($top_negara_name); ?>">
                   <?php echo htmlspecialchars($top_negara_name); ?>
                 </div>
               </div>

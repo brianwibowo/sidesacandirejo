@@ -35,40 +35,68 @@ $tgl_akhir_esc = mysqli_real_escape_string($db, $tgl_akhir);
 
 /* ── Stat total ── */
 $total_booking = $total_checkin = $total_tidak = $total_pax = 0;
-$q = mysqli_query($db,
-    "SELECT status, COUNT(*) as jml, SUM(pax) as total_pax
-     FROM tb_booking
-     WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-     GROUP BY status");
-while ($r = mysqli_fetch_assoc($q)) {
-    $total_booking += $r['jml'];
-    $total_pax     += $r['total_pax'];
-    if ($r['status'] === 'checkin')     $total_checkin += $r['jml'];
-    if ($r['status'] === 'tidak_hadir') $total_tidak   += $r['jml'];
-}
+try {
+    $q = mysqli_query($db,
+        "SELECT status, COUNT(*) as jml, SUM(pax) as total_pax
+         FROM tb_booking
+         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+         GROUP BY status");
+    if ($q) {
+        while ($r = mysqli_fetch_assoc($q)) {
+            $total_booking += (int)$r['jml'];
+            $total_pax     += (int)$r['total_pax'];
+            if ($r['status'] === 'checkin')     $total_checkin += (int)$r['jml'];
+            if ($r['status'] === 'tidak_hadir') $total_tidak   += (int)$r['jml'];
+        }
+    }
+} catch (Throwable $e) {}
 
 /* ── Rekap per hari ── */
 $rekap = [];
-$q2 = mysqli_query($db,
-    "SELECT tanggal_kunjungan,
-            COUNT(*) as total,
-            SUM(CASE WHEN status='checkin'     THEN 1 ELSE 0 END) as jml_checkin,
-            SUM(CASE WHEN status='tidak_hadir' THEN 1 ELSE 0 END) as jml_tidak,
-            SUM(pax) as total_pax
-     FROM tb_booking
-     WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-     GROUP BY tanggal_kunjungan
-     ORDER BY tanggal_kunjungan ASC");
-while ($r = mysqli_fetch_assoc($q2)) $rekap[] = $r;
+try {
+    $q2 = mysqli_query($db,
+        "SELECT tanggal_kunjungan,
+                COUNT(*) as total,
+                SUM(CASE WHEN status='checkin'     THEN 1 ELSE 0 END) as jml_checkin,
+                SUM(CASE WHEN status='tidak_hadir' THEN 1 ELSE 0 END) as jml_tidak,
+                SUM(pax) as total_pax
+         FROM tb_booking
+         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+         GROUP BY tanggal_kunjungan
+         ORDER BY tanggal_kunjungan ASC");
+    if ($q2) {
+        while ($r = mysqli_fetch_assoc($q2)) $rekap[] = $r;
+    }
+} catch (Throwable $e) {}
+
+/* ── Deteksi ketersediaan kolom catatan ── */
+$has_catatan = false;
+try {
+    $col_catatan = mysqli_query($db, "SHOW COLUMNS FROM tb_booking LIKE 'catatan'");
+    if ($col_catatan && mysqli_num_rows($col_catatan) > 0) {
+        $has_catatan = true;
+    } else {
+        if (mysqli_query($db, "ALTER TABLE tb_booking ADD COLUMN catatan TEXT NULL AFTER local_guide")) {
+            $has_catatan = true;
+        }
+    }
+} catch (Throwable $e) {
+    $has_catatan = false;
+}
+$kolom_catatan_sql = $has_catatan ? ", catatan" : ", '' AS catatan";
 
 /* ── Detail semua booking ── */
 $detail = [];
-$q3 = mysqli_query($db,
-    "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide, catatan
-     FROM tb_booking
-     WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-     ORDER BY tanggal_kunjungan ASC, id ASC");
-while ($r = mysqli_fetch_assoc($q3)) $detail[] = $r;
+try {
+    $q3 = mysqli_query($db,
+        "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide{$kolom_catatan_sql}
+         FROM tb_booking
+         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+         ORDER BY tanggal_kunjungan ASC, id ASC");
+    if ($q3) {
+        while ($r = mysqli_fetch_assoc($q3)) $detail[] = $r;
+    }
+} catch (Throwable $e) {}
 
 $tgl_cetak = date('d/m/Y H:i');
 

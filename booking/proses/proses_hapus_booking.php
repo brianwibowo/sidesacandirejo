@@ -18,14 +18,16 @@ function swalResponse($title, $message, $icon, $redirect)
 <html lang="id"><head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Proses</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head><body>
 <style>
-  body{font-family:"Poppins",sans-serif;background:#f4f6f9;}
+  body{font-family:\"Plus Jakarta Sans\",sans-serif;background:#f4f6f9;}
   .swal-custom-popup{border-radius:20px!important;padding:30px 20px!important;box-shadow:0 25px 60px rgba(0,0,0,0.25)!important;}
-  .swal-custom-title{font-family:"Poppins",sans-serif!important;font-weight:700!important;font-size:20px!important;color:#1a1a2e!important;}
+  .swal-custom-title{font-family:\"Outfit\",\"Plus Jakarta Sans\",sans-serif!important;font-weight:700!important;font-size:20px!important;color:#1a1a2e!important;}
 </style>
 <script>
   Swal.fire({

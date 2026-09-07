@@ -61,6 +61,7 @@ $initials = strtoupper(substr($nama, 0, 1));
   --sidebar-collapsed: 60px;
 }
 .booking-header {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: fixed; top: 0; left: 240px; right: 0;
   height: 58px; background: #fff;
   border-bottom: 1px solid #e5ede8;

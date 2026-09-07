@@ -22,9 +22,9 @@ while ($rk = mysqli_fetch_assoc($q_kat)) {
     $kategori_list[] = $rk['kategori_usaha'];
 }
 
-/* ── Pagination (Default 10 baris, opsi: 10, 15, 25, 50) ────────────────── */
-$allowed_per_page = [10, 15, 25, 50];
-$per_page = isset($_GET['per_page']) && in_array((int)$_GET['per_page'], $allowed_per_page) ? (int)$_GET['per_page'] : 10;
+/* ── Pagination (Default 50 baris, opsi: 10, 15, 25, 50, 100) ───────────── */
+$allowed_per_page = [10, 15, 25, 50, 100];
+$per_page = isset($_GET['per_page']) && in_array((int)$_GET['per_page'], $allowed_per_page) ? (int)$_GET['per_page'] : 50;
 
 $count_query = mysqli_query($db, "SELECT COUNT(*) as total FROM tb_data_mitra $where_mitra");
 $count_row   = mysqli_fetch_assoc($count_query);
@@ -132,12 +132,13 @@ if (!function_exists('getPageUrl')) {
                 </select>
                 <?php endif; ?>
 
-                <!-- Rows per page (Default 10) -->
+                <!-- Rows per page (Default 50) -->
                 <select name="per_page" id="perPage" class="filter-select" style="min-width:115px;" onchange="document.getElementById('filterFormMitra').submit()">
                   <option value="10" <?php echo $per_page === 10 ? 'selected' : ''; ?>>10 baris</option>
                   <option value="15" <?php echo $per_page === 15 ? 'selected' : ''; ?>>15 baris</option>
                   <option value="25" <?php echo $per_page === 25 ? 'selected' : ''; ?>>25 baris</option>
                   <option value="50" <?php echo $per_page === 50 ? 'selected' : ''; ?>>50 baris</option>
+                  <option value="100" <?php echo $per_page === 100 ? 'selected' : ''; ?>>100 baris</option>
                 </select>
 
                 <!-- Submit filter icon -->

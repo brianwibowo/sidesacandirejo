@@ -67,52 +67,84 @@ if ($show) {
     $tgl_akhir_esc = mysqli_real_escape_string($db, $tgl_akhir);
 
     /* ── Stat total ── */
-    $q = mysqli_query($db,
-        "SELECT status, COUNT(*) as jml, SUM(pax) as total_pax
-         FROM tb_booking
-         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-         GROUP BY status");
-    while ($r = mysqli_fetch_assoc($q)) {
-        $total_booking += $r['jml'];
-        $total_pax     += $r['total_pax'];
-        if ($r['status'] === 'checkin')      { $total_checkin     += $r['jml']; $pie_checkin = $r['jml']; }
-        if ($r['status'] === 'tidak_hadir')  { $total_tidakdatang += $r['jml']; $pie_tidak   = $r['jml']; }
-        if ($r['status'] === 'pending')      { $pie_pending        = $r['jml']; }
+    try {
+        $q = mysqli_query($db,
+            "SELECT status, COUNT(*) as jml, SUM(pax) as total_pax
+             FROM tb_booking
+             WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+             GROUP BY status");
+        if ($q) {
+            while ($r = mysqli_fetch_assoc($q)) {
+                $total_booking += (int)$r['jml'];
+                $total_pax     += (int)$r['total_pax'];
+                if ($r['status'] === 'checkin')      { $total_checkin     += (int)$r['jml']; $pie_checkin = (int)$r['jml']; }
+                if ($r['status'] === 'tidak_hadir')  { $total_tidakdatang += (int)$r['jml']; $pie_tidak   = (int)$r['jml']; }
+                if ($r['status'] === 'pending')      { $pie_pending        = (int)$r['jml']; }
+            }
+        }
+    } catch (Throwable $e) {
+        // Log atau lanjutkan jika tabel belum ada data
     }
 
     /* ── Rekap per hari ── */
-    $q2 = mysqli_query($db,
-        "SELECT tanggal_kunjungan,
-                COUNT(*) as total,
-                SUM(CASE WHEN status='checkin'          THEN 1 ELSE 0 END) as jml_checkin,
-                SUM(CASE WHEN status='tidak_hadir'      THEN 1 ELSE 0 END) as jml_tidak,
-                SUM(pax) as total_pax,
-                SUM(CASE WHEN jenis_wisatawan='Domestik'    THEN 1 ELSE 0 END) as jml_domestik,
-                SUM(CASE WHEN jenis_wisatawan!='Domestik'   THEN 1 ELSE 0 END) as jml_mancanegara
-         FROM tb_booking
-         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-         GROUP BY tanggal_kunjungan
-         ORDER BY tanggal_kunjungan ASC");
-    while ($r = mysqli_fetch_assoc($q2)) {
-        $rekap_harian[] = $r;
-        // Label singkat untuk chart: "11 Apr"
-        $ts = strtotime($r['tanggal_kunjungan']);
-        $chart_labels[]     = date('j', $ts) . ' ' . substr($bulan_id[(int)date('n',$ts)], 0, 3);
-        $chart_data[]       = (int)$r['total'];
-        $chart_data_dom[]   = (int)$r['jml_domestik'];
-        $chart_data_manca[] = (int)$r['jml_mancanegara'];
+    try {
+        $q2 = mysqli_query($db,
+            "SELECT tanggal_kunjungan,
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status='checkin'          THEN 1 ELSE 0 END) as jml_checkin,
+                    SUM(CASE WHEN status='tidak_hadir'      THEN 1 ELSE 0 END) as jml_tidak,
+                    SUM(pax) as total_pax,
+                    SUM(CASE WHEN jenis_wisatawan='Domestik'    THEN 1 ELSE 0 END) as jml_domestik,
+                    SUM(CASE WHEN jenis_wisatawan!='Domestik'   THEN 1 ELSE 0 END) as jml_mancanegara
+             FROM tb_booking
+             WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+             GROUP BY tanggal_kunjungan
+             ORDER BY tanggal_kunjungan ASC");
+        if ($q2) {
+            while ($r = mysqli_fetch_assoc($q2)) {
+                $rekap_harian[] = $r;
+                // Label singkat untuk chart: "11 Apr"
+                $ts = strtotime($r['tanggal_kunjungan']);
+                $chart_labels[]     = date('j', $ts) . ' ' . substr($bulan_id[(int)date('n',$ts)], 0, 3);
+                $chart_data[]       = (int)$r['total'];
+                $chart_data_dom[]   = (int)$r['jml_domestik'];
+                $chart_data_manca[] = (int)$r['jml_mancanegara'];
+            }
+        }
+    } catch (Throwable $e) {
+        // Fallback jika terjadi error
     }
 
-    /* ── Detail semua booking ── */
-    $q3 = mysqli_query($db,
-        "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide, catatan
-         FROM tb_booking
-         WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
-         ORDER BY tanggal_kunjungan ASC, id ASC");
-    if ($q3) {
-        while ($r = mysqli_fetch_assoc($q3)) {
-            $detail_booking[] = $r;
+    /* ── Deteksi ketersediaan kolom catatan ── */
+    $has_catatan = false;
+    try {
+        $col_catatan = mysqli_query($db, "SHOW COLUMNS FROM tb_booking LIKE 'catatan'");
+        if ($col_catatan && mysqli_num_rows($col_catatan) > 0) {
+            $has_catatan = true;
+        } else {
+            if (mysqli_query($db, "ALTER TABLE tb_booking ADD COLUMN catatan TEXT NULL AFTER local_guide")) {
+                $has_catatan = true;
+            }
         }
+    } catch (Throwable $e) {
+        $has_catatan = false;
+    }
+    $kolom_catatan_sql = $has_catatan ? ", catatan" : ", '' AS catatan";
+
+    /* ── Detail semua booking ── */
+    try {
+        $q3 = mysqli_query($db,
+            "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide{$kolom_catatan_sql}
+             FROM tb_booking
+             WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+             ORDER BY tanggal_kunjungan ASC, id ASC");
+        if ($q3) {
+            while ($r = mysqli_fetch_assoc($q3)) {
+                $detail_booking[] = $r;
+            }
+        }
+    } catch (Throwable $e) {
+        // Fallback jika query gagal
     }
 }
 ?>
@@ -123,13 +155,17 @@ if ($show) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Laporan Booking - Sistem Booking Desa Wisata Candirejo</title>
   <link rel="shortcut icon" href="img/iconbooking.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #f4f7f5; color: #1e3a2f; min-height: 100vh;
     }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
 
     /* ── LAYOUT ── */
     .booking-content { margin-left: 240px; padding-top: 58px; min-height: 100vh; transition: margin-left 0.25s; }
@@ -801,7 +837,7 @@ if ($show) {
                 $driver_txt = $d['driver_agent_guide'] ?: 'Belum Ada';
                 $guide_txt = $d['local_guide'] ?: 'Belum Ada';
             ?>
-            <tr class="detail-row" data-search="<?php echo htmlspecialchars(strtolower($nama_agen . ' ' . $d['nama'] . ' ' . $pk . ' ' . $driver_txt . ' ' . $guide_txt . ' ' . $d['catatan'])); ?>">
+            <tr class="detail-row" data-search="<?php echo htmlspecialchars(strtolower($nama_agen . ' ' . $d['nama'] . ' ' . $pk . ' ' . $driver_txt . ' ' . $guide_txt . ' ' . ($d['catatan'] ?? ''))); ?>">
               <td style="text-align: center; color: #7a9e8e; font-size: 12px;" class="row-num"><?php echo $no++; ?></td>
               <td>
                 <div style="font-weight: 600; color: #1e3a2f; font-size: 13.5px;"><?php echo htmlspecialchars($nama_agen); ?></div>
