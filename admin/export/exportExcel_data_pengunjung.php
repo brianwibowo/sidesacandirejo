@@ -2,8 +2,8 @@
 session_start();
 include '../../koneksi/koneksi.php'; // Pastikan koneksi ke database benar
 
-// Ambil data dari database
-$sql = "SELECT * FROM tb_data_pengunjung ORDER BY id ASC";
+// Ambil data dari database (hanya kolom yang ditampilkan, hemat RAM)
+$sql = "SELECT id, tanggal_kunjungan, nama, pilihan_paket_wisata, opsi_makan_tour, jenis_makanan_paket, opsi_cooking_lesson, opsi_gamelan, jenis_wisatawan, kota, negara, pax, agen_wisata, driver_agent_guide, local_guide FROM tb_data_pengunjung ORDER BY tanggal_kunjungan DESC, id DESC";
 $query = mysqli_query($db, $sql);
 
 // Format timestamp untuk nama file

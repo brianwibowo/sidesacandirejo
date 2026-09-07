@@ -50,7 +50,7 @@ $filter_bulan = isset($_GET['bulan']) ? trim($_GET['bulan']) : 'all';
 $filter_jenis = isset($_GET['jenis']) ? trim($_GET['jenis']) : 'all';
 
 // Query list tahun unik dari database
-$thn_res = mysqli_query($db, "SELECT DISTINCT YEAR(tanggal_kunjungan) as thn FROM tb_data_pengunjung WHERE tanggal_kunjungan IS NOT NULL AND tanggal_kunjungan != '0000-00-00' ORDER BY thn DESC");
+$thn_res = mysqli_query($db, "SELECT DISTINCT YEAR(tanggal_kunjungan) as thn FROM tb_data_pengunjung WHERE tanggal_kunjungan IS NOT NULL AND tanggal_kunjungan >= '2000-01-01' ORDER BY thn DESC");
 $available_years = [];
 while ($r = mysqli_fetch_assoc($thn_res)) {
     if ((int)$r['thn'] > 2000) {
@@ -58,16 +58,25 @@ while ($r = mysqli_fetch_assoc($thn_res)) {
     }
 }
 
-// Bangun WHERE clause
+// Bangun WHERE clause (Sargable Range Scan untuk Index Database)
 $where = "WHERE 1=1";
-if (!empty($filter_tahun) && $filter_tahun !== 'all') {
-    $safe_thn = mysqli_real_escape_string($db, $filter_tahun);
-    $where .= " AND YEAR(tanggal_kunjungan) = '$safe_thn'";
-}
-if (!empty($filter_bulan) && $filter_bulan !== 'all') {
+$has_thn = (!empty($filter_tahun) && $filter_tahun !== 'all');
+$has_bln = (!empty($filter_bulan) && $filter_bulan !== 'all');
+
+if ($has_thn && $has_bln) {
+    $thn = (int)$filter_tahun;
+    $bln = (int)$filter_bulan;
+    $tgl_awal  = sprintf('%04d-%02d-01', $thn, $bln);
+    $tgl_akhir = date('Y-m-t', strtotime($tgl_awal));
+    $where .= " AND tanggal_kunjungan BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+} elseif ($has_thn) {
+    $thn = (int)$filter_tahun;
+    $where .= " AND tanggal_kunjungan BETWEEN '{$thn}-01-01' AND '{$thn}-12-31'";
+} elseif ($has_bln) {
     $safe_bln = sprintf('%02d', (int)$filter_bulan);
     $where .= " AND MONTH(tanggal_kunjungan) = '$safe_bln'";
 }
+
 if (!empty($filter_jenis) && $filter_jenis !== 'all') {
     $safe_jenis = mysqli_real_escape_string($db, $filter_jenis);
     $where .= " AND jenis_wisatawan = '$safe_jenis'";
@@ -186,7 +195,7 @@ $monthly_q = mysqli_query($db, "SELECT
     COALESCE(SUM(CASE WHEN jenis_wisatawan = 'Domestik' THEN pax ELSE 0 END), 0) as pax_domestik,
     COALESCE(SUM(pax), 0) as total_pax
 FROM tb_data_pengunjung
-$where AND tanggal_kunjungan IS NOT NULL AND tanggal_kunjungan != '0000-00-00'
+$where AND tanggal_kunjungan IS NOT NULL AND tanggal_kunjungan >= '2000-01-01'
 GROUP BY bln
 ORDER BY bln ASC");
 

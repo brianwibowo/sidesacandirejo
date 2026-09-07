@@ -5,8 +5,8 @@ use Dompdf\Dompdf;
 
 include '../../koneksi/koneksi.php';
 
-// Ambil data surat keluar dari database
-$sql = "SELECT * FROM tb_data_pengunjung ORDER BY id ASC";
+// Ambil data pengunjung dari database (hanya kolom yang ditampilkan, hemat RAM)
+$sql = "SELECT id, tanggal_kunjungan, nama, pilihan_paket_wisata, opsi_makan_tour, jenis_makanan_paket, opsi_cooking_lesson, opsi_gamelan, jenis_wisatawan, kota, negara, pax, agen_wisata, driver_agent_guide, local_guide FROM tb_data_pengunjung ORDER BY tanggal_kunjungan DESC, id DESC";
 $query = mysqli_query($db, $sql);
 
 // Start buffering output

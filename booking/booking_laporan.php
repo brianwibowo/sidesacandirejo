@@ -115,26 +115,10 @@ if ($show) {
         // Fallback jika terjadi error
     }
 
-    /* ── Deteksi ketersediaan kolom catatan ── */
-    $has_catatan = false;
-    try {
-        $col_catatan = mysqli_query($db, "SHOW COLUMNS FROM tb_booking LIKE 'catatan'");
-        if ($col_catatan && mysqli_num_rows($col_catatan) > 0) {
-            $has_catatan = true;
-        } else {
-            if (mysqli_query($db, "ALTER TABLE tb_booking ADD COLUMN catatan TEXT NULL AFTER local_guide")) {
-                $has_catatan = true;
-            }
-        }
-    } catch (Throwable $e) {
-        $has_catatan = false;
-    }
-    $kolom_catatan_sql = $has_catatan ? ", catatan" : ", '' AS catatan";
-
     /* ── Detail semua booking ── */
     try {
         $q3 = mysqli_query($db,
-            "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide{$kolom_catatan_sql}
+            "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide, catatan
              FROM tb_booking
              WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
              ORDER BY tanggal_kunjungan ASC, id ASC");
@@ -144,7 +128,17 @@ if ($show) {
             }
         }
     } catch (Throwable $e) {
-        // Fallback jika query gagal
+        // Fallback jika kolom catatan belum ada di database lawas
+        $q3 = @mysqli_query($db,
+            "SELECT id, nama, agen_wisata, tanggal_kunjungan, pax, pilihan_paket_wisata, opsi_makan_tour, status, driver_agent_guide, local_guide, '' AS catatan
+             FROM tb_booking
+             WHERE tanggal_kunjungan BETWEEN '$tgl_mulai_esc' AND '$tgl_akhir_esc'
+             ORDER BY tanggal_kunjungan ASC, id ASC");
+        if ($q3) {
+            while ($r = mysqli_fetch_assoc($q3)) {
+                $detail_booking[] = $r;
+            }
+        }
     }
 }
 ?>

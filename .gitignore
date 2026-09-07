@@ -31,5 +31,6 @@ file/
 # Database dumps and temporary files
 *.sql
 !u655368359_db_surat.sql
+!database_optimization.sql
 doc.php
 google6fa79c3e622f86c9.html

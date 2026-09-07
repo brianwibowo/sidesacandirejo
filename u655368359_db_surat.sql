@@ -282,7 +282,8 @@ ALTER TABLE `tb_admin`
 -- Indeks untuk tabel `tb_arsip_surat_keluar`
 --
 ALTER TABLE `tb_arsip_surat_keluar`
-  ADD PRIMARY KEY (`No`);
+  ADD PRIMARY KEY (`No`),
+  ADD KEY `idx_sk_tgl` (`tanggal_keluar`);
 
 --
 -- Indeks untuk tabel `tb_arsip_surat_masuk`
@@ -297,7 +298,8 @@ ALTER TABLE `tb_booking`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_tanggal` (`tanggal_kunjungan`),
   ADD KEY `idx_status` (`status`),
-  ADD KEY `idx_pengunjung` (`id_pengunjung`);
+  ADD KEY `idx_pengunjung` (`id_pengunjung`),
+  ADD KEY `idx_status_tgl` (`status`, `tanggal_kunjungan`, `id`);
 
 --
 -- Indeks untuk tabel `tb_buat_surat`
@@ -315,7 +317,11 @@ ALTER TABLE `tb_data_mitra`
 -- Indeks untuk tabel `tb_data_pengunjung`
 --
 ALTER TABLE `tb_data_pengunjung`
-  ADD PRIMARY KEY (`id`) USING BTREE;
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `idx_tgl_id` (`tanggal_kunjungan`, `id`),
+  ADD KEY `idx_paket` (`pilihan_paket_wisata`),
+  ADD KEY `idx_jenis` (`jenis_wisatawan`),
+  ADD KEY `idx_negara` (`negara`);
 
 --
 -- Indeks untuk tabel `tb_data_pengurus`
