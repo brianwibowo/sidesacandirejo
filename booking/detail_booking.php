@@ -255,9 +255,6 @@ $asal = $bk['jenis_wisatawan'] === 'Domestik' ? displayField($bk['kota']) : disp
             <div class="info-list">
               <div class="info-label">Paket Wisata</div><div class="info-value"><?php echo e(labelPaket($bk['pilihan_paket_wisata'])); ?></div>
               <div class="info-label">Opsi Makan Tour</div><div class="info-value"><?php echo displayField($bk['opsi_makan_tour']); ?></div>
-              <div class="info-label">Jenis Makanan</div><div class="info-value"><?php echo displayField($bk['jenis_makanan_paket']); ?></div>
-              <div class="info-label">Opsi Cooking Lesson</div><div class="info-value"><?php echo displayField($bk['opsi_cooking_lesson']); ?></div>
-              <div class="info-label">Opsi Gamelan</div><div class="info-value"><?php echo displayField($bk['opsi_gamelan']); ?></div>
             </div>
           </div>
         </section>
